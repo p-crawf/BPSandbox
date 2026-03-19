@@ -55,7 +55,8 @@ select:disabled{opacity:.3;cursor:not-allowed}
 /* Verse display */
 .verse-display{display:none;margin-top:18px;padding:20px 24px;background:var(--grey-50);border-left:2px solid var(--black);border-radius:0 5px 5px 0;position:relative}
 .verse-display.show{display:block}
-.verse-display.scrollable{cursor:ns-resize}
+.verse-display.scrollable{cursor:grab}
+.verse-display.scrollable:active{cursor:grabbing}
 .verse-context{font-family:'Lora',serif;font-size:.93rem;line-height:1.9;color:var(--black);opacity:.28;transition:opacity .2s}
 .verse-context-num{font-size:.68rem;font-weight:600;vertical-align:super;margin-right:3px;font-family:'Inter',sans-serif}
 .verse-main{font-family:'Lora',serif;font-size:1rem;line-height:1.9;color:var(--black);padding:6px 0}
@@ -254,16 +255,28 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('exit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('exit-modal'))closeModal()});
   history.pushState({page:'study'},'');
   window.addEventListener('popstate',()=>{if(hasEdits||currentVerse){openModal();history.pushState({page:'study'},'')}});
-  document.getElementById('verse-display').addEventListener('wheel',e=>{
+  const verseDisp=document.getElementById('verse-display');
+  verseDisp.addEventListener('wheel',e=>{
     if(!currentVerse||!currentBook||!currentChapter)return;
     e.preventDefault();
-    const v=parseInt(currentVerse),maxV=BIBLE[currentBook][parseInt(currentChapter)-1];
-    const newV=e.deltaY>0?Math.min(maxV,v+1):Math.max(1,v-1);
-    if(newV===v)return;
-    currentVerse=String(newV);
-    document.getElementById('sel-verse').value=newV;
-    syncAll();displayVerse();
+    shiftVerse(e.deltaY>0?1:-1);
   },{passive:false});
+  let dragStartY=null,dragAccum=0,isDragging=false;
+  const DRAG_THRESHOLD=60;
+  verseDisp.addEventListener('mousedown',e=>{
+    if(!currentVerse||!currentBook||!currentChapter)return;
+    dragStartY=e.clientY;dragAccum=0;isDragging=false;
+    e.preventDefault();
+  });
+  window.addEventListener('mousemove',e=>{
+    if(dragStartY===null)return;
+    const delta=e.clientY-dragStartY;
+    dragAccum+=e.movementY;
+    isDragging=Math.abs(delta)>4;
+    if(dragAccum>DRAG_THRESHOLD){shiftVerse(1);dragAccum=0}
+    else if(dragAccum<-DRAG_THRESHOLD){shiftVerse(-1);dragAccum=0}
+  });
+  window.addEventListener('mouseup',()=>{dragStartY=null;dragAccum=0;});
 });
 
 window.addEventListener('beforeunload',e=>{if(hasEdits||currentVerse){e.preventDefault();e.returnValue=''}});
@@ -323,6 +336,15 @@ function fetchChapter(){
         document.getElementById('verse-text').textContent='Could not load chapter. Check your connection.';
       }
     });
+}
+
+function shiftVerse(dir){
+  const v=parseInt(currentVerse),maxV=BIBLE[currentBook][parseInt(currentChapter)-1];
+  const newV=Math.min(maxV,Math.max(1,v+dir));
+  if(newV===v)return;
+  currentVerse=String(newV);
+  document.getElementById('sel-verse').value=newV;
+  syncAll();displayVerse();
 }
 
 function displayVerse(){
