@@ -73,8 +73,9 @@ select:disabled{opacity:.3;cursor:not-allowed}
 .response-textarea::placeholder{color:var(--grey-400);font-style:italic}
 
 /* Print bar */
-.print-bar{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--grey-200);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;z-index:90}
+.print-bar{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--grey-200);padding:12px 40px;display:flex;align-items:center;justify-content:center;gap:20px;z-index:90}
 .print-hint{font-size:.73rem;color:var(--grey-400)}
+.print-bar-divider{width:1px;height:16px;background:var(--grey-200)}
 .print-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 20px;background:var(--black);color:var(--white);border:none;border-radius:5px;font-family:'Inter',sans-serif;font-size:.74rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:opacity .15s}
 .print-btn:hover{opacity:.75}
 
@@ -112,10 +113,6 @@ select:disabled{opacity:.3;cursor:not-allowed}
     <span class="logo-text">BibleProject</span>
     <div class="logo-divider"></div>
     <span class="logo-sub">Scripture Study</span>
-  </div>
-  <div class="mode-toggle" role="group" aria-label="Study mode">
-    <button class="mode-btn active" data-mode="interactive" onclick="setMode('interactive')">Interactive</button>
-    <button class="mode-btn" data-mode="static" onclick="setMode('static')">Static</button>
   </div>
 </header>
 
@@ -211,6 +208,11 @@ select:disabled{opacity:.3;cursor:not-allowed}
 </main>
 
 <div class="print-bar">
+  <div class="mode-toggle" role="group" aria-label="Study mode">
+    <button class="mode-btn active" data-mode="interactive" onclick="setMode('interactive')">Interactive</button>
+    <button class="mode-btn" data-mode="static" onclick="setMode('static')">Static</button>
+  </div>
+  <div class="print-bar-divider"></div>
   <span class="print-hint">Print to save your work before leaving</span>
   <button class="print-btn" onclick="handlePrint()">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
