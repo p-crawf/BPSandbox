@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scripture Study — BibleProject</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#111111;
+  --grey-800:#333333;
+  --grey-600:#666666;
+  --grey-400:#999999;
+  --grey-200:#E0E0E0;
+  --grey-100:#F2F2F2;
+  --grey-50:#F8F8F8;
+  --white:#FFFFFF;
+}
+html{scroll-behavior:smooth}
+body{background:var(--white);color:var(--black);font-family:'Inter',sans-serif;font-weight:400;line-height:1.6;min-height:100vh;padding-bottom:72px}
+
+/* Header */
+.header{background:var(--white);border-bottom:1px solid var(--grey-200);padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-dot{width:7px;height:7px;background:var(--black);border-radius:50%}
+.logo-text{font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.logo-divider{width:1px;height:13px;background:var(--grey-200)}
+.logo-sub{font-size:.73rem;color:var(--grey-400);letter-spacing:.03em}
+.mode-toggle{display:flex;border:1px solid var(--grey-200);border-radius:6px;overflow:hidden}
+.mode-btn{padding:6px 16px;border:none;background:transparent;font-family:'Inter',sans-serif;font-size:.7rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;color:var(--grey-400);cursor:pointer;transition:all .15s}
+.mode-btn.active{background:var(--black);color:var(--white)}
+
+/* Scripture bar */
+.scripture-bar{border-bottom:1px solid var(--grey-200);padding:20px 40px;background:var(--grey-50)}
+.scripture-bar-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.picker-label{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--grey-400);white-space:nowrap}
+.selects{display:flex;gap:8px;flex-wrap:wrap}
+select{appearance:none;-webkit-appearance:none;background:var(--white);border:1px solid var(--grey-200);border-radius:5px;padding:8px 28px 8px 11px;font-family:'Inter',sans-serif;font-size:.81rem;color:var(--black);cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M1 1l3.5 3L8 1' stroke='%23999' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:border-color .15s}
+select:focus{outline:none;border-color:var(--black)}
+select:disabled{opacity:.3;cursor:not-allowed}
+.verse-ref{margin-left:auto;font-family:'Lora',serif;font-style:italic;font-size:.95rem;color:var(--black);opacity:0;transition:opacity .3s}
+.verse-ref.visible{opacity:1}
+
+/* Main */
+.main{max-width:860px;margin:0 auto;padding:0 40px}
+
+/* Steps */
+.step{display:grid;grid-template-columns:32px 1fr;gap:0 28px;padding:36px 0;border-bottom:1px solid var(--grey-200)}
+.step:last-child{border-bottom:none}
+.step-num{font-size:.8rem;color:var(--grey-200);text-align:right;padding-top:2px;user-select:none;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.5}
+.step-title{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--grey-400);margin-bottom:5px}
+.step-body{font-size:.86rem;color:var(--grey-600);line-height:1.75}
+
+/* Verse display */
+.verse-display{display:none;margin-top:18px;padding:20px 24px;background:var(--grey-50);border-left:2px solid var(--black);border-radius:0 5px 5px 0}
+.verse-display.show{display:block}
+.verse-text{font-family:'Lora',serif;font-size:1rem;line-height:1.9;color:var(--black)}
+.verse-citation{margin-top:10px;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--grey-400)}
+.verse-loading{font-size:.82rem;color:var(--grey-400);font-style:italic;font-family:'Lora',serif}
+
+/* Watch */
+.step-action{margin-top:14px}
+.watch-link{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:var(--black);color:var(--white);text-decoration:none;border-radius:5px;font-size:.76rem;font-weight:500;letter-spacing:.04em;transition:opacity .15s}
+.watch-link:hover{opacity:.7}
+.watch-placeholder{font-size:.8rem;color:var(--grey-400);font-style:italic}
+
+/* Response areas */
+.response-wrap{display:none;margin-top:14px}
+.response-wrap.show{display:block}
+.response-textarea{width:100%;min-height:96px;padding:12px 14px;background:var(--white);border:1px solid var(--grey-200);border-radius:5px;font-family:'Inter',sans-serif;font-size:.83rem;color:var(--black);line-height:1.7;resize:vertical;transition:border-color .15s}
+.response-textarea:focus{outline:none;border-color:var(--black)}
+.response-textarea::placeholder{color:var(--grey-400);font-style:italic}
+
+/* Print bar */
+.print-bar{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-top:1px solid var(--grey-200);padding:12px 40px;display:flex;align-items:center;justify-content:space-between;z-index:90}
+.print-hint{font-size:.73rem;color:var(--grey-400)}
+.print-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 20px;background:var(--black);color:var(--white);border:none;border-radius:5px;font-family:'Inter',sans-serif;font-size:.74rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:opacity .15s}
+.print-btn:hover{opacity:.75}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
+.modal-bg.open{display:flex}
+.modal-card{background:var(--white);border-radius:10px;padding:40px;max-width:400px;width:calc(100% - 40px);text-align:center;box-shadow:0 12px 40px rgba(0,0,0,.12)}
+.modal-title{font-family:'Lora',serif;font-size:1.15rem;font-weight:600;margin-bottom:10px;line-height:1.35}
+.modal-body{font-size:.84rem;color:var(--grey-600);line-height:1.75;margin-bottom:26px}
+.modal-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn-leave{padding:8px 16px;background:transparent;color:var(--grey-600);border:1px solid var(--grey-200);border-radius:5px;font-family:'Inter',sans-serif;font-size:.8rem;cursor:pointer;transition:border-color .15s}
+.btn-leave:hover{border-color:var(--grey-400)}
+.btn-print-modal{padding:8px 16px;background:var(--grey-100);color:var(--black);border:none;border-radius:5px;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;transition:background .15s}
+.btn-print-modal:hover{background:var(--grey-200)}
+.btn-stay{padding:8px 16px;background:var(--black);color:var(--white);border:none;border-radius:5px;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:600;cursor:pointer;transition:opacity .15s}
+.btn-stay:hover{opacity:.75}
+
+@media print{
+  .header,.print-bar,.modal-bg{display:none!important}
+  body{padding-bottom:0}
+  .scripture-bar{background:none;border:none}
+  .step{break-inside:avoid}
+  .verse-display{display:block!important}
+  .response-wrap{display:block!important}
+  .response-textarea{border:1px solid #ccc;background:#fafafa}
+  .watch-link,.watch-placeholder{display:none!important}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <span class="logo-text">BibleProject</span>
+    <div class="logo-divider"></div>
+    <span class="logo-sub">Scripture Study</span>
+  </div>
+  <div class="mode-toggle" role="group" aria-label="Study mode">
+    <button class="mode-btn active" data-mode="interactive" onclick="setMode('interactive')">Interactive</button>
+    <button class="mode-btn" data-mode="static" onclick="setMode('static')">Static</button>
+  </div>
+</header>
+
+<section class="scripture-bar">
+  <div class="scripture-bar-inner">
+    <span class="picker-label">Passage</span>
+    <div class="selects">
+      <select id="sel-book" onchange="onBookChange()" aria-label="Book"><option value="">Book</option></select>
+      <select id="sel-chapter" onchange="onChapterChange()" disabled aria-label="Chapter"><option value="">Ch</option></select>
+      <select id="sel-verse" onchange="onVerseChange()" disabled aria-label="Verse"><option value="">Vs</option></select>
+    </div>
+    <span class="verse-ref" id="verse-ref" aria-live="polite"></span>
+  </div>
+</section>
+
+<main class="main">
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div>
+      <div class="step-title">Read the Passage</div>
+      <p class="step-body">Read slowly and with the expectation of discovery.</p>
+      <div class="verse-display" id="verse-display">
+        <div class="verse-text" id="verse-text"></div>
+        <div class="verse-citation" id="verse-citation"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div>
+      <div class="step-title">Collect Questions</div>
+      <p class="step-body">Every question is good. Get them all out and written down. The Bible is inviting us to lean in and be curious.</p>
+      <div class="response-wrap" id="response-2">
+        <textarea class="response-textarea" placeholder="Write your questions here — anything that came to mind as you read…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div>
+      <div class="step-title">Watch the Video</div>
+      <p class="step-body">The corresponding BibleProject video explores the literary shape of the passage and opens the door to deeper discussion.</p>
+      <div class="step-action" id="watch-container">
+        <span class="watch-placeholder">Select a passage to find the video</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div>
+      <div class="step-title">Observe the Passage</div>
+      <p class="step-body">What other details can you observe? What is the point of the repeated words? What do you see by comparing lines or sections?</p>
+      <div class="response-wrap" id="response-4">
+        <textarea class="response-textarea" placeholder="Record observations — repeated words, structural patterns, anything that stands out…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div>
+      <div class="step-title">Choose One Question</div>
+      <p class="step-body">Which question from step two does the group find most interesting? Which seems most aligned with what the passage wants you to ask? Choose one and discuss.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6</div>
+    <div>
+      <div class="step-title">Hyperlink Observations</div>
+      <p class="step-body">What other passages share the same question, key words, or themes? Find one or two and compare them with this one.</p>
+      <div class="response-wrap" id="response-6">
+        <textarea class="response-textarea" placeholder="Note related passages and what they add to the conversation…"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">7</div>
+    <div>
+      <div class="step-title">Discern Wisdom</div>
+      <p class="step-body">What does God have for your community? What ideas are sticking with you after this study?</p>
+      <div class="response-wrap" id="response-7">
+        <textarea class="response-textarea" placeholder="What is staying with you? What might you carry into the week ahead?"></textarea>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div class="print-bar">
+  <span class="print-hint">Print to save your work before leaving</span>
+  <button class="print-btn" onclick="handlePrint()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print Guide
+  </button>
+</div>
+
+<div class="modal-bg" id="exit-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-card">
+    <h2 class="modal-title" id="modal-title">Are you sure you'd like to exit?</h2>
+    <p class="modal-body">Any progress will be lost. Please print this page to save your work for later.</p>
+    <div class="modal-actions">
+      <button class="btn-leave" onclick="confirmLeave()">Leave anyway</button>
+      <button class="btn-print-modal" onclick="printThenClose()">Print first</button>
+      <button class="btn-stay" onclick="closeModal()">Stay on page</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const BIBLE={"Genesis":[31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,33,38,18,34,24,20,67,34,35,46,22,35,43,55,32,20,31,29,43,36,30,23,43,57,38,34,34,28,34,31,22,33,26],"Exodus":[22,25,22,31,23,30,25,32,35,29,10,51,22,31,27,36,16,27,25,26,36,31,33,18,40,37,21,43,46,38,18,35,23,35,35,38,29,31,43,38],"Leviticus":[17,16,17,35,19,30,38,36,24,20,47,8,59,57,33,34,16,30,24,16,17],"Numbers":[54,34,51,49,31,27,89,26,23,36,35,16,33,45,41,50,13,32,22,29,35,41,30,25,18,65,23,31,39,17,54,42,56,29,34,13],"Deuteronomy":[46,37,29,49,33,25,26,20,29,22,32,31,19,29,23,22,20,22,21,20,23,29,26,22,19,19,26,68,29,20,30,52,29,12],"Joshua":[18,24,17,24,15,27,26,35,27,43,23,24,33,15,63,10,18,28,51,9,45,34,16,33],"Judges":[36,23,31,24,31,40,25,35,57,18,40,15,25,20,20,31,13,31,30,48,25],"Ruth":[22,23,18,22],"1 Samuel":[28,36,21,22,12,21,17,22,27,27,15,25,23,52,35,23,58,30,24,42,15,23,29,22,44,25,12,25,11,31,13],"2 Samuel":[27,32,39,12,25,23,29,18,13,19,27,31,39,33,37,23,29,33,43,26,22,51,39,25],"1 Kings":[53,46,28,34,18,38,51,66,28,29,43,33,34,31,34,34,24,46,21,43,29,53],"2 Kings":[18,25,27,44,27,33,20,29,37,36,21,21,25,29,38,20,41,37,37,21,26,20,37,20,30],"1 Chronicles":[54,55,24,43,26,81,40,40,44,14,47,40,14,17,29,43,27,17,19,8,30,19,32,31,31,32,34,21,30],"2 Chronicles":[17,18,17,22,14,42,22,18,31,19,23,16,22,15,19,14,19,34,11,37,20,12,21,27,28,23,9,27,36,27,21,33,25,33,27,23],"Ezra":[11,70,13,24,17,22,28,36,15,44],"Nehemiah":[11,20,32,23,19,19,73,18,38,39,36,47,31],"Esther":[22,23,15,17,14,14,10,17,32,3],"Job":[22,13,26,21,27,30,21,22,35,22,20,25,28,22,35,22,16,21,29,29,34,30,17,25,6,14,23,28,25,31,40,22,33,37,16,33,24,41,30,24,34,17],"Psalms":[6,12,8,8,12,10,17,9,20,18,7,8,6,7,5,11,15,50,14,9,13,31,6,10,22,12,14,9,11,13,25,11,22,23,28,13,40,23,14,18,14,12,5,27,18,12,10,15,21,23,21,11,7,9,24,14,12,12,18,14,9,13,12,11,14,20,8,36,37,6,24,20,28,23,11,13,21,72,13,20,17,8,19,13,14,17,7,19,53,17,16,16,5,23,11,13,12,9,9,5,8,28,22,35,45,48,43,13,31,7,10,10,9,8,18,19,2,29,176,7,8,9,4,8,5,6,5,6,8,8,3,18,3,3,21,26,9,8,24,14,10,8,12,15,21,10,20,14,9,6],"Proverbs":[33,22,35,27,23,35,27,36,18,32,31,28,25,35,33,33,28,24,29,30,31,29,35,34,28,28,27,28,62,33,31],"Ecclesiastes":[18,26,22,16,20,12,29,17,18,20,10,14],"Song of Solomon":[17,17,11,16,16,13,13,14],"Isaiah":[31,22,26,6,30,13,25,22,21,34,16,6,22,32,9,14,14,7,25,6,17,25,18,23,12,21,13,29,24,33,9,20,24,17,10,22,38,22,8,31,29,25,28,28,25,13,15,22,26,11,23,15,12,17,13,12,21,14,21,22,11,12,19,12,25,24],"Jeremiah":[19,37,25,31,31,30,34,22,26,25,23,17,27,22,21,21,27,23,15,18,14,30,40,10,38,24,22,17,32,24,40,44,26,22,19,32,21,28,18,16,18,22,13,30,5,28,7,47,39,46,64,34],"Lamentations":[22,22,66,22,22],"Ezekiel":[28,10,27,17,17,14,27,18,11,22,25,28,23,23,8,63,24,32,14,49,32,31,49,27,17,21,36,26,21,26,18,32,33,31,15,38,28,23,29,49,26,20,27,31,25,24,23,35],"Daniel":[21,49,30,37,31,28,28,27,27,21,45,13],"Hosea":[11,23,5,19,15,11,16,14,17,15,12,14,16,9],"Joel":[20,32,21],"Amos":[15,16,15,13,27,14,17,14,15],"Obadiah":[21],"Jonah":[17,10,10,11],"Micah":[16,13,12,13,15,16,20],"Nahum":[15,13,19],"Habakkuk":[17,20,19],"Zephaniah":[18,15,20],"Haggai":[15,23],"Zechariah":[21,13,10,14,11,15,14,23,17,12,17,14,9,21],"Malachi":[14,17,18,6],"Matthew":[25,23,17,25,48,34,29,34,38,42,30,50,58,36,39,28,27,35,30,34,46,46,39,51,46,75,66,20],"Mark":[45,28,35,41,43,56,37,38,50,52,33,44,37,72,47,20],"Luke":[80,52,38,44,39,49,50,56,62,42,54,59,35,35,32,31,37,43,48,47,38,71,56,53],"John":[51,25,36,54,47,71,53,59,41,42,57,50,38,31,27,33,26,40,42,31,25],"Acts":[26,47,26,37,42,15,60,40,43,48,30,25,52,28,41,40,34,28,40,38,40,30,35,27,27,32,44,31],"Romans":[32,29,31,25,21,23,25,39,33,21,36,21,14,23,33,27],"1 Corinthians":[31,16,23,21,13,20,40,34,24,26,19,35,24,13,24,62],"2 Corinthians":[24,17,18,18,21,18,16,24,15,18,33,21,13],"Galatians":[24,21,29,31,26,18],"Ephesians":[23,22,21,28,22,21],"Philippians":[30,18,19,16],"Colossians":[29,23,25,6],"1 Thessalonians":[10,20,13,18,28],"2 Thessalonians":[12,17,18],"1 Timothy":[20,15,16,16,25,21],"2 Timothy":[18,26,17,22],"Titus":[16,15,15],"Philemon":[25],"Hebrews":[14,18,19,16,14,20,28,13,28,39,40,29,25],"James":[27,26,18,17,20],"1 Peter":[25,25,22,19,14],"2 Peter":[21,22,18],"1 John":[10,29,24,21,21],"2 John":[13],"3 John":[14],"Jude":[25],"Revelation":[20,29,22,11,14,17,17,13,21,11,19,17,18,20,8,21,18,24,16,15,27,21]};
+
+let currentMode='interactive',currentBook='',currentChapter='',currentVerse='',hasEdits=false;
+
+document.addEventListener('DOMContentLoaded',()=>{
+  populateBooks();
+  loadFromURL();
+  document.querySelectorAll('.response-textarea').forEach(ta=>ta.addEventListener('input',()=>{hasEdits=true}));
+  document.getElementById('exit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('exit-modal'))closeModal()});
+  history.pushState({page:'study'},'');
+  window.addEventListener('popstate',()=>{if(hasEdits||currentVerse){openModal();history.pushState({page:'study'},'')}});
+});
+
+window.addEventListener('beforeunload',e=>{if(hasEdits||currentVerse){e.preventDefault();e.returnValue=''}});
+
+function populateBooks(){
+  const sel=document.getElementById('sel-book');
+  Object.keys(BIBLE).forEach(book=>{const o=document.createElement('option');o.value=book;o.textContent=book;sel.appendChild(o)});
+}
+
+function onBookChange(){
+  currentBook=document.getElementById('sel-book').value;
+  currentChapter='';currentVerse='';
+  const cs=document.getElementById('sel-chapter'),vs=document.getElementById('sel-verse');
+  cs.innerHTML='<option value="">Ch</option>';vs.innerHTML='<option value="">Vs</option>';vs.disabled=true;
+  if(currentBook){BIBLE[currentBook].forEach((_,i)=>{const o=document.createElement('option');o.value=i+1;o.textContent=i+1;cs.appendChild(o)});cs.disabled=false}else{cs.disabled=true}
+  syncAll();clearVerse();
+}
+
+function onChapterChange(){
+  currentChapter=document.getElementById('sel-chapter').value;currentVerse='';
+  const vs=document.getElementById('sel-verse');
+  vs.innerHTML='<option value="">Vs</option>';
+  if(currentChapter){const c=BIBLE[currentBook][parseInt(currentChapter)-1];for(let i=1;i<=c;i++){const o=document.createElement('option');o.value=i;o.textContent=i;vs.appendChild(o)}vs.disabled=false}else{vs.disabled=true}
+  syncAll();clearVerse();
+}
+
+function onVerseChange(){
+  currentVerse=document.getElementById('sel-verse').value;
+  syncAll();
+  if(currentVerse)fetchVerse();else clearVerse();
+}
+
+function syncAll(){
+  const ref=document.getElementById('verse-ref');
+  if(currentBook&&currentChapter&&currentVerse){ref.textContent=`${currentBook} ${currentChapter}:${currentVerse}`;ref.classList.add('visible')}else{ref.classList.remove('visible')}
+  const wc=document.getElementById('watch-container');
+  if(currentBook&&currentChapter){const q=encodeURIComponent(`${currentBook} ${currentChapter}`);wc.innerHTML=`<a href="https://bibleproject.com/search/?q=${q}" target="_blank" rel="noopener noreferrer" class="watch-link"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>Watch on BibleProject<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a>`}else{wc.innerHTML='<span class="watch-placeholder">Select a passage to find the video</span>'}
+  const p=new URLSearchParams(window.location.search);
+  if(currentBook&&currentChapter&&currentVerse){p.set('v',currentBook.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'')+`-${currentChapter}-${currentVerse}`)}else{p.delete('v')}
+  try{history.replaceState({page:'study'},'',window.location.pathname+(p.toString()?'?'+p.toString():''))}catch(e){}
+}
+
+async function fetchVerse(){
+  const disp=document.getElementById('verse-display'),tx=document.getElementById('verse-text'),ct=document.getElementById('verse-citation');
+  disp.classList.add('show');
+  tx.innerHTML='<span class="verse-loading">Loading…</span>';ct.textContent='';
+  try{
+    const res=await fetch(`https://bible-api.com/${encodeURIComponent(currentBook+' '+currentChapter+':'+currentVerse)}?translation=web`);
+    if(!res.ok)throw new Error();
+    const d=await res.json();
+    if(d.text){tx.textContent=d.text.trim();ct.textContent=d.reference||`${currentBook} ${currentChapter}:${currentVerse}`}
+    else{tx.textContent='Verse text could not be loaded.'}
+  }catch(e){tx.textContent='Could not load verse. Check your connection and try again.'}
+}
+
+function clearVerse(){
+  const d=document.getElementById('verse-display');d.classList.remove('show');
+  document.getElementById('verse-text').textContent='';document.getElementById('verse-citation').textContent='';
+}
+
+function loadFromURL(){
+  const slug=new URLSearchParams(window.location.search).get('v');
+  if(!slug)return;
+  for(const book of Object.keys(BIBLE)){
+    const bs=book.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+    if(!slug.startsWith(bs+'-'))continue;
+    const rest=slug.slice(bs.length+1).split('-');
+    if(rest.length<2)continue;
+    const ch=rest[0],v=rest[1];
+    if(!BIBLE[book][parseInt(ch)-1]||parseInt(v)>BIBLE[book][parseInt(ch)-1])continue;
+    document.getElementById('sel-book').value=book;onBookChange();
+    document.getElementById('sel-chapter').value=ch;onChapterChange();
+    document.getElementById('sel-verse').value=v;onVerseChange();
+    break;
+  }
+}
+
+function setMode(m){
+  currentMode=m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===m));
+  document.querySelectorAll('.response-wrap').forEach(el=>el.classList.toggle('show',m==='interactive'));
+}
+
+function handlePrint(){window.print()}
+function openModal(){document.getElementById('exit-modal').classList.add('open')}
+function closeModal(){document.getElementById('exit-modal').classList.remove('open')}
+function confirmLeave(){hasEdits=false;closeModal()}
+function printThenClose(){closeModal();setTimeout(()=>window.print(),150)}
+</script>
+</body>
+</html>
