@@ -293,26 +293,25 @@ function syncAll(){
 }
 
 async function fetchVerse(){
-  const disp=document.getElementById('verse-display'),tx=document.getElementById('verse-text'),ct=document.getElementById('verse-citation'),prev=document.getElementById('verse-prev'),next=document.getElementById('verse-next');
+  const disp=document.getElementById('verse-display'),tx=document.getElementById('verse-text'),ct=document.getElementById('verse-citation'),prevEl=document.getElementById('verse-prev'),nextEl=document.getElementById('verse-next');
   disp.classList.add('show');
-  tx.innerHTML='<span class="verse-loading">Loading…</span>';ct.textContent='';prev.textContent='';next.textContent='';
+  tx.innerHTML='<span class="verse-loading">Loading…</span>';ct.textContent='';prevEl.textContent='';nextEl.textContent='';
   const ch=parseInt(currentChapter),v=parseInt(currentVerse);
   const maxV=BIBLE[currentBook][ch-1];
-  const hasPrev=v>1,hasNext=v<maxV;
-  async function getVerse(c,n){
-    try{const r=await fetch(`https://bible-api.com/${encodeURIComponent(currentBook+' '+c+':'+n)}?translation=web`);if(!r.ok)return null;const d=await r.json();return d.text?d.text.trim():null}catch{return null}
-  }
-  const[mainText,prevText,nextText]=await Promise.all([
-    getVerse(ch,v),
-    hasPrev?getVerse(ch,v-1):Promise.resolve(null),
-    hasNext?getVerse(ch,v+1):Promise.resolve(null)
-  ]);
-  if(mainText){
-    tx.innerHTML=`<span class="verse-main-num">${v}</span>${mainText}`;
-    ct.textContent=`${currentBook} ${currentChapter}:${currentVerse}`;
-  }else{tx.textContent='Could not load verse. Check your connection and try again.'}
-  prev.innerHTML=prevText?`<span class="verse-context-num">${v-1}</span>${prevText}`:'';
-  next.innerHTML=nextText?`<span class="verse-context-num">${v+1}</span>${nextText}`:'';
+  const from=Math.max(1,v-1),to=Math.min(maxV,v+1);
+  try{
+    const res=await fetch(`https://bible-api.com/${encodeURIComponent(currentBook+' '+ch+':'+from+'-'+to)}?translation=web`);
+    if(!res.ok)throw new Error();
+    const d=await res.json();
+    const byVerse={};
+    (d.verses||[]).forEach(vv=>{byVerse[vv.verse]=vv.text.trim()});
+    if(byVerse[v]){
+      tx.innerHTML=`<span class="verse-main-num">${v}</span>${byVerse[v]}`;
+      ct.textContent=`${currentBook} ${currentChapter}:${currentVerse}`;
+    }else{tx.textContent='Could not load verse. Check your connection and try again.';return}
+    prevEl.innerHTML=byVerse[v-1]?`<span class="verse-context-num">${v-1}</span>${byVerse[v-1]}`:'';
+    nextEl.innerHTML=byVerse[v+1]?`<span class="verse-context-num">${v+1}</span>${byVerse[v+1]}`:'';
+  }catch(e){tx.textContent='Could not load verse. Check your connection and try again.'}
 }
 
 function clearVerse(){
