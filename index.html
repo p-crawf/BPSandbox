@@ -53,18 +53,19 @@ select:disabled{opacity:.3;cursor:not-allowed}
 .step-body{font-size:.86rem;color:var(--grey-600);line-height:1.75}
 
 /* Verse display */
-.verse-display{display:none;margin-top:18px;padding:20px 24px;background:var(--grey-50);border-left:2px solid var(--black);border-radius:0 5px 5px 0;position:relative}
+.verse-display{display:none;margin-top:18px;padding:20px 24px 20px 24px;background:var(--grey-50);border-left:2px solid var(--black);border-radius:0 5px 5px 0;position:relative}
 .verse-display.show{display:block}
-.verse-display.scrollable{cursor:grab}
-.verse-display.scrollable:active{cursor:grabbing}
 .verse-context{font-family:'Lora',serif;font-size:.93rem;line-height:1.9;color:var(--black);opacity:.28;transition:opacity .2s}
 .verse-context-num{font-size:.68rem;font-weight:600;vertical-align:super;margin-right:3px;font-family:'Inter',sans-serif}
 .verse-main{font-family:'Lora',serif;font-size:1rem;line-height:1.9;color:var(--black);padding:6px 0}
 .verse-main-num{font-size:.68rem;font-weight:600;vertical-align:super;margin-right:3px;font-family:'Inter',sans-serif;color:var(--grey-400)}
 .verse-citation{margin-top:10px;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--grey-400)}
 .verse-loading{font-size:.82rem;color:var(--grey-400);font-style:italic;font-family:'Lora',serif}
-.verse-scroll-hint{margin-top:12px;font-size:.65rem;letter-spacing:.07em;text-transform:uppercase;color:var(--grey-200);text-align:right;opacity:0;transition:opacity .2s;user-select:none}
-.verse-display.scrollable:hover .verse-scroll-hint{opacity:1}
+.verse-nav{display:flex;flex-direction:column;gap:2px;position:absolute;bottom:14px;right:14px}
+.verse-nav-btn{display:flex;align-items:center;justify-content:center;width:22px;height:22px;background:none;border:1px solid var(--grey-200);border-radius:4px;cursor:pointer;color:var(--grey-400);transition:border-color .15s,color .15s;padding:0}
+.verse-nav-btn:hover{border-color:var(--grey-600);color:var(--black)}
+.verse-nav-btn:disabled{opacity:.2;cursor:default}
+.verse-nav-btn svg{pointer-events:none}
 
 /* Watch */
 .step-action{margin-top:14px}
@@ -147,7 +148,14 @@ select:disabled{opacity:.3;cursor:not-allowed}
         <div class="verse-main" id="verse-text"></div>
         <div class="verse-context" id="verse-next"></div>
         <div class="verse-citation" id="verse-citation"></div>
-        <div class="verse-scroll-hint">scroll to move through chapter</div>
+        <div class="verse-nav" id="verse-nav" style="display:none">
+          <button class="verse-nav-btn" id="verse-up" onclick="shiftVerse(-1)" aria-label="Previous verse" title="Previous verse">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+          </button>
+          <button class="verse-nav-btn" id="verse-down" onclick="shiftVerse(1)" aria-label="Next verse" title="Next verse">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -255,28 +263,6 @@ document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('exit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('exit-modal'))closeModal()});
   history.pushState({page:'study'},'');
   window.addEventListener('popstate',()=>{if(hasEdits||currentVerse){openModal();history.pushState({page:'study'},'')}});
-  const verseDisp=document.getElementById('verse-display');
-  verseDisp.addEventListener('wheel',e=>{
-    if(!currentVerse||!currentBook||!currentChapter)return;
-    e.preventDefault();
-    shiftVerse(e.deltaY>0?1:-1);
-  },{passive:false});
-  let dragStartY=null,dragAccum=0,isDragging=false;
-  const DRAG_THRESHOLD=60;
-  verseDisp.addEventListener('mousedown',e=>{
-    if(!currentVerse||!currentBook||!currentChapter)return;
-    dragStartY=e.clientY;dragAccum=0;isDragging=false;
-    e.preventDefault();
-  });
-  window.addEventListener('mousemove',e=>{
-    if(dragStartY===null)return;
-    const delta=e.clientY-dragStartY;
-    dragAccum+=e.movementY;
-    isDragging=Math.abs(delta)>4;
-    if(dragAccum>DRAG_THRESHOLD){shiftVerse(1);dragAccum=0}
-    else if(dragAccum<-DRAG_THRESHOLD){shiftVerse(-1);dragAccum=0}
-  });
-  window.addEventListener('mouseup',()=>{dragStartY=null;dragAccum=0;});
 });
 
 window.addEventListener('beforeunload',e=>{if(hasEdits||currentVerse){e.preventDefault();e.returnValue=''}});
@@ -360,11 +346,16 @@ function displayVerse(){
   ct.textContent=`${currentBook} ${currentChapter}:${v}`;
   prevEl.innerHTML=chapterVerses[v-1]?`<span class="verse-context-num">${v-1}</span>${chapterVerses[v-1]}`:'';
   nextEl.innerHTML=chapterVerses[v+1]?`<span class="verse-context-num">${v+1}</span>${chapterVerses[v+1]}`:'';
-  disp.classList.toggle('scrollable',BIBLE[currentBook][parseInt(currentChapter)-1]>1);
+  const maxV=BIBLE[currentBook][parseInt(currentChapter)-1];
+  const nav=document.getElementById('verse-nav');
+  nav.style.display=maxV>1?'flex':'none';
+  document.getElementById('verse-up').disabled=(v<=1);
+  document.getElementById('verse-down').disabled=(v>=maxV);
 }
 
 function clearVerse(){
-  const d=document.getElementById('verse-display');d.classList.remove('show','scrollable');
+  const d=document.getElementById('verse-display');d.classList.remove('show');
+  document.getElementById('verse-nav').style.display='none';
   document.getElementById('verse-text').textContent='';document.getElementById('verse-citation').textContent='';
   document.getElementById('verse-prev').textContent='';document.getElementById('verse-next').textContent='';
 }
