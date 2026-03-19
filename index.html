@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scripture Study — BibleProject</title>
+<title>Communal Bible Study Tool — BibleProject</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -61,11 +61,12 @@ select:disabled{opacity:.3;cursor:not-allowed}
 .verse-main-num{font-size:.68rem;font-weight:600;vertical-align:super;margin-right:3px;font-family:'Inter',sans-serif;color:var(--grey-400)}
 .verse-citation{margin-top:10px;font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--grey-400)}
 .verse-loading{font-size:.82rem;color:var(--grey-400);font-style:italic;font-family:'Lora',serif}
-.verse-nav{display:flex;flex-direction:column;gap:2px;position:absolute;bottom:14px;right:14px}
-.verse-nav-btn{display:flex;align-items:center;justify-content:center;width:22px;height:22px;background:none;border:1px solid var(--grey-200);border-radius:4px;cursor:pointer;color:var(--grey-400);transition:border-color .15s,color .15s;padding:0}
+.verse-nav-btn{display:flex;align-items:center;justify-content:center;width:24px;height:20px;background:none;border:1px solid var(--grey-200);border-radius:4px;cursor:pointer;color:var(--grey-400);transition:border-color .15s,color .15s;padding:0;position:absolute;left:50%;transform:translateX(-50%)}
 .verse-nav-btn:hover{border-color:var(--grey-600);color:var(--black)}
 .verse-nav-btn:disabled{opacity:.2;cursor:default}
 .verse-nav-btn svg{pointer-events:none}
+#verse-up{top:-10px}
+#verse-down{bottom:-10px}
 
 /* Watch */
 .step-action{margin-top:14px}
@@ -120,7 +121,7 @@ select:disabled{opacity:.3;cursor:not-allowed}
     <div class="logo-dot"></div>
     <span class="logo-text">BibleProject</span>
     <div class="logo-divider"></div>
-    <span class="logo-sub">Scripture Study</span>
+    <span class="logo-sub">Communal Bible Study Tool</span>
   </div>
 </header>
 
@@ -148,14 +149,12 @@ select:disabled{opacity:.3;cursor:not-allowed}
         <div class="verse-main" id="verse-text"></div>
         <div class="verse-context" id="verse-next"></div>
         <div class="verse-citation" id="verse-citation"></div>
-        <div class="verse-nav" id="verse-nav" style="display:none">
-          <button class="verse-nav-btn" id="verse-up" onclick="shiftVerse(-1)" aria-label="Previous verse" title="Previous verse">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
-          </button>
-          <button class="verse-nav-btn" id="verse-down" onclick="shiftVerse(1)" aria-label="Next verse" title="Next verse">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-          </button>
-        </div>
+        <button class="verse-nav-btn" id="verse-up" style="display:none" onclick="shiftVerse(-1)" aria-label="Previous verse" title="Previous verse">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+        <button class="verse-nav-btn" id="verse-down" style="display:none" onclick="shiftVerse(1)" aria-label="Next verse" title="Next verse">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
       </div>
     </div>
   </div>
@@ -347,15 +346,18 @@ function displayVerse(){
   prevEl.innerHTML=chapterVerses[v-1]?`<span class="verse-context-num">${v-1}</span>${chapterVerses[v-1]}`:'';
   nextEl.innerHTML=chapterVerses[v+1]?`<span class="verse-context-num">${v+1}</span>${chapterVerses[v+1]}`:'';
   const maxV=BIBLE[currentBook][parseInt(currentChapter)-1];
-  const nav=document.getElementById('verse-nav');
-  nav.style.display=maxV>1?'flex':'none';
-  document.getElementById('verse-up').disabled=(v<=1);
-  document.getElementById('verse-down').disabled=(v>=maxV);
+  const showNav=maxV>1;
+  const upBtn=document.getElementById('verse-up'),downBtn=document.getElementById('verse-down');
+  upBtn.style.display=showNav?'flex':'none';
+  downBtn.style.display=showNav?'flex':'none';
+  upBtn.disabled=(v<=1);
+  downBtn.disabled=(v>=maxV);
 }
 
 function clearVerse(){
   const d=document.getElementById('verse-display');d.classList.remove('show');
-  document.getElementById('verse-nav').style.display='none';
+  document.getElementById('verse-up').style.display='none';
+  document.getElementById('verse-down').style.display='none';
   document.getElementById('verse-text').textContent='';document.getElementById('verse-citation').textContent='';
   document.getElementById('verse-prev').textContent='';document.getElementById('verse-next').textContent='';
 }
