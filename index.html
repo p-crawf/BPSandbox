@@ -5,17 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Communal Bible Study Tool — BibleProject</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --black:#111111;
-  --grey-800:#333333;
-  --grey-600:#666666;
-  --grey-400:#999999;
-  --grey-200:#E0E0E0;
-  --grey-100:#F2F2F2;
-  --grey-50:#F8F8F8;
-  --white:#FFFFFF;
+  --brand:#00AEEF;
+  --black:#1b1b1b;
+  --grey-800:#363535;
+  --grey-600:#424242;
+  --grey-400:#767676;
+  --grey-200:#e0dfdf;
+  --grey-100:#edeceb;
+  --grey-50:#f6f5f4;
+  --white:#ffffff;
 }
 html{scroll-behavior:smooth}
 body{background:var(--white);color:var(--black);font-family:'Inter',sans-serif;font-weight:400;line-height:1.6;min-height:100vh;padding-bottom:72px}
@@ -23,7 +25,7 @@ body{background:var(--white);color:var(--black);font-family:'Inter',sans-serif;f
 /* Header */
 .header{background:var(--white);border-bottom:1px solid var(--grey-200);padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .logo{display:flex;align-items:center;gap:10px}
-.logo-dot{width:7px;height:7px;background:var(--black);border-radius:50%}
+.logo-mark{height:26px;width:auto;display:block}
 .logo-text{font-size:.78rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
 .logo-divider{width:1px;height:13px;background:var(--grey-200)}
 .logo-sub{font-size:.73rem;color:var(--grey-400);letter-spacing:.03em}
@@ -37,7 +39,7 @@ body{background:var(--white);color:var(--black);font-family:'Inter',sans-serif;f
 .picker-label{font-size:.68rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--grey-400);white-space:nowrap}
 .selects{display:flex;gap:8px;flex-wrap:wrap}
 select{appearance:none;-webkit-appearance:none;background:var(--white);border:1px solid var(--grey-200);border-radius:5px;padding:8px 28px 8px 11px;font-family:'Inter',sans-serif;font-size:.81rem;color:var(--black);cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M1 1l3.5 3L8 1' stroke='%23999' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:border-color .15s}
-select:focus{outline:none;border-color:var(--black)}
+select:focus{outline:none;border-color:var(--brand)}
 select:disabled{opacity:.3;cursor:not-allowed}
 .verse-ref{margin-left:auto;font-family:'Lora',serif;font-style:italic;font-size:.95rem;color:var(--black);opacity:0;transition:opacity .3s}
 .verse-ref.visible{opacity:1}
@@ -53,7 +55,7 @@ select:disabled{opacity:.3;cursor:not-allowed}
 .step-body{font-size:.86rem;color:var(--grey-600);line-height:1.75}
 
 /* Verse display */
-.verse-display{display:none;margin-top:18px;padding:20px 24px 20px 24px;background:var(--grey-50);border-left:2px solid var(--black);border-radius:0 5px 5px 0;position:relative}
+.verse-display{display:none;margin-top:18px;padding:20px 24px 20px 24px;background:var(--grey-50);border-left:2px solid var(--brand);border-radius:0 5px 5px 0;position:relative}
 .verse-display.show{display:block}
 .verse-context{font-family:'Lora',serif;font-size:.93rem;line-height:1.9;color:var(--black);opacity:.28;transition:opacity .2s}
 .verse-context-num{font-size:.68rem;font-weight:600;vertical-align:super;margin-right:3px;font-family:'Inter',sans-serif}
@@ -78,7 +80,7 @@ select:disabled{opacity:.3;cursor:not-allowed}
 .response-wrap{display:none;margin-top:14px}
 .response-wrap.show{display:block}
 .response-textarea{width:100%;min-height:96px;padding:12px 14px;background:var(--white);border:1px solid var(--grey-200);border-radius:5px;font-family:'Inter',sans-serif;font-size:.83rem;color:var(--black);line-height:1.7;resize:vertical;transition:border-color .15s}
-.response-textarea:focus{outline:none;border-color:var(--black)}
+.response-textarea:focus{outline:none;border-color:var(--brand)}
 .response-textarea::placeholder{color:var(--grey-400);font-style:italic}
 
 /* Print bar */
@@ -118,7 +120,7 @@ select:disabled{opacity:.3;cursor:not-allowed}
 
 <header class="header">
   <div class="logo">
-    <div class="logo-dot"></div>
+    <img src="logo.svg" alt="BibleProject logo" class="logo-mark">
     <span class="logo-text">BibleProject</span>
     <div class="logo-divider"></div>
     <span class="logo-sub">Communal Bible Study Tool</span>
