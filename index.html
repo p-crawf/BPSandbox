@@ -114,6 +114,45 @@ select:disabled{opacity:.3;cursor:not-allowed}
   .response-textarea{border:1px solid #ccc;background:#fafafa}
   .watch-link,.watch-placeholder{display:none!important}
 }
+
+@media (max-width:600px){
+  body{padding-bottom:60px}
+
+  /* Header */
+  .header{padding:0 16px;height:50px}
+  .logo-sub{display:none}
+
+  /* Scripture bar */
+  .scripture-bar{padding:12px 16px}
+  .picker-label{display:none}
+  .scripture-bar-inner{gap:8px;flex-wrap:nowrap}
+  .selects{flex:1;min-width:0;flex-wrap:nowrap}
+  #sel-book{flex:1;min-width:0}
+  .verse-ref{font-size:.82rem;white-space:nowrap}
+
+  /* Main */
+  .main{padding:0 16px}
+
+  /* Steps */
+  .step{padding:22px 0;gap:0 12px;grid-template-columns:20px 1fr}
+
+  /* Verse nav — larger touch targets */
+  .verse-display{margin-top:22px;padding:20px 14px}
+  .verse-nav-btn{width:48px;height:36px}
+  #verse-up{top:-18px}
+  #verse-down{bottom:-18px}
+
+  /* Watch button — full width on mobile */
+  .watch-link{display:flex;width:100%;justify-content:center}
+
+  /* Prevent iOS auto-zoom on focus */
+  select,.response-textarea{font-size:16px}
+
+  /* Print bar */
+  .print-bar{padding:8px 16px;gap:10px}
+  .print-hint,.print-bar-divider{display:none}
+  .print-btn{padding:8px 16px}
+}
 </style>
 </head>
 <body>
