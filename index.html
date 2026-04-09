@@ -222,7 +222,8 @@ button:hover{background:var(--bp-cream)}
       </div>
       <div class="step-desc">Read slowly and with the expectation of discovery.</div>
       <div class="step-body">
-        <div class="hero-inner">
+        div class="hero" id="hero" style="display:none">
+  <div class="hero-inner">
     <div class="hero-eyebrow">Today's passage</div>
     <div class="hero-verse" id="hero-verse"></div>
     <div class="hero-ref" id="hero-ref"></div>
@@ -234,6 +235,8 @@ button:hover{background:var(--bp-cream)}
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="10 6 16 12 10 18"/></svg>
       </button>
     </div>
+  </div>
+</div>
         </div>
         <div class="btn-row">
           <button class="btn-primary" onclick="advance(1)">Done reading &#8594;</button>
