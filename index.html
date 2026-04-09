@@ -189,6 +189,7 @@ button:hover{background:var(--bp-cream)}
       <select id="sel-book" onchange="onBookChange()" aria-label="Book"><option value="">Book</option></select>
       <select id="sel-chapter" onchange="onChapterChange()" disabled aria-label="Chapter"><option value="">Ch</option></select>
       <select id="sel-verse" onchange="onVerseChange()" disabled aria-label="Verse"><option value="">Vs</option></select>
+      <select id="sel-verse" onchange="onVerseChange()" disabled aria-label="Verse"><option value="">Vs</option></select>
     </div>
     <span class="verse-ref" id="verse-ref" aria-live="polite"></span>
   </div>
@@ -221,12 +222,18 @@ button:hover{background:var(--bp-cream)}
       </div>
       <div class="step-desc">Read slowly and with the expectation of discovery.</div>
       <div class="step-body">
-        <div class="video-placeholder" id="video-step1">
-          <div class="play-icon"><div class="play-tri"></div></div>
-          <div class="video-meta">
-            <strong>BibleProject Video</strong>
-            Watch before or after reading
-          </div>
+        <div class="hero-inner">
+    <div class="hero-eyebrow">Today's passage</div>
+    <div class="hero-verse" id="hero-verse"></div>
+    <div class="hero-ref" id="hero-ref"></div>
+    <div class="hero-nav" id="hero-nav" style="display:none">
+      <button class="hero-nav-btn" id="verse-up" onclick="shiftVerse(-1)" aria-label="Previous verse" title="Previous verse">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="14 18 8 12 14 6"/></svg>
+      </button>
+      <button class="hero-nav-btn" id="verse-down" onclick="shiftVerse(1)" aria-label="Next verse" title="Next verse">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="10 6 16 12 10 18"/></svg>
+      </button>
+    </div>
         </div>
         <div class="btn-row">
           <button class="btn-primary" onclick="advance(1)">Done reading &#8594;</button>
