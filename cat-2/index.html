@@ -49,6 +49,31 @@ body{background:var(--bp-cream);color:var(--bp-black);font-family:'Inter',sans-s
 .section-intro{font-size:.9rem;color:var(--bp-gray);margin-bottom:28px;line-height:1.6}
 .section-h2{font-size:1.05rem;font-weight:600;margin-bottom:16px;padding-top:8px}
 
+/* Downloads (reference layout) */
+.section-downloads{background:var(--bp-white);border-top:0.5px solid var(--bp-border);border-bottom:0.5px solid var(--bp-border);padding-top:56px;padding-bottom:56px}
+.downloads-page-head{max-width:720px;margin-bottom:32px;text-align:left}
+.dl-page-title{font-family:'Inter',sans-serif;font-size:clamp(1.5rem,4vw,2.05rem);font-weight:600;line-height:1.2;color:var(--bp-black);margin-bottom:14px;letter-spacing:-.02em}
+.dl-page-sub{font-size:1.05rem;font-weight:600;color:var(--bp-black);margin-bottom:16px;line-height:1.35}
+.dl-page-note{font-size:.875rem;color:var(--bp-gray);line-height:1.65;max-width:680px}
+.downloads-acc{border:none;border-radius:0;background:transparent;overflow:visible}
+.acc-item{border-bottom:0.5px solid var(--bp-border)}
+.acc-item:last-child{border-bottom:none}
+.acc-btn{width:100%;text-align:left;display:flex;align-items:center;gap:16px;padding:20px 4px 20px 0;background:transparent;border:none;font-family:'Inter',sans-serif;cursor:pointer;transition:background .12s}
+.acc-btn:hover{background:rgba(0,0,0,.02)}
+.acc-btn[aria-expanded="true"]{background:rgba(0,0,0,.02)}
+.acc-thumb{width:56px;height:56px;flex-shrink:0;border-radius:50%;background:linear-gradient(145deg,hsl(var(--thumb-h,210),48%,88%),hsl(var(--thumb-h,210),42%,72%));box-shadow:inset 0 0 0 1px rgba(0,0,0,.06)}
+.acc-text{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left}
+.acc-title{font-size:1rem;font-weight:600;color:var(--bp-black);line-height:1.3}
+.acc-meta{font-size:.875rem;font-weight:400;color:var(--bp-gray)}
+.acc-chevron{width:20px;height:20px;flex-shrink:0;color:var(--bp-gray);transition:transform .2s ease}
+.acc-btn[aria-expanded="true"] .acc-chevron{transform:rotate(180deg)}
+.acc-panel{display:none;padding:0 0 20px 0;margin:0;border:none}
+.acc-panel.open{display:block}
+.acc-panel-inner{padding:4px 0 8px 0;padding-inline-start:72px;max-width:100%}
+.acc-panel ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.acc-panel a{font-size:.88rem;color:var(--bp-blue);text-decoration:none;font-weight:500}
+.acc-panel a:hover{text-decoration:underline}
+
 /* Reading plans */
 .plan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
 .plan-card{background:var(--bp-white);border:0.5px solid var(--bp-border);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;transition:border-color .15s,box-shadow .15s}
@@ -58,21 +83,6 @@ body{background:var(--bp-cream);color:var(--bp-black);font-family:'Inter',sans-s
 .plan-card a{align-self:flex-start;font-size:.85rem;font-weight:500;color:var(--bp-blue);text-decoration:none}
 .plan-card a:hover{text-decoration:underline}
 .plan-empty{font-size:.9rem;color:var(--bp-gray);font-style:italic;padding:16px 0}
-
-/* Accordion */
-.downloads-acc{border:0.5px solid var(--bp-border);border-radius:12px;background:var(--bp-white);overflow:hidden}
-.acc-item{border-bottom:0.5px solid var(--bp-border)}
-.acc-item:last-child{border-bottom:none}
-.acc-btn{width:100%;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;background:var(--bp-white);border:none;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:500;color:var(--bp-black);cursor:pointer;transition:background .15s}
-.acc-btn:hover{background:var(--bp-cream)}
-.acc-btn[aria-expanded="true"]{background:var(--bp-cream)}
-.acc-icon{width:18px;height:18px;flex-shrink:0;color:var(--bp-gray);transition:transform .2s}
-.acc-btn[aria-expanded="true"] .acc-icon{transform:rotate(180deg)}
-.acc-panel{display:none;padding:0 18px 18px 18px}
-.acc-panel.open{display:block}
-.acc-panel ul{list-style:none;display:flex;flex-direction:column;gap:8px}
-.acc-panel a{font-size:.88rem;color:var(--bp-blue);text-decoration:none}
-.acc-panel a:hover{text-decoration:underline}
 
 /* Footer */
 .site-footer{background:var(--bp-white);border-top:0.5px solid var(--bp-border);padding:40px 24px 48px;margin-top:24px}
@@ -94,6 +104,8 @@ body{background:var(--bp-cream);color:var(--bp-black);font-family:'Inter',sans-s
 @media (max-width:640px){
   .site-header-inner{height:auto;min-height:56px;padding:12px 16px;flex-wrap:wrap}
   .header-nav{width:100%;justify-content:space-between}
+  .acc-thumb{width:48px;height:48px}
+  .acc-panel-inner{padding-inline-start:64px}
 }
 </style>
 </head>
@@ -101,7 +113,7 @@ body{background:var(--bp-cream);color:var(--bp-black);font-family:'Inter',sans-s
 
 <header class="site-header">
   <div class="site-header-inner">
-    <a class="logo-link" id="logo-link" href="https://bibleproject.com/english/" aria-label="BibleProject home">
+    <a class="logo-link" id="logo-link" href="https://p-crawf.github.io/BPSandbox" aria-label="BibleProject — home">
       <img class="logo-mark" src="../bibleproject-logo-mark.svg" alt="" width="48" height="48" decoding="async" aria-hidden="true">
       <img src="../bibleproject-word-mark.svg" alt="BibleProject" width="148" height="27" decoding="async">
     </a>
@@ -124,16 +136,19 @@ body{background:var(--bp-cream);color:var(--bp-black);font-family:'Inter',sans-s
   </div>
 </section>
 
+<section class="section section-downloads" id="downloads">
+  <div class="downloads-page-head">
+    <h2 class="dl-page-title" data-i18n="dlPageTitle">Download Free BibleProject Resources for Sharing and Teaching</h2>
+    <p class="dl-page-sub" data-i18n="dlPageSub">Access videos, posters, transcripts, and study notes.</p>
+    <p class="dl-page-note" data-i18n="dlPageNote">Note: Not all videos have accompanying transcripts, study notes, and posters. We're working to add missing transcripts over time. But if study notes or posters are unavailable, it's because they were not created for that video.</p>
+  </div>
+  <div class="downloads-acc" id="downloads-acc" role="region" aria-label="Download categories"></div>
+</section>
+
 <section class="section" id="reading-plans">
   <h2 class="section-title" data-i18n="plansTitle">Reading Plans</h2>
   <p class="section-intro" id="plans-intro" data-i18n="plansIntro">Reading plans on YouVersion that match your language. Open the Bible App to start.</p>
   <div class="plan-grid" id="plan-grid" role="list"></div>
-</section>
-
-<section class="section" id="downloads">
-  <h2 class="section-title" data-i18n="dlTitle">Downloads</h2>
-  <p class="section-intro" id="dl-intro" data-i18n="dlIntro">Video and audio organized by series. Categories with no items in your language are hidden.</p>
-  <div class="downloads-acc" id="downloads-acc" role="region" aria-label="Download categories"></div>
 </section>
 
 <footer class="site-footer">
@@ -196,8 +211,6 @@ function setLang(langKey){
   if(!loc)return;
   document.documentElement.lang=loc.htmlLang;
   document.documentElement.dir=loc.dir;
-  const logo=document.getElementById('logo-link');
-  logo.href='https://bibleproject.com/'+loc.slug+'/';
   document.title='BibleProject — '+(loc.label||loc.slug)+' (prototype)';
 
   document.querySelectorAll('[data-i18n]').forEach(function(el){
@@ -207,7 +220,6 @@ function setLang(langKey){
   document.getElementById('hero-title').textContent=loc.heroTitle;
   document.getElementById('hero-lead').textContent=loc.heroLead;
   document.getElementById('plans-intro').textContent=loc.plansIntro;
-  document.getElementById('dl-intro').textContent=loc.dlIntro;
 
   const grid=document.getElementById('plan-grid');
   grid.innerHTML='';
@@ -230,6 +242,18 @@ function setLang(langKey){
     });
   }
 
+  function thumbHue(str){
+    var h=200;
+    for(var i=0;i<str.length;i++) h=(h+str.charCodeAt(i)*11)%360;
+    return h;
+  }
+  function formatVideoCount(n,loc){
+    if(loc.htmlLang==='ko') return n===1 ? '영상 1개' : '영상 '+n+'개';
+    var vs=loc.videoSingular||'video',vp=loc.videoPlural||'videos';
+    if(n===1) return '1 '+vs;
+    return n+' '+vp;
+  }
+
   const acc=document.getElementById('downloads-acc');
   acc.innerHTML='';
   let idx=0;
@@ -244,13 +268,17 @@ function setLang(langKey){
     btn.id=id+'-btn';
     btn.setAttribute('aria-expanded','false');
     btn.setAttribute('aria-controls',id+'-panel');
-    btn.innerHTML='<span class="acc-label"></span><svg class="acc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
-    btn.querySelector('.acc-label').textContent=label;
+    btn.innerHTML='<span class="acc-thumb" aria-hidden="true"></span><span class="acc-text"><span class="acc-title"></span><span class="acc-meta"></span></span><svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    btn.querySelector('.acc-thumb').style.setProperty('--thumb-h',String(thumbHue(key)));
+    btn.querySelector('.acc-title').textContent=label;
+    btn.querySelector('.acc-meta').textContent=formatVideoCount(items.length,loc);
     const panel=document.createElement('div');
     panel.className='acc-panel';
     panel.id=id+'-panel';
     panel.setAttribute('role','region');
     panel.setAttribute('aria-labelledby',id+'-btn');
+    const inner=document.createElement('div');
+    inner.className='acc-panel-inner';
     const ul=document.createElement('ul');
     items.forEach(function(it){
       const li=document.createElement('li');
@@ -262,7 +290,8 @@ function setLang(langKey){
       li.appendChild(a);
       ul.appendChild(li);
     });
-    panel.appendChild(ul);
+    inner.appendChild(ul);
+    panel.appendChild(inner);
     const wrap=document.createElement('div');
     wrap.className='acc-item';
     wrap.appendChild(btn);
