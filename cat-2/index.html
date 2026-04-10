@@ -156,6 +156,7 @@ body{background:var(--bp-cream);color:var(--bp-black);font-family:'Inter',sans-s
   </div>
 </footer>
 
+<script src="locales-data.js"></script>
 <script>
 (function(){
 const CATEGORY_ORDER=[
@@ -182,110 +183,7 @@ const CATEGORY_ORDER=[
   ['streetlights-remix','Streetlights Remix']
 ];
 
-const LOCALES={
-  'english':{
-    slug:'english',
-    htmlLang:'en',
-    dir:'ltr',
-    navDownloads:'Downloads',
-    navPlans:'Reading Plans',
-    langLabel:'Language',
-    heroEyebrow:'BibleProject',
-    heroTitle:'We create resources to help people understand the Bible.',
-    heroLead:'Explore reading plans and video downloads available in your language.',
-    plansTitle:'Reading Plans',
-    plansIntro:'Reading plans on YouVersion that match your language. Open the Bible App to start.',
-    dlTitle:'Downloads',
-    dlIntro:'Video and audio organized by series. Categories with no items in your language are hidden.',
-    signupTitle:'Email updates',
-    signupBtn:'Subscribe',
-    readingPlans:[
-      {title:'BibleProject: The Bible in One Year',subtitle:'YouVersion · English',url:'https://www.bible.com/yv/reading-plans'},
-      {title:'Gospels in 40 Days',subtitle:'YouVersion · English',url:'https://www.bible.com/yv/reading-plans'}
-    ],
-    downloads:{
-      'ot-overviews':[{title:'Genesis 1–11 Overview',url:'https://bibleproject.com/explore/video/'}],
-      'nt-overviews':[{title:'Luke Overview',url:'https://bibleproject.com/explore/video/'}],
-      'biblical-themes':[{title:'The Kingdom of God',url:'https://bibleproject.com/explore/video/'}],
-      'how-to-read-bible':[{title:'How to Read the Bible series',url:'https://bibleproject.com/explore/video/'}],
-      'word-studies':[{title:'Word Study: Agape',url:'https://bibleproject.com/explore/video/'}]
-    }
-  },
-  'spanish':{
-    slug:'spanish',
-    htmlLang:'es',
-    dir:'ltr',
-    navDownloads:'Descargas',
-    navPlans:'Planes de lectura',
-    langLabel:'Idioma',
-    heroEyebrow:'BibleProject',
-    heroTitle:'Creamos recursos para ayudar a las personas a entender la Biblia.',
-    heroLead:'Explora planes de lectura y descargas de video disponibles en tu idioma.',
-    plansTitle:'Planes de lectura',
-    plansIntro:'Planes en YouVersion en tu idioma. Abre la aplicación Biblia para comenzar.',
-    dlTitle:'Descargas',
-    dlIntro:'Video y audio por serie. Las categorías vacías no se muestran.',
-    signupTitle:'Correo de novedades',
-    signupBtn:'Suscribirse',
-    readingPlans:[
-      {title:'Biblia en un año',subtitle:'YouVersion · Español',url:'https://www.bible.com/yv/reading-plans'},
-      {title:'Salmos de consuelo',subtitle:'YouVersion · Español',url:'https://www.bible.com/yv/reading-plans'}
-    ],
-    downloads:{
-      'ot-overviews':[{title:'Génesis 1–11',url:'https://bibleproject.com/explore/video/'}],
-      'biblical-themes':[{title:'El Reino de Dios',url:'https://bibleproject.com/explore/video/'}],
-      'advent':[{title:'Adviento',url:'https://bibleproject.com/explore/video/'}]
-    }
-  },
-  'french':{
-    slug:'french',
-    htmlLang:'fr',
-    dir:'ltr',
-    navDownloads:'Téléchargements',
-    navPlans:'Plans de lecture',
-    langLabel:'Langue',
-    heroEyebrow:'BibleProject',
-    heroTitle:'Nous créons des ressources pour aider chacun à comprendre la Bible.',
-    heroLead:'Découvrez des plans de lecture et des téléchargements disponibles dans votre langue.',
-    plansTitle:'Plans de lecture',
-    plansIntro:'Plans YouVersion dans votre langue. Ouvrez l’application Bible pour commencer.',
-    dlTitle:'Téléchargements',
-    dlIntro:'Vidéos et audio par série. Les catégories vides sont masquées.',
-    signupTitle:'Newsletter',
-    signupBtn:'S’inscrire',
-    readingPlans:[
-      {title:'La Bible en un an',subtitle:'YouVersion · Français',url:'https://www.bible.com/yv/reading-plans'}
-    ],
-    downloads:{
-      'nt-overviews':[{title:'Luc — Aperçu',url:'https://bibleproject.com/explore/video/'}],
-      'biblical-themes':[{title:'Le Royaume de Dieu',url:'https://bibleproject.com/explore/video/'}]
-    }
-  },
-  'korean':{
-    slug:'korean',
-    htmlLang:'ko',
-    dir:'ltr',
-    navDownloads:'다운로드',
-    navPlans:'읽기 계획',
-    langLabel:'언어',
-    heroEyebrow:'BibleProject',
-    heroTitle:'성경을 이해하도록 돕는 자료를 만듭니다.',
-    heroLead:'해당 언어로 제공되는 읽기 계획과 다운로드를 둘러보세요.',
-    plansTitle:'읽기 계획',
-    plansIntro:'YouVersion에서 제공하는 언어별 계획입니다. 바이블 앱에서 시작하세요.',
-    dlTitle:'다운로드',
-    dlIntro:'시리즈별로 정리된 영상·오디오입니다. 항목이 없는 카테고리는 숨깁니다.',
-    signupTitle:'이메일 소식',
-    signupBtn:'구독',
-    readingPlans:[
-      {title:'1년 성경 읽기',subtitle:'YouVersion · 한국어',url:'https://www.bible.com/yv/reading-plans'}
-    ],
-    downloads:{
-      'ot-overviews':[{title:'창세기 1–11',url:'https://bibleproject.com/explore/video/'}],
-      'how-to-read-bible':[{title:'성경 읽는 법',url:'https://bibleproject.com/explore/video/'}]
-    }
-  }
-};
+const LOCALES=window.CAT2_LOCALES||{};
 
 function getQueryLang(){
   const q=new URLSearchParams(window.location.search).get('lang');
@@ -300,7 +198,7 @@ function setLang(langKey){
   document.documentElement.dir=loc.dir;
   const logo=document.getElementById('logo-link');
   logo.href='https://bibleproject.com/'+loc.slug+'/';
-  document.title='BibleProject — '+loc.slug.replace(/-/g,' ')+' (prototype)';
+  document.title='BibleProject — '+(loc.label||loc.slug)+' (prototype)';
 
   document.querySelectorAll('[data-i18n]').forEach(function(el){
     const k=el.getAttribute('data-i18n');
@@ -313,18 +211,20 @@ function setLang(langKey){
 
   const grid=document.getElementById('plan-grid');
   grid.innerHTML='';
+  const cta=loc.ctaOpenApp||'Open in Bible App →';
   if(!loc.readingPlans||!loc.readingPlans.length){
-    grid.innerHTML='<p class="plan-empty" role="status">No reading plans listed for this language yet.</p>';
+    grid.innerHTML='<p class="plan-empty" role="status">'+(loc.plansEmpty||'No reading plans listed for this language yet.')+'</p>';
   }else{
     loc.readingPlans.forEach(function(p){
       const card=document.createElement('article');
       card.className='plan-card';
       card.setAttribute('role','listitem');
-      card.innerHTML='<div class="plan-card-title"></div><div class="plan-card-meta"></div><a target="_blank" rel="noopener noreferrer">Open in Bible App →</a>';
+      card.innerHTML='<div class="plan-card-title"></div><div class="plan-card-meta"></div><a target="_blank" rel="noopener noreferrer"></a>';
       card.querySelector('.plan-card-title').textContent=p.title;
       card.querySelector('.plan-card-meta').textContent=p.subtitle||'';
       const a=card.querySelector('a');
       a.href=p.url;
+      a.textContent=cta;
       a.setAttribute('aria-label',p.title+' — open in Bible App');
       grid.appendChild(card);
     });
@@ -381,7 +281,7 @@ function setLang(langKey){
     });
   });
   if(!acc.children.length){
-    acc.innerHTML='<p class="plan-empty" style="padding:20px">No download categories yet for this language.</p>';
+    acc.innerHTML='<p class="plan-empty" style="padding:20px">'+(loc.dlEmpty||'No download categories yet for this language.')+'</p>';
   }
 
   try{
@@ -392,10 +292,13 @@ function setLang(langKey){
 function fillPicker(current){
   const sel=document.getElementById('lang-picker');
   sel.innerHTML='';
-  Object.keys(LOCALES).forEach(function(key){
+  Object.keys(LOCALES).sort(function(a,b){
+    const la=(LOCALES[a].label||a),lb=(LOCALES[b].label||b);
+    return la.localeCompare(lb);
+  }).forEach(function(key){
     const o=document.createElement('option');
     o.value=key;
-    o.textContent=key.charAt(0).toUpperCase()+key.slice(1).replace(/-/g,' ');
+    o.textContent=LOCALES[key].label||key.charAt(0).toUpperCase()+key.slice(1).replace(/-/g,' ');
     if(key===current)o.selected=true;
     sel.appendChild(o);
   });
