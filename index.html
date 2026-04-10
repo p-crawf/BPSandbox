@@ -29,6 +29,11 @@ body{background:var(--bp-cream);color:var(--bp-black);font-family:'Inter',sans-s
 .logo-word-img{height:22px;width:auto;display:block;flex-shrink:0}
 .logo-divider{width:1px;height:18px;background:var(--bp-border);flex-shrink:0}
 .logo-sub{font-size:.73rem;color:var(--bp-gray);letter-spacing:.03em}
+.header-actions{display:flex;align-items:center;flex-shrink:0}
+.header-download{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font-size:.76rem;font-weight:500;color:var(--bp-black);text-decoration:none;border:0.5px solid var(--bp-border);border-radius:8px;background:var(--bp-white);font-family:'Inter',sans-serif;transition:background .15s,border-color .15s;white-space:nowrap}
+.header-download:hover{background:var(--bp-cream);border-color:var(--bp-blue)}
+.header-download svg{flex-shrink:0;opacity:.85}
+.header-download-short{display:none}
 
 /* Scripture bar */
 .scripture-bar{border-bottom:0.5px solid var(--bp-border);padding:20px 40px;background:var(--bp-blue-light)}
@@ -180,8 +185,11 @@ button:hover{background:var(--bp-cream)}
 
 @media (max-width:600px){
   body{padding-bottom:60px}
-  .header{padding:0 16px;height:50px}
+  .header{padding:0 16px;height:50px;gap:8px}
   .logo-sub{display:none}
+  .header-download{padding:6px 10px;font-size:.68rem;gap:6px}
+  .header-download-long{display:none!important}
+  .header-download-short{display:inline!important}
   .scripture-bar{padding:12px 16px}
   .picker-label{display:none}
   .scripture-bar-inner{gap:8px;flex-wrap:nowrap}
@@ -214,6 +222,13 @@ button:hover{background:var(--bp-cream)}
     </div>
     <div class="logo-divider"></div>
     <span class="logo-sub">Communal Bible Study Tool</span>
+  </div>
+  <div class="header-actions">
+    <a href="bible-reading-guided-study.pdf" download="Bible Reading Guided Study.pdf" class="header-download" title="Download Bible Reading Guided Study (PDF)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span class="header-download-long">Download Guide PDF</span>
+      <span class="header-download-short">Guide PDF</span>
+    </a>
   </div>
 </header>
 
@@ -368,7 +383,7 @@ button:hover{background:var(--bp-cream)}
   <span class="print-hint">Save your notes before leaving</span>
   <button class="print-btn" onclick="handlePrint()">
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
-    Print Guide
+    Print Your Notes
   </button>
 </div>
 
