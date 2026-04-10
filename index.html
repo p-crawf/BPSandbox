@@ -56,8 +56,35 @@ select:disabled{opacity:.3;cursor:not-allowed}
 .hero-nav-btn:disabled{opacity:.2;cursor:default}
 .hero-nav-btn svg{pointer-events:none}
 
+/* Study layout: optional left passage rail */
+.study-wrap{max-width:1180px;margin:0 auto;padding:0 40px;display:flex;align-items:flex-start;gap:28px}
+.passage-sidebar{
+  display:none;
+  width:min(300px,32vw);
+  flex-shrink:0;
+  position:sticky;
+  top:64px;
+  align-self:flex-start;
+  padding:20px 18px 24px;
+  background:var(--bp-white);
+  border:0.5px solid var(--bp-border);
+  border-radius:12px;
+  max-height:calc(100vh - 72px);
+  overflow-y:auto;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+}
+.passage-sidebar .hero-eyebrow{margin-bottom:10px}
+.passage-sidebar .hero-verse{font-size:15px;line-height:1.6}
+.passage-sidebar .hero-ref{font-size:12px;margin-top:10px}
+.passage-sidebar .hero-nav{margin-top:12px}
+body.study-layout--with-sidebar .passage-sidebar{display:block;animation:passageSidebarIn .5s ease forwards}
+@keyframes passageSidebarIn{
+  from{opacity:0;transform:translateX(-16px)}
+  to{opacity:1;transform:translateX(0)}
+}
+
 /* Main */
-.main{max-width:860px;margin:0 auto;padding:0 40px}
+.main{flex:1;min-width:0;max-width:none;margin:0;padding:0}
 .steps-wrap{padding:20px 20px 0}
 
 /* Progress pips */
@@ -144,6 +171,7 @@ button:hover{background:var(--bp-cream)}
   .header,.print-bar,.modal-bg,.progress-row,.hero-nav{display:none!important}
   body{padding-bottom:0;background:#fff}
   .scripture-bar{background:none;border:none}
+  .passage-sidebar{display:none!important}
   .passage-reader{break-after:avoid;background:#f5f3ee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .step-card{opacity:1!important;break-inside:avoid;border:0.5px solid #ccc}
   .step-card .step-body{display:block!important}
@@ -165,6 +193,9 @@ button:hover{background:var(--bp-cream)}
   .verse-ref{font-size:.82rem;white-space:nowrap}
   .passage-reader{padding:20px 16px}
   .hero-verse{font-size:16px}
+  .study-wrap{flex-direction:column;padding:0 16px;gap:16px}
+  .passage-sidebar{position:relative;top:0;width:100%!important;max-height:none;animation:none;opacity:1!important;transform:none!important}
+  body.study-layout--with-sidebar .passage-sidebar{display:block}
   .main{padding:0}
   .steps-wrap{padding:16px 16px 0}
   .step-card{padding:14px 16px}
@@ -201,7 +232,23 @@ button:hover{background:var(--bp-cream)}
   </div>
 </section>
 
-<main class="main">
+<div class="study-wrap">
+  <aside id="passageSidebar" class="passage-sidebar" aria-label="Passage for reference">
+    <div class="passage-sidebar-inner">
+      <div class="hero-eyebrow">Passage</div>
+      <div class="hero-verse" id="sidebar-verse"></div>
+      <div class="hero-ref" id="sidebar-ref"></div>
+      <div class="hero-nav" id="sidebar-nav" style="display:none">
+        <button type="button" class="hero-nav-btn" id="sidebar-verse-up" onclick="shiftVerse(-1)" aria-label="Shift passage back one verse" title="Shift passage back one verse">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="14 18 8 12 14 6"/></svg>
+        </button>
+        <button type="button" class="hero-nav-btn" id="sidebar-verse-down" onclick="shiftVerse(1)" aria-label="Shift passage forward one verse" title="Shift passage forward one verse">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="10 6 16 12 10 18"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+  <main class="main">
   <div class="steps-wrap">
     <div class="progress-row" id="prog"></div>
 
@@ -328,7 +375,8 @@ button:hover{background:var(--bp-cream)}
       </div>
     </div>
   </div>
-</main>
+  </main>
+</div>
 
 <div class="print-bar">
   <span class="print-hint">Save your notes before leaving</span>
@@ -372,10 +420,16 @@ function escapeHtml(t){
   return d.innerHTML;
 }
 
+function updatePassageSidebarLayout(){
+  const show=completedThrough>=1&&current>=2&&current<=8&&!!currentVerse;
+  document.body.classList.toggle('study-layout--with-sidebar',show);
+}
+
 document.addEventListener('DOMContentLoaded',()=>{
   populateBooks();
   buildProgress();
   loadFromURL();
+  updatePassageSidebarLayout();
   document.querySelectorAll('textarea').forEach(ta=>ta.addEventListener('input',()=>{hasEdits=true}));
   document.getElementById('q-input').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addQ()}});
   document.getElementById('exit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('exit-modal'))closeModal()});
@@ -483,7 +537,10 @@ function fetchChapter(){
     })
     .catch(()=>{
       if(currentVerse){
-        document.getElementById('hero-verse').textContent='Could not load passage. Check your connection.';
+        const err='Could not load passage. Check your connection.';
+        document.getElementById('hero-verse').textContent=err;
+        const sv=document.getElementById('sidebar-verse');
+        if(sv)sv.textContent=err;
       }
     });
 }
@@ -509,10 +566,14 @@ function displayVerse(){
   const s=parseInt(currentVerse,10);
   const e=getVerseEndInclusive();
   const panel=document.getElementById('passageReader'),hv=document.getElementById('hero-verse'),hr=document.getElementById('hero-ref'),nav=document.getElementById('hero-nav');
+  const shv=document.getElementById('sidebar-verse'),shr=document.getElementById('sidebar-ref'),snav=document.getElementById('sidebar-nav');
   panel.hidden=false;
   for(let v=s;v<=e;v++){
     if(!chapterVerses[v]){
-      hv.innerHTML='<span class="verse-loading">Loading…</span>';hr.textContent='';nav.style.display='none';
+      const loading='<span class="verse-loading">Loading…</span>';
+      hv.innerHTML=loading;hr.textContent='';nav.style.display='none';
+      if(shv){shv.innerHTML=loading;shr.textContent='';snav.style.display='none'}
+      updatePassageSidebarLayout();
       const endRef=e;
       chapterLoadPromise&&chapterLoadPromise.then(()=>{if(parseInt(currentVerse,10)===s&&getVerseEndInclusive()===endRef)displayVerse()});
       return;
@@ -522,14 +583,24 @@ function displayVerse(){
   for(let v=s;v<=e;v++){
     lines.push(`<span class="verse-line"><span class="verse-num">${v}</span>${escapeHtml(chapterVerses[v])}</span>`);
   }
-  hv.innerHTML=lines.join('');
+  const html=lines.join('');
   const refSuffix=e>s?`${s}-${e}`:String(s);
-  hr.textContent=`${currentBook} ${currentChapter}:${refSuffix} (WEB)`;
+  const refText=`${currentBook} ${currentChapter}:${refSuffix} (WEB)`;
   const maxV=BIBLE[currentBook][parseInt(currentChapter)-1];
   const showNav=maxV>1;
+  hv.innerHTML=html;
+  hr.textContent=refText;
   nav.style.display=showNav?'flex':'none';
   document.getElementById('verse-up').disabled=(s<=1);
   document.getElementById('verse-down').disabled=(e>=maxV);
+  if(shv){
+    shv.innerHTML=html;
+    shr.textContent=refText;
+    snav.style.display=showNav?'flex':'none';
+    document.getElementById('sidebar-verse-up').disabled=(s<=1);
+    document.getElementById('sidebar-verse-down').disabled=(e>=maxV);
+  }
+  updatePassageSidebarLayout();
 }
 
 function clearVerse(){
@@ -537,6 +608,13 @@ function clearVerse(){
   document.getElementById('hero-verse').textContent='';
   document.getElementById('hero-ref').textContent='';
   document.getElementById('hero-nav').style.display='none';
+  const shv=document.getElementById('sidebar-verse');
+  if(shv){
+    shv.textContent='';
+    document.getElementById('sidebar-ref').textContent='';
+    document.getElementById('sidebar-nav').style.display='none';
+  }
+  updatePassageSidebarLayout();
 }
 
 function loadFromURL(){
@@ -604,6 +682,7 @@ function goToStep(stepNum){
   current=stepNum;
   if(stepNum===5)populatePick();
   buildProgress();
+  updatePassageSidebarLayout();
   document.getElementById('s'+stepNum).scrollIntoView({behavior:'smooth',block:'start'});
 }
 
@@ -614,13 +693,14 @@ function advance(step){
   prev.classList.add('done');
   prev.querySelector('.step-body').style.display='none';
   const next=step+1;
-  if(next>7){current=8;buildProgress();return}
+  if(next>7){current=8;buildProgress();updatePassageSidebarLayout();return}
   current=next;
   const nc=document.getElementById('s'+next);
   nc.classList.add('active');
   nc.querySelector('.step-body').style.display='';
   if(next===5)populatePick();
   buildProgress();
+  updatePassageSidebarLayout();
   nc.scrollIntoView({behavior:'smooth',block:'start'});
 }
 
