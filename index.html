@@ -156,8 +156,8 @@ button:hover{background:var(--bp-cream)}
 .print-btn:hover{background:#333}
 
 /* Modal */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:200;align-items:center;justify-content:center}
-.modal-bg.open{display:flex}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;align-items:center;justify-content:center;padding:24px;isolation:isolate}
+.modal-bg.open{display:flex!important}
 .modal-card{background:var(--bp-white);border:0.5px solid var(--bp-border);border-radius:12px;padding:40px;max-width:400px;width:calc(100% - 40px);text-align:center}
 .modal-title{font-family:'Lora',serif;font-size:1.15rem;font-weight:500;margin-bottom:10px;line-height:1.35}
 .modal-body{font-size:14px;color:var(--bp-gray);line-height:1.75;margin-bottom:26px}
@@ -400,18 +400,6 @@ button:hover{background:var(--bp-cream)}
   </button>
 </div>
 
-<div class="modal-bg" id="complete-modal" role="dialog" aria-modal="true" aria-labelledby="complete-modal-title">
-  <div class="modal-card">
-    <h2 class="modal-title" id="complete-modal-title">Study complete</h2>
-    <p class="modal-body">Would you like to download or print your responses?</p>
-    <div class="modal-actions">
-      <button type="button" class="btn-leave" onclick="closeCompleteModal()">Not now</button>
-      <button type="button" class="btn-print-modal" onclick="downloadResponsesFromComplete()">Download</button>
-      <button type="button" class="btn-stay" onclick="printFromCompleteModal()">Print</button>
-    </div>
-  </div>
-</div>
-
 <div class="modal-bg" id="exit-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <div class="modal-card">
     <h2 class="modal-title" id="modal-title">Are you sure you'd like to exit?</h2>
@@ -420,6 +408,18 @@ button:hover{background:var(--bp-cream)}
       <button class="btn-leave" onclick="confirmLeave()">Leave anyway</button>
       <button class="btn-print-modal" onclick="printThenClose()">Print first</button>
       <button class="btn-stay" onclick="closeModal()">Stay on page</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="complete-modal" role="dialog" aria-modal="true" aria-labelledby="complete-modal-title" aria-hidden="true">
+  <div class="modal-card">
+    <h2 class="modal-title" id="complete-modal-title">Study complete</h2>
+    <p class="modal-body">Save your notes as a text file, or use Print and choose <strong>Save as PDF</strong> in the print dialog to download a PDF.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn-leave" onclick="closeCompleteModal()">Not now</button>
+      <button type="button" class="btn-print-modal" onclick="downloadResponsesFromComplete()">Download notes (.txt)</button>
+      <button type="button" class="btn-stay" onclick="printFromCompleteModal()">Print / Save as PDF</button>
     </div>
   </div>
 </div>
@@ -468,6 +468,8 @@ function syncStep1BodyVisibility(){
 }
 
 document.addEventListener('DOMContentLoaded',()=>{
+  const cm=document.getElementById('complete-modal');
+  if(cm)document.body.appendChild(cm);
   populateBooks();
   buildProgress();
   loadFromURL();
@@ -805,7 +807,13 @@ function advance(step){
   prev.classList.add('done');
   prev.querySelector('.step-body').style.display='none';
   const next=step+1;
-  if(next>7){current=8;buildProgress();syncStep1BodyVisibility();openCompleteModal();return}
+  if(next>7){
+    current=8;
+    buildProgress();
+    syncStep1BodyVisibility();
+    queueCompleteModal();
+    return;
+  }
   current=next;
   const nc=document.getElementById('s'+next);
   nc.classList.add('active');
@@ -843,8 +851,15 @@ function renderQList(){
 function populatePick(){
   const ul=document.getElementById('q-pick');
   ul.innerHTML='';
-  const qs=questions.length?questions:['What does this imagery represent?','Why these details specifically?'];
-  qs.forEach(function(q){
+  if(!questions.length){
+    const li=document.createElement('li');
+    li.className='q-item';
+    li.style.cssText='font-style:italic;color:var(--bp-gray);cursor:default';
+    li.textContent='No questions added in step 2 yet. You can go back to add some, or continue with your notes below.';
+    ul.appendChild(li);
+    return;
+  }
+  questions.forEach(function(q){
     const li=document.createElement('li');
     li.className='q-item selectable';
     const bullet=document.createElement('div');bullet.className='q-bullet';
@@ -933,8 +948,25 @@ window.addEventListener('afterprint',()=>{
     if(v==='none')el.style.display='none';
   });
 });
-function openCompleteModal(){document.getElementById('complete-modal').classList.add('open')}
-function closeCompleteModal(){document.getElementById('complete-modal').classList.remove('open')}
+function queueCompleteModal(){
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{openCompleteModal()});
+  });
+}
+function openCompleteModal(){
+  const el=document.getElementById('complete-modal');
+  if(!el)return;
+  el.classList.add('open');
+  el.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+}
+function closeCompleteModal(){
+  const el=document.getElementById('complete-modal');
+  if(!el)return;
+  el.classList.remove('open');
+  el.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
 function openModal(){document.getElementById('exit-modal').classList.add('open')}
 function closeModal(){document.getElementById('exit-modal').classList.remove('open')}
 function openScriptureResetModal(){document.getElementById('scripture-reset-modal').classList.add('open')}
