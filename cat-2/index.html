@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BibleProject — Language hub (prototype)</title>
+<meta name="description" content="BibleProject resources in your language — reading plans and downloads.">
+<link rel="icon" href="../bibleproject-logo-mark.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bp-blue:#2a9fd6;
+  --bp-blue-dark:#1e8abb;
+  --bp-blue-light:#e8f4fb;
+  --bp-cream:#f5f3ee;
+  --bp-white:#ffffff;
+  --bp-black:#1a1a1a;
+  --bp-gray:#6b6b6b;
+  --bp-border:#e0ddd8;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bp-cream);color:var(--bp-black);font-family:'Inter',sans-serif;font-weight:400;line-height:1.6;min-height:100vh}
+
+/* Header */
+.site-header{background:var(--bp-white);border-bottom:0.5px solid var(--bp-border);position:sticky;top:0;z-index:200}
+.site-header-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.logo-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex-shrink:0}
+.logo-link img{height:28px;width:auto;display:block}
+.logo-mark{height:32px!important}
+.header-nav{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:flex-end}
+.header-nav a{font-size:.8rem;font-weight:500;color:var(--bp-black);text-decoration:none;letter-spacing:.02em}
+.header-nav a:hover{color:var(--bp-blue)}
+.lang-select-wrap{display:flex;align-items:center;gap:8px}
+.lang-select-wrap label{font-size:.68rem;font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--bp-gray);white-space:nowrap}
+.lang-select{appearance:none;-webkit-appearance:none;background:var(--bp-white);border:0.5px solid var(--bp-border);border-radius:8px;padding:8px 28px 8px 11px;font-family:'Inter',sans-serif;font-size:.8rem;color:var(--bp-black);cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M1 1l3.5 3L8 1' stroke='%236b6b6b' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;max-width:min(200px,42vw)}
+.lang-select:focus{outline:none;border-color:var(--bp-blue)}
+
+/* Hero */
+.hero{background:linear-gradient(180deg,var(--bp-blue-light) 0%,var(--bp-cream) 100%);border-bottom:0.5px solid var(--bp-border);padding:48px 24px 56px}
+.hero-inner{max-width:720px;margin:0 auto;text-align:center}
+.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--bp-gray);margin-bottom:12px}
+.hero-title{font-family:'Lora',serif;font-size:clamp(1.5rem,4vw,2rem);font-weight:400;line-height:1.35;color:var(--bp-black);margin-bottom:14px}
+.hero-lead{font-size:1.05rem;color:var(--bp-gray);line-height:1.65;max-width:560px;margin:0 auto}
+
+/* Sections */
+.section{max-width:900px;margin:0 auto;padding:48px 24px}
+.section-title{font-family:'Lora',serif;font-size:1.35rem;font-weight:600;margin-bottom:8px}
+.section-intro{font-size:.9rem;color:var(--bp-gray);margin-bottom:28px;line-height:1.6}
+.section-h2{font-size:1.05rem;font-weight:600;margin-bottom:16px;padding-top:8px}
+
+/* Reading plans */
+.plan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.plan-card{background:var(--bp-white);border:0.5px solid var(--bp-border);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;transition:border-color .15s,box-shadow .15s}
+.plan-card:hover{border-color:rgba(42,159,214,.35);box-shadow:0 4px 20px rgba(0,0,0,.04)}
+.plan-card-title{font-size:.95rem;font-weight:500;line-height:1.45}
+.plan-card-meta{font-size:.75rem;color:var(--bp-gray)}
+.plan-card a{align-self:flex-start;font-size:.85rem;font-weight:500;color:var(--bp-blue);text-decoration:none}
+.plan-card a:hover{text-decoration:underline}
+.plan-empty{font-size:.9rem;color:var(--bp-gray);font-style:italic;padding:16px 0}
+
+/* Accordion */
+.downloads-acc{border:0.5px solid var(--bp-border);border-radius:12px;background:var(--bp-white);overflow:hidden}
+.acc-item{border-bottom:0.5px solid var(--bp-border)}
+.acc-item:last-child{border-bottom:none}
+.acc-btn{width:100%;text-align:left;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;background:var(--bp-white);border:none;font-family:'Inter',sans-serif;font-size:.95rem;font-weight:500;color:var(--bp-black);cursor:pointer;transition:background .15s}
+.acc-btn:hover{background:var(--bp-cream)}
+.acc-btn[aria-expanded="true"]{background:var(--bp-cream)}
+.acc-icon{width:18px;height:18px;flex-shrink:0;color:var(--bp-gray);transition:transform .2s}
+.acc-btn[aria-expanded="true"] .acc-icon{transform:rotate(180deg)}
+.acc-panel{display:none;padding:0 18px 18px 18px}
+.acc-panel.open{display:block}
+.acc-panel ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.acc-panel a{font-size:.88rem;color:var(--bp-blue);text-decoration:none}
+.acc-panel a:hover{text-decoration:underline}
+
+/* Footer */
+.site-footer{background:var(--bp-white);border-top:0.5px solid var(--bp-border);padding:40px 24px 48px;margin-top:24px}
+.footer-inner{max-width:900px;margin:0 auto}
+.footer-links{display:flex;flex-wrap:wrap;gap:16px 24px;margin-bottom:28px}
+.footer-links a{font-size:.85rem;color:var(--bp-gray);text-decoration:none}
+.footer-links a:hover{color:var(--bp-blue)}
+.footer-note{font-size:.72rem;color:var(--bp-gray);margin-bottom:20px;line-height:1.5}
+.footer-signup{font-size:.85rem;font-weight:500;margin-bottom:10px}
+.signup-row{display:flex;flex-wrap:wrap;gap:10px;max-width:400px}
+.signup-row input[type="email"]{flex:1;min-width:180px;border:0.5px solid var(--bp-border);border-radius:8px;padding:10px 12px;font-size:.88rem;font-family:'Inter',sans-serif}
+.signup-row input:focus{outline:none;border-color:var(--bp-blue)}
+.signup-row button{padding:10px 18px;background:#111;color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:500;font-family:'Inter',sans-serif;cursor:pointer}
+.signup-row button:hover{background:#333}
+.footer-back{margin-top:28px;padding-top:20px;border-top:0.5px solid var(--bp-border)}
+.footer-back a{font-size:.85rem;color:var(--bp-gray);text-decoration:none}
+.footer-back a:hover{color:var(--bp-blue)}
+
+@media (max-width:640px){
+  .site-header-inner{height:auto;min-height:56px;padding:12px 16px;flex-wrap:wrap}
+  .header-nav{width:100%;justify-content:space-between}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="site-header-inner">
+    <a class="logo-link" id="logo-link" href="https://bibleproject.com/english/" aria-label="BibleProject home">
+      <img class="logo-mark" src="../bibleproject-logo-mark.svg" alt="" width="48" height="48" decoding="async" aria-hidden="true">
+      <img src="../bibleproject-word-mark.svg" alt="BibleProject" width="148" height="27" decoding="async">
+    </a>
+    <nav class="header-nav" aria-label="Primary">
+      <a href="#downloads" data-i18n="navDownloads">Downloads</a>
+      <a href="#reading-plans" data-i18n="navPlans">Reading Plans</a>
+      <div class="lang-select-wrap">
+        <label for="lang-picker" data-i18n="langLabel">Language</label>
+        <select id="lang-picker" class="lang-select" aria-label="Choose language"></select>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <p class="hero-eyebrow" data-i18n="heroEyebrow">BibleProject</p>
+    <h1 class="hero-title" id="hero-title">We create resources to help people understand the Bible.</h1>
+    <p class="hero-lead" id="hero-lead">Explore reading plans and video downloads available in your language.</p>
+  </div>
+</section>
+
+<section class="section" id="reading-plans">
+  <h2 class="section-title" data-i18n="plansTitle">Reading Plans</h2>
+  <p class="section-intro" id="plans-intro" data-i18n="plansIntro">Reading plans on YouVersion that match your language. Open the Bible App to start.</p>
+  <div class="plan-grid" id="plan-grid" role="list"></div>
+</section>
+
+<section class="section" id="downloads">
+  <h2 class="section-title" data-i18n="dlTitle">Downloads</h2>
+  <p class="section-intro" id="dl-intro" data-i18n="dlIntro">Video and audio organized by series. Categories with no items in your language are hidden.</p>
+  <div class="downloads-acc" id="downloads-acc" role="region" aria-label="Download categories"></div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="https://bibleproject.com/about" target="_blank" rel="noopener noreferrer">About</a>
+      <a href="https://bibleproject.com/downloads" target="_blank" rel="noopener noreferrer">Downloads</a>
+      <a href="https://bibleproject.com/terms" target="_blank" rel="noopener noreferrer">Terms of Use</a>
+      <a href="https://bibleproject.com/privacy" target="_blank" rel="noopener noreferrer">Privacy</a>
+    </div>
+    <p class="footer-note">Legal links above are shown in English as a global standard; localized legal pages may be added in Sanity.</p>
+    <p class="footer-signup" data-i18n="signupTitle">Email updates</p>
+    <form class="signup-row" action="#" method="post" onsubmit="event.preventDefault();alert('Prototype: connect to your newsletter API.');">
+      <input type="email" name="email" placeholder="you@example.com" autocomplete="email" aria-label="Email">
+      <button type="submit" data-i18n="signupBtn">Subscribe</button>
+    </form>
+    <div class="footer-back">
+      <a href="../">← Home</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+const CATEGORY_ORDER=[
+  ['ten-commandments','The 10 Commandments'],
+  ['ot-overviews','Old Testament Overviews'],
+  ['nt-overviews','New Testament Overviews'],
+  ['biblical-themes','Biblical Themes'],
+  ['sermon-on-the-mount','Sermon on the Mount'],
+  ['sermon-on-the-mount-visual','Sermon on the Mount Visual Commentaries'],
+  ['how-to-read-bible','How to Read the Bible'],
+  ['insights','Insights'],
+  ['god-spiritual-beings','God and Spiritual Beings'],
+  ['royal-priesthood','Royal Priesthood'],
+  ['creation','Creation'],
+  ['cog-word-studies','Character of God Word Studies'],
+  ['word-studies','Word Studies'],
+  ['bad-words','Bad Words'],
+  ['advent','Advent'],
+  ['luke-acts','Luke-Acts'],
+  ['wisdom','Wisdom'],
+  ['shema','The Shema'],
+  ['torah','Torah'],
+  ['deuterocanon','The Deuterocanon / Apocrypha'],
+  ['streetlights-remix','Streetlights Remix']
+];
+
+const LOCALES={
+  'english':{
+    slug:'english',
+    htmlLang:'en',
+    dir:'ltr',
+    navDownloads:'Downloads',
+    navPlans:'Reading Plans',
+    langLabel:'Language',
+    heroEyebrow:'BibleProject',
+    heroTitle:'We create resources to help people understand the Bible.',
+    heroLead:'Explore reading plans and video downloads available in your language.',
+    plansTitle:'Reading Plans',
+    plansIntro:'Reading plans on YouVersion that match your language. Open the Bible App to start.',
+    dlTitle:'Downloads',
+    dlIntro:'Video and audio organized by series. Categories with no items in your language are hidden.',
+    signupTitle:'Email updates',
+    signupBtn:'Subscribe',
+    readingPlans:[
+      {title:'BibleProject: The Bible in One Year',subtitle:'YouVersion · English',url:'https://www.bible.com/yv/reading-plans'},
+      {title:'Gospels in 40 Days',subtitle:'YouVersion · English',url:'https://www.bible.com/yv/reading-plans'}
+    ],
+    downloads:{
+      'ot-overviews':[{title:'Genesis 1–11 Overview',url:'https://bibleproject.com/explore/video/'}],
+      'nt-overviews':[{title:'Luke Overview',url:'https://bibleproject.com/explore/video/'}],
+      'biblical-themes':[{title:'The Kingdom of God',url:'https://bibleproject.com/explore/video/'}],
+      'how-to-read-bible':[{title:'How to Read the Bible series',url:'https://bibleproject.com/explore/video/'}],
+      'word-studies':[{title:'Word Study: Agape',url:'https://bibleproject.com/explore/video/'}]
+    }
+  },
+  'spanish':{
+    slug:'spanish',
+    htmlLang:'es',
+    dir:'ltr',
+    navDownloads:'Descargas',
+    navPlans:'Planes de lectura',
+    langLabel:'Idioma',
+    heroEyebrow:'BibleProject',
+    heroTitle:'Creamos recursos para ayudar a las personas a entender la Biblia.',
+    heroLead:'Explora planes de lectura y descargas de video disponibles en tu idioma.',
+    plansTitle:'Planes de lectura',
+    plansIntro:'Planes en YouVersion en tu idioma. Abre la aplicación Biblia para comenzar.',
+    dlTitle:'Descargas',
+    dlIntro:'Video y audio por serie. Las categorías vacías no se muestran.',
+    signupTitle:'Correo de novedades',
+    signupBtn:'Suscribirse',
+    readingPlans:[
+      {title:'Biblia en un año',subtitle:'YouVersion · Español',url:'https://www.bible.com/yv/reading-plans'},
+      {title:'Salmos de consuelo',subtitle:'YouVersion · Español',url:'https://www.bible.com/yv/reading-plans'}
+    ],
+    downloads:{
+      'ot-overviews':[{title:'Génesis 1–11',url:'https://bibleproject.com/explore/video/'}],
+      'biblical-themes':[{title:'El Reino de Dios',url:'https://bibleproject.com/explore/video/'}],
+      'advent':[{title:'Adviento',url:'https://bibleproject.com/explore/video/'}]
+    }
+  },
+  'french':{
+    slug:'french',
+    htmlLang:'fr',
+    dir:'ltr',
+    navDownloads:'Téléchargements',
+    navPlans:'Plans de lecture',
+    langLabel:'Langue',
+    heroEyebrow:'BibleProject',
+    heroTitle:'Nous créons des ressources pour aider chacun à comprendre la Bible.',
+    heroLead:'Découvrez des plans de lecture et des téléchargements disponibles dans votre langue.',
+    plansTitle:'Plans de lecture',
+    plansIntro:'Plans YouVersion dans votre langue. Ouvrez l’application Bible pour commencer.',
+    dlTitle:'Téléchargements',
+    dlIntro:'Vidéos et audio par série. Les catégories vides sont masquées.',
+    signupTitle:'Newsletter',
+    signupBtn:'S’inscrire',
+    readingPlans:[
+      {title:'La Bible en un an',subtitle:'YouVersion · Français',url:'https://www.bible.com/yv/reading-plans'}
+    ],
+    downloads:{
+      'nt-overviews':[{title:'Luc — Aperçu',url:'https://bibleproject.com/explore/video/'}],
+      'biblical-themes':[{title:'Le Royaume de Dieu',url:'https://bibleproject.com/explore/video/'}]
+    }
+  },
+  'korean':{
+    slug:'korean',
+    htmlLang:'ko',
+    dir:'ltr',
+    navDownloads:'다운로드',
+    navPlans:'읽기 계획',
+    langLabel:'언어',
+    heroEyebrow:'BibleProject',
+    heroTitle:'성경을 이해하도록 돕는 자료를 만듭니다.',
+    heroLead:'해당 언어로 제공되는 읽기 계획과 다운로드를 둘러보세요.',
+    plansTitle:'읽기 계획',
+    plansIntro:'YouVersion에서 제공하는 언어별 계획입니다. 바이블 앱에서 시작하세요.',
+    dlTitle:'다운로드',
+    dlIntro:'시리즈별로 정리된 영상·오디오입니다. 항목이 없는 카테고리는 숨깁니다.',
+    signupTitle:'이메일 소식',
+    signupBtn:'구독',
+    readingPlans:[
+      {title:'1년 성경 읽기',subtitle:'YouVersion · 한국어',url:'https://www.bible.com/yv/reading-plans'}
+    ],
+    downloads:{
+      'ot-overviews':[{title:'창세기 1–11',url:'https://bibleproject.com/explore/video/'}],
+      'how-to-read-bible':[{title:'성경 읽는 법',url:'https://bibleproject.com/explore/video/'}]
+    }
+  }
+};
+
+function getQueryLang(){
+  const q=new URLSearchParams(window.location.search).get('lang');
+  if(q&&LOCALES[q])return q;
+  return 'english';
+}
+
+function setLang(langKey){
+  const loc=LOCALES[langKey];
+  if(!loc)return;
+  document.documentElement.lang=loc.htmlLang;
+  document.documentElement.dir=loc.dir;
+  const logo=document.getElementById('logo-link');
+  logo.href='https://bibleproject.com/'+loc.slug+'/';
+  document.title='BibleProject — '+loc.slug.replace(/-/g,' ')+' (prototype)';
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    const k=el.getAttribute('data-i18n');
+    if(loc[k]!==undefined)el.textContent=loc[k];
+  });
+  document.getElementById('hero-title').textContent=loc.heroTitle;
+  document.getElementById('hero-lead').textContent=loc.heroLead;
+  document.getElementById('plans-intro').textContent=loc.plansIntro;
+  document.getElementById('dl-intro').textContent=loc.dlIntro;
+
+  const grid=document.getElementById('plan-grid');
+  grid.innerHTML='';
+  if(!loc.readingPlans||!loc.readingPlans.length){
+    grid.innerHTML='<p class="plan-empty" role="status">No reading plans listed for this language yet.</p>';
+  }else{
+    loc.readingPlans.forEach(function(p){
+      const card=document.createElement('article');
+      card.className='plan-card';
+      card.setAttribute('role','listitem');
+      card.innerHTML='<div class="plan-card-title"></div><div class="plan-card-meta"></div><a target="_blank" rel="noopener noreferrer">Open in Bible App →</a>';
+      card.querySelector('.plan-card-title').textContent=p.title;
+      card.querySelector('.plan-card-meta').textContent=p.subtitle||'';
+      const a=card.querySelector('a');
+      a.href=p.url;
+      a.setAttribute('aria-label',p.title+' — open in Bible App');
+      grid.appendChild(card);
+    });
+  }
+
+  const acc=document.getElementById('downloads-acc');
+  acc.innerHTML='';
+  let idx=0;
+  CATEGORY_ORDER.forEach(function(entry){
+    const key=entry[0],label=entry[1];
+    const items=loc.downloads&&loc.downloads[key];
+    if(!items||!items.length)return;
+    const id='acc-'+idx++;
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='acc-btn';
+    btn.id=id+'-btn';
+    btn.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-controls',id+'-panel');
+    btn.innerHTML='<span class="acc-label"></span><svg class="acc-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    btn.querySelector('.acc-label').textContent=label;
+    const panel=document.createElement('div');
+    panel.className='acc-panel';
+    panel.id=id+'-panel';
+    panel.setAttribute('role','region');
+    panel.setAttribute('aria-labelledby',id+'-btn');
+    const ul=document.createElement('ul');
+    items.forEach(function(it){
+      const li=document.createElement('li');
+      const a=document.createElement('a');
+      a.href=it.url;
+      a.target='_blank';
+      a.rel='noopener noreferrer';
+      a.textContent=it.title;
+      li.appendChild(a);
+      ul.appendChild(li);
+    });
+    panel.appendChild(ul);
+    const wrap=document.createElement('div');
+    wrap.className='acc-item';
+    wrap.appendChild(btn);
+    wrap.appendChild(panel);
+    acc.appendChild(wrap);
+    btn.addEventListener('click',function(){
+      const open=btn.getAttribute('aria-expanded')==='true';
+      acc.querySelectorAll('.acc-btn').forEach(function(b){
+        b.setAttribute('aria-expanded','false');
+        b.nextElementSibling.classList.remove('open');
+      });
+      if(!open){
+        btn.setAttribute('aria-expanded','true');
+        panel.classList.add('open');
+      }
+    });
+  });
+  if(!acc.children.length){
+    acc.innerHTML='<p class="plan-empty" style="padding:20px">No download categories yet for this language.</p>';
+  }
+
+  try{
+    history.replaceState({lang:langKey},'','?lang='+encodeURIComponent(langKey));
+  }catch(e){}
+}
+
+function fillPicker(current){
+  const sel=document.getElementById('lang-picker');
+  sel.innerHTML='';
+  Object.keys(LOCALES).forEach(function(key){
+    const o=document.createElement('option');
+    o.value=key;
+    o.textContent=key.charAt(0).toUpperCase()+key.slice(1).replace(/-/g,' ');
+    if(key===current)o.selected=true;
+    sel.appendChild(o);
+  });
+  sel.onchange=function(){setLang(sel.value)};
+}
+
+const initial=getQueryLang();
+fillPicker(initial);
+setLang(initial);
+})();
+</script>
+</body>
+</html>
