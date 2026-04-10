@@ -7,6 +7,7 @@
 
 var DEFAULTS={
   heroEyebrow:'BibleProject',
+  heroTitle:'We create resources to help people understand the Bible.',
   sectionLabelPlans:'Reading plans',
   sectionLabelDownloads:'Downloads available',
   plansTitle:'Reading Plans',

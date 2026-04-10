@@ -30,26 +30,32 @@
 html{scroll-behavior:smooth}
 body{background:var(--color-background-primary);color:var(--color-text-primary);font-family:var(--font-sans);font-size:15px;font-weight:400;line-height:1.6;min-height:100vh}
 
-/* Header */
+/* Header — left-aligned cluster (logo + locale + nav), BP-style */
 .site-header{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);position:sticky;top:0;z-index:200}
-.site-header-inner{max-width:1100px;margin:0 auto;padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.header-content-inner{max-width:1100px;margin:0 auto;padding:12px 24px 14px;display:flex;align-items:center;justify-content:flex-start;flex-wrap:wrap;gap:12px 28px}
+.header-logo-container{display:flex;align-items:center;gap:14px 18px;flex-wrap:wrap;min-width:0}
 .logo-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex-shrink:0}
 .logo-link img{height:28px;width:auto;display:block}
 .logo-mark{height:32px!important}
-.header-nav{display:flex;align-items:center;gap:20px;flex-wrap:wrap;justify-content:flex-end}
-.header-nav a{font-size:14px;font-weight:500;color:var(--color-text-secondary);text-decoration:none}
-.header-nav a:hover{color:var(--color-brand-blue)}
+.header-content-language-identifier{font-size:14px;font-weight:500;color:var(--color-text-primary);line-height:1.35;white-space:nowrap}
+.header-main-link-container{display:flex;align-items:center;gap:20px 24px;flex-wrap:wrap;justify-content:flex-start}
+.header-main-link-container>a{font-size:14px;font-weight:500;color:var(--color-text-secondary);text-decoration:none}
+.header-main-link-container>a:hover{color:var(--color-brand-blue)}
 .lang-select-wrap{display:flex;align-items:center;gap:8px}
 .lang-select-wrap label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-secondary);white-space:nowrap}
 .lang-select{appearance:none;-webkit-appearance:none;background:var(--color-background-primary);border:0.5px solid var(--color-border-primary);border-radius:8px;padding:8px 28px 8px 11px;font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary);cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M1 1l3.5 3L8 1' stroke='%236b6b6b' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;max-width:min(200px,42vw)}
 .lang-select:focus{outline:none;border-color:var(--color-brand-blue)}
 
-/* Hero — stack (matches site heading + lead + note pattern) */
-.hero{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:40px 24px 48px}
-.hero-stack{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:1.125rem}
-.hero-heading{font-family:var(--font-sans);font-size:clamp(26px,4vw,34px);font-weight:700;line-height:1.2;color:var(--color-text-primary)}
-.hero-lead-lg{font-size:17px;font-weight:600;line-height:1.35;color:var(--color-text-primary)}
-.hero-note{font-size:15px;line-height:1.6;color:var(--color-text-primary);max-width:60ch}
+/* Hero — centered tagline + decorative carousel */
+.hero{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:36px 24px 20px;overflow:hidden}
+.hero-stack{max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;padding-bottom:8px}
+.hero-heading{font-family:var(--font-sans);font-size:clamp(24px,4vw,32px);font-weight:700;line-height:1.25;color:var(--color-text-primary);max-width:22ch}
+.home-carousel-outer{height:clamp(270px,40.5vw,405px);position:relative;width:100%;max-width:1100px;margin:0 auto}
+.home-carousel{height:clamp(300px,75vw,1500px);inset:0;overflow:hidden;position:absolute;width:100%;left:0;right:0;pointer-events:none}
+.home-carousel-svg{display:block;height:auto;left:50%;position:absolute;top:24px;transform:translateX(-50%);width:min(600px,100vw);max-width:100%}
+.home-carousel-svg .home-carousel-spin{transform-origin:500px 500px;transform-box:view-box;animation:home-carousel-rotate 85s linear infinite}
+.home-carousel-svg .home-carousel-spin--b{animation-duration:68s;animation-direction:reverse}
+@keyframes home-carousel-rotate{to{transform:rotate(360deg)}}
 
 /* Sections — labels + headings */
 .ds-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-secondary);margin-bottom:0.75rem}
@@ -59,7 +65,11 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
 
 /* Downloads */
 .section-downloads{background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary);border-bottom:0.5px solid var(--color-border-tertiary);padding-top:2.5rem;padding-bottom:2.5rem}
-.downloads-acc{border:none;border-radius:0;background:transparent;overflow:visible;margin-top:0.5rem}
+.downloads-intro--center{max-width:720px;margin:0 auto 2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.downloads-intro-title{font-family:var(--font-sans);font-size:clamp(20px,3vw,26px);font-weight:700;line-height:1.25;color:var(--color-text-primary)}
+.downloads-intro-sub{font-size:17px;font-weight:600;line-height:1.35;color:var(--color-text-primary);max-width:50ch}
+.downloads-intro-note{font-size:15px;line-height:1.6;color:var(--color-text-secondary);max-width:60ch;text-align:center}
+.downloads-acc{border:none;border-radius:0;background:transparent;overflow:visible;margin-top:0.25rem}
 .acc-item{border-bottom:0.5px solid var(--color-border-tertiary)}
 .acc-item:last-child{border-bottom:none}
 .acc-btn{width:100%;text-align:left;display:flex;align-items:center;gap:16px;padding:20px 4px 20px 0;background:transparent;border:none;font-family:var(--font-sans);cursor:pointer;transition:background .12s}
@@ -113,8 +123,8 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
 .footer-back a:hover{color:var(--color-brand-blue)}
 
 @media (max-width:640px){
-  .site-header-inner{height:auto;min-height:56px;padding:12px 16px;flex-wrap:wrap}
-  .header-nav{width:100%;justify-content:space-between}
+  .header-content-inner{padding:12px 16px 14px}
+  .header-main-link-container{width:100%;gap:14px 18px}
   .acc-thumb{width:48px;height:48px}
   .acc-panel-inner{padding-inline-start:64px}
 }
@@ -123,12 +133,15 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
 <body>
 
 <header class="site-header">
-  <div class="site-header-inner">
-    <a class="logo-link" id="logo-link" href="https://p-crawf.github.io/BPSandbox" aria-label="BibleProject — home">
-      <img class="logo-mark" src="../bibleproject-logo-mark.svg" alt="" width="48" height="48" decoding="async" aria-hidden="true">
-      <img src="../bibleproject-word-mark.svg" alt="BibleProject" width="148" height="27" decoding="async">
-    </a>
-    <nav class="header-nav" aria-label="Primary">
+  <div class="header-content-inner">
+    <div class="header-logo-container">
+      <a class="logo-link" id="logo-link" href="https://p-crawf.github.io/BPSandbox" aria-label="BibleProject — home">
+        <img class="logo-mark" src="../bibleproject-logo-mark.svg" alt="" width="48" height="48" decoding="async" aria-hidden="true">
+        <img src="../bibleproject-word-mark.svg" alt="BibleProject" width="148" height="27" decoding="async">
+      </a>
+      <div class="header-content-language-identifier" id="header-lang-label" aria-live="polite">English</div>
+    </div>
+    <nav class="header-main-link-container" aria-label="Primary">
       <a href="#reading-plans" data-i18n="navPlans">Reading Plans</a>
       <a href="#downloads" data-i18n="navDownloads">Downloads</a>
       <div class="lang-select-wrap">
@@ -141,9 +154,45 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
 
 <section class="hero">
   <div class="hero-stack">
-    <h1 class="hero-heading" id="hero-dl-title" data-i18n="dlPageTitle">Download Free BibleProject Resources for Sharing and Teaching</h1>
-    <div class="hero-lead-lg" id="hero-dl-sub" data-i18n="dlPageSub">Access videos, posters, transcripts, and study notes.</div>
-    <div class="hero-note" id="hero-dl-note" data-i18n="dlPageNote">Note: Not all videos have accompanying transcripts, study notes, and posters. We're working to add missing transcripts over time. But if study notes or posters are unavailable, it's because they were not created for that video.</div>
+    <h1 class="hero-heading" id="hero-title" data-i18n="heroTitle">We create resources to help people understand the Bible.</h1>
+  </div>
+  <div class="home-carousel-outer" data-testid="home-carousel">
+    <div class="home-carousel">
+      <svg class="home-carousel-svg" viewBox="0 0 1000 1000" aria-hidden="true">
+        <g class="home-carousel-spin">
+          <g transform="rotate(8.62, 500, 500)">
+            <g transform="rotate(0,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#2a9fd6"/></g>
+            <g transform="rotate(30,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#E8B86D"/></g>
+            <g transform="rotate(60,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#C07A5A"/></g>
+            <g transform="rotate(90,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#7B6BBF"/></g>
+            <g transform="rotate(120,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#4A9E78"/></g>
+            <g transform="rotate(150,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#D4647A"/></g>
+            <g transform="rotate(180,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#111111"/></g>
+            <g transform="rotate(210,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#F5F3EE" stroke="#e0ddd8" stroke-width="0.75"/></g>
+            <g transform="rotate(240,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#2a9fd6"/></g>
+            <g transform="rotate(270,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#E8B86D"/></g>
+            <g transform="rotate(300,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#C07A5A"/></g>
+            <g transform="rotate(330,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#7B6BBF"/></g>
+          </g>
+        </g>
+        <g class="home-carousel-spin home-carousel-spin--b">
+          <g transform="rotate(-8.62, 500, 500)">
+            <g transform="rotate(15,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#4A9E78"/></g>
+            <g transform="rotate(45,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#D4647A"/></g>
+            <g transform="rotate(75,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#111111"/></g>
+            <g transform="rotate(105,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#F5F3EE" stroke="#e0ddd8" stroke-width="0.75"/></g>
+            <g transform="rotate(135,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#2a9fd6"/></g>
+            <g transform="rotate(165,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#E8B86D"/></g>
+            <g transform="rotate(195,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#C07A5A"/></g>
+            <g transform="rotate(225,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#7B6BBF"/></g>
+            <g transform="rotate(255,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#4A9E78"/></g>
+            <g transform="rotate(285,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#D4647A"/></g>
+            <g transform="rotate(315,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#111111"/></g>
+            <g transform="rotate(345,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#E8B86D"/></g>
+          </g>
+        </g>
+      </svg>
+    </div>
   </div>
 </section>
 
@@ -163,9 +212,14 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
   </div>
 </section>
 
-<section class="section section-downloads" id="downloads" aria-labelledby="downloads-label">
-  <p class="ds-label" id="downloads-label" data-i18n="sectionLabelDownloads">Downloads available</p>
-  <div class="downloads-acc" id="downloads-acc" role="region" aria-labelledby="downloads-label"></div>
+<section class="section section-downloads" id="downloads" aria-labelledby="downloads-block-title">
+  <p class="ds-label" data-i18n="sectionLabelDownloads">Downloads available</p>
+  <div class="downloads-intro--center">
+    <h2 class="downloads-intro-title" id="downloads-block-title" data-i18n="dlPageTitle">Download Free BibleProject Resources for Sharing and Teaching</h2>
+    <p class="downloads-intro-sub" data-i18n="dlPageSub">Access videos, posters, transcripts, and study notes.</p>
+    <p class="downloads-intro-note" data-i18n="dlPageNote">Note: Not all videos have accompanying transcripts, study notes, and posters. We're working to add missing transcripts over time. But if study notes or posters are unavailable, it's because they were not created for that video.</p>
+  </div>
+  <div class="downloads-acc" id="downloads-acc" role="region" aria-label="Download categories"></div>
 </section>
 
 <footer class="site-footer">
@@ -236,6 +290,8 @@ function setLang(langKey){
   });
   const overviewEl=document.getElementById('plans-overview-desc');
   if(overviewEl)overviewEl.textContent=loc.plansOverview!==undefined?loc.plansOverview:loc.plansIntro;
+  const headerLang=document.getElementById('header-lang-label');
+  if(headerLang)headerLang.textContent=loc.label||loc.slug||'';
 
   function planThumbBg(seed){
     var colors=['#F79968','#E8B86D','#7B6BBF','#4A9E78','#C07A5A','#D4647A'];
