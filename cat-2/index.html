@@ -19,7 +19,6 @@
   --color-border-tertiary:#e0ddd8;
   --color-brand-blue:#2a9fd6;
   --color-brand-blue-dark:#1e8abb;
-  --color-blue-tint:#e8f4fb;
   --bp-blue:var(--color-brand-blue);
   --bp-blue-dark:var(--color-brand-blue-dark);
   --bp-cream:var(--color-background-secondary);
@@ -29,7 +28,7 @@
   --bp-border:var(--color-border-tertiary);
 }
 html{scroll-behavior:smooth}
-body{background:var(--color-background-secondary);color:var(--color-text-primary);font-family:var(--font-sans);font-size:15px;font-weight:400;line-height:1.6;min-height:100vh}
+body{background:var(--color-background-primary);color:var(--color-text-primary);font-family:var(--font-sans);font-size:15px;font-weight:400;line-height:1.6;min-height:100vh}
 
 /* Header */
 .site-header{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);position:sticky;top:0;z-index:200}
@@ -45,12 +44,12 @@ body{background:var(--color-background-secondary);color:var(--color-text-primary
 .lang-select{appearance:none;-webkit-appearance:none;background:var(--color-background-primary);border:0.5px solid var(--color-border-primary);border-radius:8px;padding:8px 28px 8px 11px;font-family:var(--font-sans);font-size:13px;color:var(--color-text-primary);cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M1 1l3.5 3L8 1' stroke='%236b6b6b' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;max-width:min(200px,42vw)}
 .lang-select:focus{outline:none;border-color:var(--color-brand-blue)}
 
-/* Hero — Display / H1 scale (design system) */
-.hero{background:linear-gradient(180deg,var(--color-blue-tint) 0%,var(--color-background-secondary) 100%);border-bottom:0.5px solid var(--color-border-tertiary);padding:48px 24px 56px}
-.hero-inner{max-width:720px;margin:0 auto;text-align:center}
-.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:12px}
-.hero-title{font-family:var(--font-sans);font-size:clamp(22px,4vw,28px);font-weight:700;line-height:1.2;color:var(--color-text-primary);margin-bottom:14px}
-.hero-lead{font-size:15px;color:var(--color-text-secondary);line-height:1.6;max-width:560px;margin:0 auto}
+/* Hero — stack (matches site heading + lead + note pattern) */
+.hero{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:40px 24px 48px}
+.hero-stack{max-width:900px;margin:0 auto;display:flex;flex-direction:column;gap:1.125rem}
+.hero-heading{font-family:var(--font-sans);font-size:clamp(26px,4vw,34px);font-weight:700;line-height:1.2;color:var(--color-text-primary)}
+.hero-lead-lg{font-size:17px;font-weight:600;line-height:1.35;color:var(--color-text-primary)}
+.hero-note{font-size:15px;line-height:1.6;color:var(--color-text-primary);max-width:60ch}
 
 /* Sections — labels + headings */
 .ds-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-secondary);margin-bottom:0.75rem}
@@ -60,10 +59,7 @@ body{background:var(--color-background-secondary);color:var(--color-text-primary
 
 /* Downloads */
 .section-downloads{background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary);border-bottom:0.5px solid var(--color-border-tertiary);padding-top:2.5rem;padding-bottom:2.5rem}
-.downloads-page-head{max-width:720px;margin-bottom:2rem;text-align:left}
-.dl-page-sub{font-size:15px;font-weight:600;color:var(--color-text-primary);margin-bottom:1rem;line-height:1.4}
-.dl-page-note{font-size:13px;color:var(--color-text-secondary);line-height:1.65;max-width:680px}
-.downloads-acc{border:none;border-radius:0;background:transparent;overflow:visible}
+.downloads-acc{border:none;border-radius:0;background:transparent;overflow:visible;margin-top:0.5rem}
 .acc-item{border-bottom:0.5px solid var(--color-border-tertiary)}
 .acc-item:last-child{border-bottom:none}
 .acc-btn{width:100%;text-align:left;display:flex;align-items:center;gap:16px;padding:20px 4px 20px 0;background:transparent;border:none;font-family:var(--font-sans);cursor:pointer;transition:background .12s}
@@ -82,14 +78,21 @@ body{background:var(--color-background-secondary);color:var(--color-text-primary
 .acc-panel a{font-size:14px;color:var(--color-brand-blue);text-decoration:none;font-weight:500}
 .acc-panel a:hover{text-decoration:underline}
 
-/* Reading plans — content card–inspired */
-.plan-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.plan-card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:12px;padding:18px 20px;display:flex;flex-direction:column;gap:12px;transition:border-color .15s,box-shadow .15s}
-.plan-card:hover{border-color:rgba(42,159,214,.35);box-shadow:0 4px 20px rgba(17,17,17,.06)}
-.plan-card-title{font-size:14px;font-weight:700;line-height:1.35;color:var(--color-text-primary)}
-.plan-card-meta{font-size:13px;color:var(--color-text-secondary)}
-.plan-card a{align-self:flex-start;font-size:14px;font-weight:500;color:var(--color-brand-blue);text-decoration:none}
-.plan-card a:hover{text-decoration:underline}
+/* Reading plans — ipv2-style overview + horizontal rail */
+.ipv2-overview-container{max-width:1100px;margin:0 auto}
+.ipv2-overview-head{display:flex;flex-wrap:wrap;gap:20px 28px;align-items:flex-start;margin-bottom:1.5rem}
+.ipv2-overview-logo-container{flex-shrink:0}
+.ipv2-overview-logo{width:80px;height:auto;display:block}
+.ipv2-overview-description{flex:1;min-width:min(100%,240px);font-size:15px;line-height:1.6;color:var(--color-text-primary);max-width:65ch}
+.swiper-bible-studies{margin:0 -24px;padding:0 24px}
+.plan-scroll{display:flex;flex-direction:row;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:12px;scrollbar-width:thin}
+.plan-scroll:focus-visible{outline:2px solid var(--color-brand-blue);outline-offset:4px;border-radius:4px}
+.ipv2-overview-plan{flex:0 0 148px;scroll-snap-align:start;min-width:0}
+.ipv2-overview-video{display:block;text-decoration:none;color:inherit}
+.ipv2-overview-video:hover .ipv2-overview-video-title{color:var(--color-brand-blue)}
+.ipv2-overview-video-image-container{border-radius:8px;overflow:hidden;aspect-ratio:320/180;background:#f79968}
+.ipv2-overview-video-image{width:100%;height:100%;object-fit:cover;display:block}
+.ipv2-overview-video-title{margin-top:10px;font-size:14px;font-weight:600;line-height:1.35;color:var(--color-text-primary);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .plan-empty{font-size:15px;color:var(--color-text-secondary);font-style:italic;padding:16px 0}
 
 /* Footer */
@@ -137,28 +140,32 @@ body{background:var(--color-background-secondary);color:var(--color-text-primary
 </header>
 
 <section class="hero">
-  <div class="hero-inner">
-    <p class="hero-eyebrow" data-i18n="heroEyebrow">BibleProject</p>
-    <h1 class="hero-title" id="hero-title">We create resources to help people understand the Bible.</h1>
-    <p class="hero-lead" id="hero-lead">Explore reading plans and video downloads available in your language.</p>
+  <div class="hero-stack">
+    <h1 class="hero-heading" id="hero-dl-title" data-i18n="dlPageTitle">Download Free BibleProject Resources for Sharing and Teaching</h1>
+    <div class="hero-lead-lg" id="hero-dl-sub" data-i18n="dlPageSub">Access videos, posters, transcripts, and study notes.</div>
+    <div class="hero-note" id="hero-dl-note" data-i18n="dlPageNote">Note: Not all videos have accompanying transcripts, study notes, and posters. We're working to add missing transcripts over time. But if study notes or posters are unavailable, it's because they were not created for that video.</div>
   </div>
 </section>
 
 <section class="section section-reading" id="reading-plans" aria-labelledby="reading-plans-heading">
   <p class="ds-label" data-i18n="sectionLabelPlans">Reading plans</p>
   <h2 class="ds-heading" id="reading-plans-heading" data-i18n="plansTitle">Reading Plans</h2>
-  <p class="section-intro" id="plans-intro" data-i18n="plansIntro">Reading plans on YouVersion that match your language. Open the Bible App to start.</p>
-  <div class="plan-grid" id="plan-grid" role="list"></div>
+  <div class="ipv2-overview-container">
+    <div class="ipv2-overview-head">
+      <div class="ipv2-overview-logo-container">
+        <img class="ipv2-overview-logo" src="https://d1bsmz3sdihplr.cloudfront.net/media/pages/sunday-school/bible-app-logo.png" alt="" width="80" height="80" loading="lazy" decoding="async">
+      </div>
+      <div class="ipv2-overview-description" id="plans-overview-desc"></div>
+    </div>
+    <div class="swiper-bible-studies">
+      <div class="plan-scroll" id="plan-scroll" role="list" tabindex="0" aria-label="Reading plans"></div>
+    </div>
+  </div>
 </section>
 
-<section class="section section-downloads" id="downloads" aria-labelledby="downloads-heading">
-  <div class="downloads-page-head">
-    <p class="ds-label" data-i18n="sectionLabelDownloads">Downloads available</p>
-    <h2 class="ds-heading" id="downloads-heading" data-i18n="dlPageTitle">Download Free BibleProject Resources for Sharing and Teaching</h2>
-    <p class="dl-page-sub" data-i18n="dlPageSub">Access videos, posters, transcripts, and study notes.</p>
-    <p class="dl-page-note" data-i18n="dlPageNote">Note: Not all videos have accompanying transcripts, study notes, and posters. We're working to add missing transcripts over time. But if study notes or posters are unavailable, it's because they were not created for that video.</p>
-  </div>
-  <div class="downloads-acc" id="downloads-acc" role="region" aria-label="Download categories"></div>
+<section class="section section-downloads" id="downloads" aria-labelledby="downloads-label">
+  <p class="ds-label" id="downloads-label" data-i18n="sectionLabelDownloads">Downloads available</p>
+  <div class="downloads-acc" id="downloads-acc" role="region" aria-labelledby="downloads-label"></div>
 </section>
 
 <footer class="site-footer">
@@ -227,28 +234,55 @@ function setLang(langKey){
     const k=el.getAttribute('data-i18n');
     if(loc[k]!==undefined)el.textContent=loc[k];
   });
-  document.getElementById('hero-title').textContent=loc.heroTitle;
-  document.getElementById('hero-lead').textContent=loc.heroLead;
-  document.getElementById('plans-intro').textContent=loc.plansIntro;
+  const overviewEl=document.getElementById('plans-overview-desc');
+  if(overviewEl)overviewEl.textContent=loc.plansOverview!==undefined?loc.plansOverview:loc.plansIntro;
 
-  const grid=document.getElementById('plan-grid');
-  grid.innerHTML='';
-  const cta=loc.ctaOpenApp||'Open in Bible App →';
+  function planThumbBg(seed){
+    var colors=['#F79968','#E8B86D','#7B6BBF','#4A9E78','#C07A5A','#D4647A'];
+    var h=0,i;
+    for(i=0;i<seed.length;i++)h=(h+seed.charCodeAt(i)*7)%colors.length;
+    return colors[h];
+  }
+
+  const scroll=document.getElementById('plan-scroll');
+  scroll.innerHTML='';
   if(!loc.readingPlans||!loc.readingPlans.length){
-    grid.innerHTML='<p class="plan-empty" role="status">'+(loc.plansEmpty||'No reading plans listed for this language yet.')+'</p>';
+    scroll.removeAttribute('role');
+    scroll.removeAttribute('tabindex');
+    scroll.innerHTML='<p class="plan-empty" role="status">'+(loc.plansEmpty||'No reading plans listed for this language yet.')+'</p>';
   }else{
+    scroll.setAttribute('role','list');
+    scroll.setAttribute('tabindex','0');
     loc.readingPlans.forEach(function(p){
-      const card=document.createElement('article');
-      card.className='plan-card';
-      card.setAttribute('role','listitem');
-      card.innerHTML='<div class="plan-card-title"></div><div class="plan-card-meta"></div><a target="_blank" rel="noopener noreferrer"></a>';
-      card.querySelector('.plan-card-title').textContent=p.title;
-      card.querySelector('.plan-card-meta').textContent=p.subtitle||'';
-      const a=card.querySelector('a');
+      const slide=document.createElement('div');
+      slide.className='ipv2-overview-plan';
+      slide.setAttribute('role','listitem');
+      const a=document.createElement('a');
+      a.className='ipv2-overview-video';
       a.href=p.url;
-      a.textContent=cta;
-      a.setAttribute('aria-label',p.title+' — open in Bible App');
-      grid.appendChild(card);
+      a.target='_blank';
+      a.rel='noopener noreferrer';
+      a.setAttribute('aria-label',(p.title||'')+' — '+(loc.ctaOpenApp||'Open in Bible App'));
+      const wrap=document.createElement('div');
+      wrap.className='ipv2-overview-video-image-container';
+      wrap.style.background=p.thumbBg||planThumbBg(p.title||'x');
+      if(p.thumb){
+        const im=document.createElement('img');
+        im.className='ipv2-overview-video-image';
+        im.src=p.thumb;
+        im.alt='';
+        im.loading='lazy';
+        im.decoding='async';
+        im.onerror=function(){this.remove();};
+        wrap.appendChild(im);
+      }
+      const tit=document.createElement('div');
+      tit.className='ipv2-overview-video-title';
+      tit.textContent=p.title||'';
+      a.appendChild(wrap);
+      a.appendChild(tit);
+      slide.appendChild(a);
+      scroll.appendChild(slide);
     });
   }
 
