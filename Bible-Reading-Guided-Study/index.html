@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Communal Bible Study Tool — BibleProject</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link rel="icon" href="../bibleproject-logo-mark.svg" type="image/svg+xml">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bp-blue:#2a9fd6;
+  --bp-blue-dark:#1e8abb;
+  --bp-blue-light:#e8f4fb;
+  --bp-cream:#f5f3ee;
+  --bp-white:#ffffff;
+  --bp-black:#1a1a1a;
+  --bp-gray:#6b6b6b;
+  --bp-border:#e0ddd8;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bp-cream);color:var(--bp-black);font-family:'Inter',sans-serif;font-weight:400;line-height:1.6;min-height:100vh;padding-bottom:72px}
+
+/* Header */
+.header{background:var(--bp-white);border-bottom:0.5px solid var(--bp-border);padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.logo-mark-img{height:28px;width:auto;display:block;flex-shrink:0}
+.logo-word-img{height:22px;width:auto;display:block;flex-shrink:0}
+.logo-divider{width:1px;height:18px;background:var(--bp-border);flex-shrink:0}
+.logo-sub{font-size:.73rem;color:var(--bp-gray);letter-spacing:.03em}
+.header-actions{display:flex;align-items:center;flex-shrink:0}
+.header-download{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;font-size:.76rem;font-weight:500;color:var(--bp-black);text-decoration:none;border:0.5px solid var(--bp-border);border-radius:8px;background:var(--bp-white);font-family:'Inter',sans-serif;transition:background .15s,border-color .15s;white-space:nowrap}
+.header-download:hover{background:var(--bp-cream);border-color:var(--bp-blue)}
+.header-download svg{flex-shrink:0;opacity:.85}
+.header-download-short{display:none}
+
+/* Scripture bar */
+.scripture-bar{border-bottom:0.5px solid var(--bp-border);padding:20px 40px;background:var(--bp-blue-light)}
+.scripture-bar-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.picker-label{font-size:.68rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--bp-gray);white-space:nowrap}
+.selects{display:flex;gap:8px;flex-wrap:wrap}
+select{appearance:none;-webkit-appearance:none;background:var(--bp-white);border:0.5px solid var(--bp-border);border-radius:8px;padding:8px 28px 8px 11px;font-family:'Inter',sans-serif;font-size:.81rem;color:var(--bp-black);cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' viewBox='0 0 9 5'%3E%3Cpath d='M1 1l3.5 3L8 1' stroke='%236b6b6b' stroke-width='1.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;transition:border-color .15s}
+select:focus{outline:none;border-color:var(--bp-blue)}
+select:disabled{opacity:.3;cursor:not-allowed}
+.verse-ref{margin-left:auto;font-family:'Lora',serif;font-style:italic;font-size:.95rem;color:var(--bp-black);opacity:0;transition:opacity .3s}
+.verse-ref.visible{opacity:1}
+
+/* Passage typography (sidebar) */
+.hero-eyebrow{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#7c6a3e;margin-bottom:8px}
+.hero-verse{font-family:'Lora',serif;font-size:18px;line-height:1.65;color:#2c2519}
+.hero-verse .verse-line{display:block;margin-bottom:10px}
+.hero-verse .verse-line:last-child{margin-bottom:0}
+.hero-verse .verse-num{font-weight:600;color:#7c6a3e;font-size:12px;font-family:'Inter',sans-serif;margin-right:6px;vertical-align:baseline}
+.hero-verse .verse-loading{font-style:italic;color:var(--bp-gray);font-size:15px}
+.hero-ref{font-size:13px;color:#7c6a3e;font-weight:500;margin-top:12px}
+.hero-nav{display:flex;gap:8px;margin-top:14px}
+.hero-nav-btn{display:flex;align-items:center;justify-content:center;width:36px;height:30px;background:var(--bp-white);border:0.5px solid var(--bp-border);border-radius:6px;cursor:pointer;color:var(--bp-gray);transition:border-color .15s,color .15s;padding:0}
+.hero-nav-btn:hover{border-color:var(--bp-blue);color:var(--bp-blue)}
+.hero-nav-btn:disabled{opacity:.2;cursor:default}
+.hero-nav-btn svg{pointer-events:none}
+
+/* Study layout: left passage rail (always visible) */
+.study-wrap{max-width:1180px;margin:0 auto;padding:0 40px;display:flex;align-items:flex-start;gap:28px}
+.passage-sidebar{
+  display:block;
+  width:min(300px,32vw);
+  flex-shrink:0;
+  position:sticky;
+  top:64px;
+  align-self:flex-start;
+  padding:20px 18px 24px;
+  background:var(--bp-white);
+  border:0.5px solid var(--bp-border);
+  border-radius:12px;
+  max-height:calc(100vh - 72px);
+  overflow-y:auto;
+  box-shadow:0 1px 3px rgba(0,0,0,.04);
+}
+.passage-sidebar .hero-eyebrow{margin-bottom:10px}
+.passage-sidebar .hero-verse{font-size:15px;line-height:1.6}
+.passage-sidebar .hero-ref{font-size:12px;margin-top:10px}
+.passage-sidebar .hero-nav{margin-top:12px}
+.passage-empty{font-size:14px;color:var(--bp-gray);line-height:1.55;font-style:italic;margin:0}
+#passageFilled[hidden]{display:none!important}
+
+/* Main */
+.main{flex:1;min-width:0;max-width:none;margin:0;padding:0}
+.steps-wrap{padding:20px 20px 0}
+
+/* Progress pips */
+.progress-row{display:flex;align-items:center;gap:8px;margin-bottom:24px}
+.prog-pip{width:8px;height:8px;border-radius:50%;background:var(--bp-border);flex-shrink:0;transition:background .2s,width .2s,border-radius .2s}
+.prog-pip.done{background:var(--bp-blue)}
+.prog-pip.active{background:#111;width:20px;border-radius:4px}
+.prog-pip.nav{cursor:pointer}
+.prog-pip.nav:hover{opacity:.85}
+.step-card.step-revisit .step-header,.step-card.step-revisit .step-desc{cursor:pointer}
+.step-card.step-revisit .step-header:focus-visible,.step-card.step-revisit .step-desc:focus-visible{outline:2px solid var(--bp-blue);outline-offset:2px}
+
+/* Step cards */
+.step-card{background:var(--bp-white);border:0.5px solid var(--bp-border);border-radius:12px;padding:18px 20px;margin-bottom:12px;transition:border-color .15s,opacity .15s}
+.step-card.active{border:1.5px solid #111}
+.step-card.done{opacity:.55}
+.step-header{display:flex;align-items:center;gap:12px}
+.step-num{width:26px;height:26px;border-radius:50%;background:#111;color:#fff;font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-card.done .step-num{background:var(--bp-blue)}
+.step-title{font-size:15px;font-weight:500}
+.step-desc{font-size:13px;color:var(--bp-gray);line-height:1.6;margin-top:10px;padding-left:38px}
+.step-body{padding-left:38px;margin-top:12px}
+
+/* Textareas */
+textarea{width:100%;border:0.5px solid var(--bp-border);border-radius:8px;padding:10px 12px;font-size:14px;font-family:'Inter',sans-serif;color:var(--bp-black);background:var(--bp-white);resize:vertical;min-height:90px;outline:none}
+textarea:focus{border-color:var(--bp-blue)}
+textarea::placeholder{color:var(--bp-gray);font-style:italic}
+
+/* Buttons */
+.btn-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+button{background:transparent;border:0.5px solid var(--bp-border);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:500;cursor:pointer;color:var(--bp-black);font-family:'Inter',sans-serif}
+button:hover{background:var(--bp-cream)}
+.btn-primary{background:#111;color:#fff;border-color:#111}
+.btn-primary:hover{background:#333;border-color:#333}
+
+/* Video placeholder */
+.video-placeholder{background:var(--bp-cream);border-radius:8px;height:80px;display:flex;align-items:center;justify-content:center;gap:10px;border:0.5px solid var(--bp-border);margin-bottom:10px}
+.video-placeholder a{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.play-icon{width:28px;height:28px;border-radius:50%;background:#111;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.play-tri{width:0;height:0;border-style:solid;border-width:5px 0 5px 9px;border-color:transparent transparent transparent #fff;margin-left:2px}
+.video-meta{font-size:13px;color:var(--bp-gray)}
+.video-meta strong{color:var(--bp-black);font-weight:500;display:block}
+
+/* Question list */
+.q-list{list-style:none;display:flex;flex-direction:column;gap:6px}
+.q-item{display:flex;align-items:center;gap:10px;background:var(--bp-cream);border-radius:8px;padding:8px 12px;font-size:13px;cursor:default;border:0.5px solid transparent}
+.q-item.selectable{cursor:pointer}
+.q-item.selectable:hover{border-color:var(--bp-border)}
+.q-item.selected{border-color:#111;background:var(--bp-white)}
+.q-bullet{width:6px;height:6px;border-radius:50%;background:var(--bp-border);flex-shrink:0}
+.q-item.selected .q-bullet{background:#111}
+.q-text{flex:1;min-width:0}
+
+/* Question input */
+.q-input-row{display:flex;gap:8px;margin-bottom:10px}
+.q-input-row input{flex:1;border:0.5px solid var(--bp-border);border-radius:8px;padding:8px 12px;font-size:14px;font-family:'Inter',sans-serif;color:var(--bp-black);outline:none}
+.q-input-row input:focus{border-color:var(--bp-blue)}
+.q-input-row input::placeholder{color:var(--bp-gray);font-style:italic}
+
+/* Watch link (inline) */
+.watch-link{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;background:var(--bp-blue);color:var(--bp-white);text-decoration:none;border-radius:8px;font-size:.76rem;font-weight:500;letter-spacing:.04em;transition:background .15s}
+.watch-link:hover{background:var(--bp-blue-dark)}
+
+/* Print bar */
+.print-bar{position:fixed;bottom:0;left:0;right:0;background:var(--bp-white);border-top:0.5px solid var(--bp-border);padding:12px 40px;display:flex;align-items:center;justify-content:center;gap:20px;z-index:90}
+.print-hint{font-size:13px;color:var(--bp-gray)}
+.print-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 20px;background:#111;color:var(--bp-white);border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:.74rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;transition:background .15s}
+.print-btn:hover{background:#333}
+
+/* Modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10000;align-items:center;justify-content:center;padding:24px;isolation:isolate}
+.modal-bg.open{display:flex!important}
+.modal-card{background:var(--bp-white);border:0.5px solid var(--bp-border);border-radius:12px;padding:40px;max-width:400px;width:calc(100% - 40px);text-align:center}
+.modal-title{font-family:'Lora',serif;font-size:1.15rem;font-weight:500;margin-bottom:10px;line-height:1.35}
+.modal-body{font-size:14px;color:var(--bp-gray);line-height:1.75;margin-bottom:26px}
+.modal-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn-leave{padding:8px 16px;background:transparent;color:var(--bp-gray);border:0.5px solid #b0aba4;border-radius:8px;font-family:'Inter',sans-serif;font-size:.8rem;cursor:pointer;transition:border-color .15s}
+.btn-leave:hover{border-color:var(--bp-blue)}
+.btn-print-modal{padding:8px 16px;background:transparent;color:var(--bp-black);border:0.5px solid #b0aba4;border-radius:8px;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;transition:border-color .15s}
+.btn-print-modal:hover{border-color:var(--bp-blue)}
+.btn-stay{padding:8px 16px;background:var(--bp-blue);color:var(--bp-white);border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:.8rem;font-weight:500;cursor:pointer;transition:background .15s}
+.btn-stay:hover{background:var(--bp-blue-dark)}
+
+@media print{
+  .header,.print-bar,.modal-bg,.progress-row,.hero-nav{display:none!important}
+  body{padding-bottom:0;background:#fff}
+  .scripture-bar{background:none;border:none}
+  .passage-sidebar{display:none!important}
+  .study-wrap{max-width:none;padding:0 16px}
+  .step-card,.step-card.done{opacity:1!important;break-inside:avoid;page-break-inside:avoid;border:0.5px solid #ccc}
+  #step1-body,
+  .step-card .step-body{display:block!important;visibility:visible!important;overflow:visible!important}
+  .btn-row{display:none!important}
+  .video-placeholder{display:flex!important;height:auto!important;min-height:0!important}
+  .q-input-row{display:none!important}
+  textarea{border:0.5px solid #ccc;background:#fafafa;min-height:80px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .q-list{min-height:1em}
+}
+
+@media (max-width:600px){
+  body{padding-bottom:60px}
+  .header{padding:0 16px;height:50px;gap:8px}
+  .logo-sub{display:none}
+  .header-download{padding:6px 10px;font-size:.68rem;gap:6px}
+  .header-download-long{display:none!important}
+  .header-download-short{display:inline!important}
+  .scripture-bar{padding:12px 16px}
+  .picker-label{display:none}
+  .scripture-bar-inner{gap:8px;flex-wrap:nowrap}
+  .selects{flex:1;min-width:0;flex-wrap:nowrap}
+  #sel-book{flex:1;min-width:0}
+  .verse-ref{font-size:.82rem;white-space:nowrap}
+  .passage-sidebar{padding:16px 14px}
+  .hero-verse{font-size:16px}
+  .study-wrap{flex-direction:column;padding:0 16px;gap:16px}
+  .passage-sidebar{position:relative;top:0;width:100%!important;max-height:none;animation:none;opacity:1!important;transform:none!important}
+  .main{padding:0}
+  .steps-wrap{padding:16px 16px 0}
+  .step-card{padding:14px 16px}
+  .step-desc{padding-left:34px}
+  .step-body{padding-left:34px}
+  select,textarea{font-size:16px}
+  .print-bar{padding:8px 16px;gap:10px}
+  .print-hint{display:none}
+  .print-btn{padding:8px 16px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">
+    <div class="logo-brand">
+      <img src="../bibleproject-logo-mark.svg" alt="" class="logo-mark-img" width="48" height="48" decoding="async" aria-hidden="true">
+      <img src="../bibleproject-word-mark.svg" alt="BibleProject" class="logo-word-img" width="148" height="27" decoding="async">
+    </div>
+    <div class="logo-divider"></div>
+    <span class="logo-sub">Communal Bible Study Tool</span>
+  </div>
+  <div class="header-actions">
+    <a href="../bible-reading-guided-study.pdf" download="Bible Reading Guided Study.pdf" class="header-download" title="Download Bible Reading Guided Study (PDF)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span class="header-download-long">Download Guide PDF</span>
+      <span class="header-download-short">Guide PDF</span>
+    </a>
+  </div>
+</header>
+
+<section class="scripture-bar">
+  <div class="scripture-bar-inner">
+    <span class="picker-label">Passage</span>
+    <div class="selects">
+      <select id="sel-book" onchange="onBookChange()" aria-label="Book"><option value="">Book</option></select>
+      <select id="sel-chapter" onchange="onChapterChange()" disabled aria-label="Chapter"><option value="">Ch</option></select>
+      <select id="sel-verse" onchange="onVerseStartChange()" disabled aria-label="Start verse"><option value="">From</option></select>
+      <select id="sel-verse-end" onchange="onVerseEndChange()" disabled aria-label="End verse (optional)"><option value="">To</option></select>
+    </div>
+    <span class="verse-ref" id="verse-ref" aria-live="polite"></span>
+  </div>
+</section>
+
+<div class="study-wrap">
+  <aside id="passageSidebar" class="passage-sidebar" aria-label="Passage">
+    <div class="passage-sidebar-inner">
+      <div class="hero-eyebrow">Passage</div>
+      <p class="passage-empty" id="passageEmptyState">Select a scripture to get started.</p>
+      <div id="passageFilled" hidden>
+        <div class="hero-verse" id="sidebar-verse"></div>
+        <div class="hero-ref" id="sidebar-ref"></div>
+        <div class="hero-nav" id="sidebar-nav" style="display:none">
+          <button type="button" class="hero-nav-btn" id="sidebar-verse-up" onclick="shiftVerse(-1)" aria-label="Shift passage back one verse" title="Shift passage back one verse">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="14 18 8 12 14 6"/></svg>
+          </button>
+          <button type="button" class="hero-nav-btn" id="sidebar-verse-down" onclick="shiftVerse(1)" aria-label="Shift passage forward one verse" title="Shift passage forward one verse">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="10 6 16 12 10 18"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <main class="main">
+  <div class="steps-wrap" id="steps-wrap">
+    <div class="progress-row" id="prog"></div>
+
+    <div class="step-card active" id="s1">
+      <div class="step-header">
+        <div class="step-num">1</div>
+        <div class="step-title">Read the passage</div>
+      </div>
+      <div class="step-desc" id="step1-desc">Select a scripture to get started.</div>
+      <div class="step-body" id="step1-body" style="display:none">
+        <div class="btn-row">
+          <button type="button" class="btn-primary" id="step1-done-btn" onclick="advance(1)" disabled>Done reading &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s2">
+      <div class="step-header">
+        <div class="step-num">2</div>
+        <div class="step-title">Collect questions</div>
+      </div>
+      <div class="step-desc">Every question is good. Get them all out. The Bible invites curiosity.</div>
+      <div class="step-body" style="display:none">
+        <div class="q-input-row">
+          <input type="text" id="q-input" placeholder="Type a question and press Add...">
+          <button onclick="addQ()">Add</button>
+        </div>
+        <ul class="q-list" id="q-list"></ul>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="advance(2)">Done &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s3">
+      <div class="step-header">
+        <div class="step-num">3</div>
+        <div class="step-title">Watch the video</div>
+      </div>
+      <div class="step-desc">The BibleProject video explores the literary shape of the passage.</div>
+      <div class="step-body" style="display:none">
+        <div class="video-placeholder" id="watch-container">
+          <div class="play-icon"><div class="play-tri"></div></div>
+          <div class="video-meta">
+            <strong>BibleProject Video</strong>
+            <span id="watch-meta-sub">Select a passage to find the video</span>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="advance(3)">Done watching &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s4">
+      <div class="step-header">
+        <div class="step-num">4</div>
+        <div class="step-title">Observe the passage</div>
+      </div>
+      <div class="step-desc">What details stand out? What patterns or repeated words do you notice?</div>
+      <div class="step-body" style="display:none">
+        <textarea placeholder="Write your observations..."></textarea>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="advance(4)">Done &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s5">
+      <div class="step-header">
+        <div class="step-num">5</div>
+        <div class="step-title">Choose one question</div>
+      </div>
+      <div class="step-desc">Which question from step 2 seems most aligned with what the passage wants you to ask?</div>
+      <div class="step-body" style="display:none">
+        <ul class="q-list" id="q-pick" style="margin-bottom:12px"></ul>
+        <textarea placeholder="Discuss and write notes here..."></textarea>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="advance(5)">Done &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s6">
+      <div class="step-header">
+        <div class="step-num">6</div>
+        <div class="step-title">Hyperlink observations</div>
+      </div>
+      <div class="step-desc">What other passages share the same question, key words, or themes?</div>
+      <div class="step-body" style="display:none">
+        <textarea placeholder="Write cross-references and reflections..."></textarea>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="advance(6)">Done &#8594;</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card" id="s7">
+      <div class="step-header">
+        <div class="step-num">7</div>
+        <div class="step-title">Discern wisdom</div>
+      </div>
+      <div class="step-desc">What does God have for your community? What ideas are sticking with you?</div>
+      <div class="step-body" style="display:none">
+        <textarea placeholder="Final reflections..."></textarea>
+        <div class="btn-row">
+          <button class="btn-primary" onclick="advance(7)">Complete study</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </main>
+</div>
+
+<div class="modal-bg" id="scripture-reset-modal" role="dialog" aria-modal="true" aria-labelledby="scripture-reset-title">
+  <div class="modal-card">
+    <h2 class="modal-title" id="scripture-reset-title">New scripture</h2>
+    <p class="modal-body">By selecting a new scripture this will start a new session and remove any inputs. Would you like to proceed?</p>
+    <div class="modal-actions">
+      <button type="button" class="btn-leave" onclick="closeScriptureResetModal()">Cancel</button>
+      <button type="button" class="btn-stay" onclick="confirmScriptureReset()">Yes, proceed</button>
+    </div>
+  </div>
+</div>
+
+<div class="print-bar">
+  <span class="print-hint">Save your notes before leaving</span>
+  <button class="print-btn" onclick="handlePrint()">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+    Print Your Notes
+  </button>
+</div>
+
+<div class="modal-bg" id="exit-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-card">
+    <h2 class="modal-title" id="modal-title">Are you sure you'd like to exit?</h2>
+    <p class="modal-body">Any progress will be lost. Please print this page to save your work for later.</p>
+    <div class="modal-actions">
+      <button class="btn-leave" onclick="confirmLeave()">Leave anyway</button>
+      <button class="btn-print-modal" onclick="printThenClose()">Print first</button>
+      <button class="btn-stay" onclick="closeModal()">Stay on page</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="complete-modal" role="dialog" aria-modal="true" aria-labelledby="complete-modal-title" aria-hidden="true">
+  <div class="modal-card">
+    <h2 class="modal-title" id="complete-modal-title">Study complete</h2>
+    <p class="modal-body">Save your notes as a text file, or use Print and choose <strong>Save as PDF</strong> in the print dialog to download a PDF.</p>
+    <div class="modal-actions">
+      <button type="button" class="btn-leave" onclick="closeCompleteModal()">Not now</button>
+      <button type="button" class="btn-print-modal" onclick="downloadResponsesFromComplete()">Download notes (.txt)</button>
+      <button type="button" class="btn-stay" onclick="printFromCompleteModal()">Print / Save as PDF</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const STEP1_DESC_ACTIVE='Read slowly and with the expectation of discovery.';
+const EMPTY_SCRIPTURE_COPY='Select a scripture to get started.';
+
+const BIBLE={"Genesis":[31,25,24,26,32,22,24,22,29,32,32,20,18,24,21,16,27,33,38,18,34,24,20,67,34,35,46,22,35,43,55,32,20,31,29,43,36,30,23,43,57,38,34,34,28,34,31,22,33,26],"Exodus":[22,25,22,31,23,30,25,32,35,29,10,51,22,31,27,36,16,27,25,26,36,31,33,18,40,37,21,43,46,38,18,35,23,35,35,38,29,31,43,38],"Leviticus":[17,16,17,35,19,30,38,36,24,20,47,8,59,57,33,34,16,30,24,16,17],"Numbers":[54,34,51,49,31,27,89,26,23,36,35,16,33,45,41,50,13,32,22,29,35,41,30,25,18,65,23,31,39,17,54,42,56,29,34,13],"Deuteronomy":[46,37,29,49,33,25,26,20,29,22,32,31,19,29,23,22,20,22,21,20,23,29,26,22,19,19,26,68,29,20,30,52,29,12],"Joshua":[18,24,17,24,15,27,26,35,27,43,23,24,33,15,63,10,18,28,51,9,45,34,16,33],"Judges":[36,23,31,24,31,40,25,35,57,18,40,15,25,20,20,31,13,31,30,48,25],"Ruth":[22,23,18,22],"1 Samuel":[28,36,21,22,12,21,17,22,27,27,15,25,23,52,35,23,58,30,24,42,15,23,29,22,44,25,12,25,11,31,13],"2 Samuel":[27,32,39,12,25,23,29,18,13,19,27,31,39,33,37,23,29,33,43,26,22,51,39,25],"1 Kings":[53,46,28,34,18,38,51,66,28,29,43,33,34,31,34,34,24,46,21,43,29,53],"2 Kings":[18,25,27,44,27,33,20,29,37,36,21,21,25,29,38,20,41,37,37,21,26,20,37,20,30],"1 Chronicles":[54,55,24,43,26,81,40,40,44,14,47,40,14,17,29,43,27,17,19,8,30,19,32,31,31,32,34,21,30],"2 Chronicles":[17,18,17,22,14,42,22,18,31,19,23,16,22,15,19,14,19,34,11,37,20,12,21,27,28,23,9,27,36,27,21,33,25,33,27,23],"Ezra":[11,70,13,24,17,22,28,36,15,44],"Nehemiah":[11,20,32,23,19,19,73,18,38,39,36,47,31],"Esther":[22,23,15,17,14,14,10,17,32,3],"Job":[22,13,26,21,27,30,21,22,35,22,20,25,28,22,35,22,16,21,29,29,34,30,17,25,6,14,23,28,25,31,40,22,33,37,16,33,24,41,30,24,34,17],"Psalms":[6,12,8,8,12,10,17,9,20,18,7,8,6,7,5,11,15,50,14,9,13,31,6,10,22,12,14,9,11,13,25,11,22,23,28,13,40,23,14,18,14,12,5,27,18,12,10,15,21,23,21,11,7,9,24,14,12,12,18,14,9,13,12,11,14,20,8,36,37,6,24,20,28,23,11,13,21,72,13,20,17,8,19,13,14,17,7,19,53,17,16,16,5,23,11,13,12,9,9,5,8,28,22,35,45,48,43,13,31,7,10,10,9,8,18,19,2,29,176,7,8,9,4,8,5,6,5,6,8,8,3,18,3,3,21,26,9,8,24,14,10,8,12,15,21,10,20,14,9,6],"Proverbs":[33,22,35,27,23,35,27,36,18,32,31,28,25,35,33,33,28,24,29,30,31,29,35,34,28,28,27,28,62,33,31],"Ecclesiastes":[18,26,22,16,20,12,29,17,18,20,10,14],"Song of Solomon":[17,17,11,16,16,13,13,14],"Isaiah":[31,22,26,6,30,13,25,22,21,34,16,6,22,32,9,14,14,7,25,6,17,25,18,23,12,21,13,29,24,33,9,20,24,17,10,22,38,22,8,31,29,25,28,28,25,13,15,22,26,11,23,15,12,17,13,12,21,14,21,22,11,12,19,12,25,24],"Jeremiah":[19,37,25,31,31,30,34,22,26,25,23,17,27,22,21,21,27,23,15,18,14,30,40,10,38,24,22,17,32,24,40,44,26,22,19,32,21,28,18,16,18,22,13,30,5,28,7,47,39,46,64,34],"Lamentations":[22,22,66,22,22],"Ezekiel":[28,10,27,17,17,14,27,18,11,22,25,28,23,23,8,63,24,32,14,49,32,31,49,27,17,21,36,26,21,26,18,32,33,31,15,38,28,23,29,49,26,20,27,31,25,24,23,35],"Daniel":[21,49,30,37,31,28,28,27,27,21,45,13],"Hosea":[11,23,5,19,15,11,16,14,17,15,12,14,16,9],"Joel":[20,32,21],"Amos":[15,16,15,13,27,14,17,14,15],"Obadiah":[21],"Jonah":[17,10,10,11],"Micah":[16,13,12,13,15,16,20],"Nahum":[15,13,19],"Habakkuk":[17,20,19],"Zephaniah":[18,15,20],"Haggai":[15,23],"Zechariah":[21,13,10,14,11,15,14,23,17,12,17,14,9,21],"Malachi":[14,17,18,6],"Matthew":[25,23,17,25,48,34,29,34,38,42,30,50,58,36,39,28,27,35,30,34,46,46,39,51,46,75,66,20],"Mark":[45,28,35,41,43,56,37,38,50,52,33,44,37,72,47,20],"Luke":[80,52,38,44,39,49,50,56,62,42,54,59,35,35,32,31,37,43,48,47,38,71,56,53],"John":[51,25,36,54,47,71,53,59,41,42,57,50,38,31,27,33,26,40,42,31,25],"Acts":[26,47,26,37,42,15,60,40,43,48,30,25,52,28,41,40,34,28,40,38,40,30,35,27,27,32,44,31],"Romans":[32,29,31,25,21,23,25,39,33,21,36,21,14,23,33,27],"1 Corinthians":[31,16,23,21,13,20,40,34,24,26,19,35,24,13,24,62],"2 Corinthians":[24,17,18,18,21,18,16,24,15,18,33,21,13],"Galatians":[24,21,29,31,26,18],"Ephesians":[23,22,21,28,22,21],"Philippians":[30,18,19,16],"Colossians":[29,23,25,6],"1 Thessalonians":[10,20,13,18,28],"2 Thessalonians":[12,17,18],"1 Timothy":[20,15,16,16,25,21],"2 Timothy":[18,26,17,22],"Titus":[16,15,15],"Philemon":[25],"Hebrews":[14,18,19,16,14,20,28,13,28,39,40,29,25],"James":[27,26,18,17,20],"1 Peter":[25,25,22,19,14],"2 Peter":[21,22,18],"1 John":[10,29,24,21,21],"2 John":[13],"3 John":[14],"Jude":[25],"Revelation":[20,29,22,11,14,17,17,13,21,11,19,17,18,20,8,21,18,24,16,15,27,21]};
+
+let currentBook='',currentChapter='',currentVerse='',currentVerseEnd='',hasEdits=false;
+let chapterVerses={},chapterLoadPromise=null;
+let current=1;
+let completedThrough=0;
+let questions=[];
+let suppressScriptureModal=false;
+
+function sessionActive(){
+  if(currentVerse)return true;
+  if(completedThrough>0)return true;
+  if(questions.length>0)return true;
+  return Array.from(document.querySelectorAll('textarea')).some(t=>t.value.trim()!=='');
+}
+
+function getVerseEndInclusive(){
+  if(!currentVerse)return 0;
+  const s=parseInt(currentVerse,10);
+  if(!currentVerseEnd)return s;
+  return Math.max(s,parseInt(currentVerseEnd,10));
+}
+
+function escapeHtml(t){
+  const d=document.createElement('div');
+  d.textContent=t;
+  return d.innerHTML;
+}
+
+function syncStep1BodyVisibility(){
+  const desc=document.getElementById('step1-desc');
+  if(desc)desc.textContent=currentVerse?STEP1_DESC_ACTIVE:EMPTY_SCRIPTURE_COPY;
+  const body=document.getElementById('step1-body');
+  const btn=document.getElementById('step1-done-btn');
+  if(!body||!btn)return;
+  btn.disabled=!currentVerse;
+  if(current===1){body.style.display=currentVerse?'':'none'}
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  const cm=document.getElementById('complete-modal');
+  if(cm)document.body.appendChild(cm);
+  populateBooks();
+  buildProgress();
+  loadFromURL();
+  syncStep1BodyVisibility();
+  document.querySelectorAll('textarea').forEach(ta=>ta.addEventListener('input',()=>{hasEdits=true}));
+  document.getElementById('q-input').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addQ()}});
+  document.getElementById('exit-modal').addEventListener('click',e=>{if(e.target===document.getElementById('exit-modal'))closeModal()});
+  document.getElementById('scripture-reset-modal').addEventListener('click',e=>{if(e.target===document.getElementById('scripture-reset-modal'))closeScriptureResetModal()});
+  document.getElementById('complete-modal').addEventListener('click',e=>{if(e.target===document.getElementById('complete-modal'))closeCompleteModal()});
+  document.getElementById('steps-wrap').addEventListener('click',e=>{
+    if(!e.target.closest('.step-header')&&!e.target.closest('.step-desc'))return;
+    const card=e.target.closest('.step-card');
+    if(!card||!card.classList.contains('step-revisit'))return;
+    const n=parseInt(card.id.replace('s',''),10);
+    if(Number.isNaN(n))return;
+    goToStep(n);
+  });
+  history.pushState({page:'study'},'');
+  window.addEventListener('popstate',()=>{if(hasEdits||currentVerse){openModal();history.pushState({page:'study'},'')}});
+});
+
+function populateBooks(){
+  const sel=document.getElementById('sel-book');
+  Object.keys(BIBLE).forEach(book=>{const o=document.createElement('option');o.value=book;o.textContent=book;sel.appendChild(o)});
+}
+
+function onBookChange(){
+  const newBook=document.getElementById('sel-book').value;
+  const oldBook=currentBook;
+  if(!suppressScriptureModal && sessionActive() && newBook!==oldBook){
+    document.getElementById('sel-book').value=oldBook||'';
+    openScriptureResetModal();
+    return;
+  }
+  currentBook=newBook;
+  currentChapter='';currentVerse='';currentVerseEnd='';
+  const cs=document.getElementById('sel-chapter'),vs=document.getElementById('sel-verse'),ve=document.getElementById('sel-verse-end');
+  cs.innerHTML='<option value="">Ch</option>';
+  vs.innerHTML='<option value="">From</option>';vs.disabled=true;
+  ve.innerHTML='<option value="">To</option>';ve.disabled=true;
+  if(currentBook){BIBLE[currentBook].forEach((_,i)=>{const o=document.createElement('option');o.value=i+1;o.textContent=i+1;cs.appendChild(o)});cs.disabled=false}else{cs.disabled=true}
+  syncAll();clearVerse();
+}
+
+function onChapterChange(){
+  const newCh=document.getElementById('sel-chapter').value;
+  const oldCh=currentChapter;
+  if(!suppressScriptureModal && sessionActive() && newCh!==oldCh){
+    document.getElementById('sel-chapter').value=oldCh||'';
+    openScriptureResetModal();
+    return;
+  }
+  currentChapter=newCh;currentVerse='';currentVerseEnd='';
+  chapterVerses={};chapterLoadPromise=null;
+  const vs=document.getElementById('sel-verse'),ve=document.getElementById('sel-verse-end');
+  vs.innerHTML='<option value="">From</option>';
+  ve.innerHTML='<option value="">To</option>';
+  if(currentChapter){
+    const c=BIBLE[currentBook][parseInt(currentChapter)-1];
+    for(let i=1;i<=c;i++){const o=document.createElement('option');o.value=i;o.textContent=i;vs.appendChild(o)}
+    vs.disabled=false;ve.disabled=false;
+    fetchChapter();
+  }else{vs.disabled=true;ve.disabled=true}
+  syncAll();clearVerse();
+}
+
+function rebuildVerseEndOptions(){
+  const ve=document.getElementById('sel-verse-end');
+  const maxV=BIBLE[currentBook][parseInt(currentChapter)-1];
+  const prev=currentVerseEnd;
+  ve.innerHTML='<option value="">To</option>';
+  if(!currentVerse||!currentChapter||!currentBook){ve.value='';currentVerseEnd='';return}
+  const start=parseInt(currentVerse,10);
+  for(let i=start;i<=maxV;i++){const o=document.createElement('option');o.value=i;o.textContent=i;ve.appendChild(o)}
+  if(prev&&parseInt(prev,10)>=start&&parseInt(prev,10)<=maxV){ve.value=prev;currentVerseEnd=prev}else{ve.value='';currentVerseEnd=''}
+}
+
+function onVerseStartChange(){
+  const newV=document.getElementById('sel-verse').value;
+  const oldV=currentVerse;
+  if(!suppressScriptureModal && sessionActive() && newV!==oldV){
+    document.getElementById('sel-verse').value=oldV||'';
+    openScriptureResetModal();
+    return;
+  }
+  currentVerse=newV;
+  rebuildVerseEndOptions();
+  syncAll();
+  if(currentVerse)displayVerse();else clearVerse();
+}
+
+function onVerseEndChange(){
+  const ve=document.getElementById('sel-verse-end');
+  const v=ve.value;
+  if(!v){currentVerseEnd=''}
+  else{
+    const end=parseInt(v,10),start=parseInt(currentVerse,10);
+    if(end<=start){ve.value='';currentVerseEnd=''}
+    else{currentVerseEnd=String(end)}
+  }
+  syncAll();
+  if(currentVerse)displayVerse();else clearVerse();
+}
+
+/** BibleProject overview video slug for book + chapter; see https://bibleproject.com/videos/ */
+function getBibleProjectVideoSlug(book,chStr){
+  const c=parseInt(String(chStr),10);
+  if(!book||Number.isNaN(c)||c<1)return null;
+  if(book==='Genesis')return c<=11?'genesis-1-11':'genesis-12-50';
+  if(book==='Exodus')return c<=18?'exodus-1-18':'exodus-19-40';
+  if(book==='Isaiah')return c<=39?'isaiah-1-39':'isaiah-40-66';
+  if(book==='Ezekiel')return c<=33?'ezekiel-1-33':'ezekiel-34-48';
+  if(book==='Matthew')return c<=13?'matthew-1-13':'matthew-14-28';
+  if(book==='Luke')return c<=9?'luke-1-9':'luke-10-24';
+  if(book==='John')return c<=12?'john-1-12':'john-13-21';
+  if(book==='Acts')return c<=12?'acts-1-12':'acts-13-28';
+  if(book==='Romans')return c<=4?'romans-1-4':'romans-5-16';
+  if(book==='Revelation')return c<=11?'revelation-1-11':'revelation-12-22';
+  const single={
+    'Leviticus':'leviticus','Numbers':'numbers','Deuteronomy':'deuteronomy','Joshua':'joshua','Judges':'judges','Ruth':'ruth',
+    '1 Samuel':'1-samuel','2 Samuel':'2-samuel','1 Kings':'kings','2 Kings':'kings','1 Chronicles':'chronicles','2 Chronicles':'chronicles',
+    'Ezra':'ezra-nehemiah','Nehemiah':'ezra-nehemiah','Esther':'esther','Job':'job','Psalms':'psalms','Proverbs':'proverbs','Ecclesiastes':'ecclesiastes',
+    'Song of Solomon':'song-of-songs','Jeremiah':'jeremiah','Lamentations':'lamentations','Daniel':'daniel','Hosea':'hosea','Joel':'joel','Amos':'amos',
+    'Obadiah':'obadiah','Jonah':'jonah','Micah':'micah','Nahum':'nahum','Habakkuk':'habakkuk','Zephaniah':'zephaniah','Haggai':'haggai','Zechariah':'zechariah','Malachi':'malachi',
+    'Mark':'mark','1 Corinthians':'1-corinthians','2 Corinthians':'2-corinthians','Galatians':'galatians','Ephesians':'ephesians','Philippians':'philippians','Colossians':'colossians',
+    '1 Thessalonians':'1-thessalonians','2 Thessalonians':'2-thessalonians','1 Timothy':'1-timothy','2 Timothy':'2-timothy','Titus':'titus','Philemon':'philemon',
+    'Hebrews':'hebrews','James':'james','1 Peter':'1-peter','2 Peter':'2-peter','1 John':'1-3-john','2 John':'1-3-john','3 John':'1-3-john','Jude':'jude'
+  };
+  return single[book]||null;
+}
+
+function syncAll(){
+  const ref=document.getElementById('verse-ref');
+  if(currentBook&&currentChapter&&currentVerse){
+    const s=parseInt(currentVerse,10),e=getVerseEndInclusive();
+    ref.textContent=e>s?`${currentBook} ${currentChapter}:${s}-${e}`:`${currentBook} ${currentChapter}:${s}`;
+    ref.classList.add('visible');
+  }else{ref.classList.remove('visible')}
+  const wc=document.getElementById('watch-container');
+  if(currentBook&&currentChapter){
+    const slug=getBibleProjectVideoSlug(currentBook,currentChapter);
+    const href=slug?`https://bibleproject.com/videos/${slug}/`:'https://bibleproject.com/videos/';
+    wc.innerHTML=`<a href="${href}" target="_blank" rel="noopener noreferrer"><div class="play-icon"><div class="play-tri"></div></div><div class="video-meta"><strong>${currentBook} ${currentChapter} — BibleProject</strong>Watch on bibleproject.com</div></a>`;
+  }else{
+    wc.innerHTML=`<div class="play-icon"><div class="play-tri"></div></div><div class="video-meta"><strong>BibleProject Video</strong>Select a passage to find the video</div>`;
+  }
+  const p=new URLSearchParams(window.location.search);
+  if(currentBook&&currentChapter&&currentVerse){
+    const slug=currentBook.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+    const s=parseInt(currentVerse,10),e=getVerseEndInclusive();
+    p.set('v',e>s?`${slug}-${currentChapter}-${s}-${e}`:`${slug}-${currentChapter}-${s}`);
+  }else{p.delete('v')}
+  try{history.replaceState({page:'study'},'',window.location.pathname+(p.toString()?'?'+p.toString():''))}catch(e){}
+}
+
+function fetchChapter(){
+  if(!currentBook||!currentChapter)return;
+  const book=currentBook,ch=currentChapter;
+  chapterLoadPromise=fetch(`https://bible-api.com/${encodeURIComponent(book+' '+ch)}?translation=web`)
+    .then(r=>{if(!r.ok)throw new Error();return r.json()})
+    .then(d=>{
+      if(book!==currentBook||ch!==currentChapter)return;
+      chapterVerses={};
+      (d.verses||[]).forEach(vv=>{chapterVerses[vv.verse]=vv.text.trim()});
+      if(currentVerse)displayVerse();
+    })
+    .catch(()=>{
+      if(currentVerse){
+        const err='Could not load passage. Check your connection.';
+        const sv=document.getElementById('sidebar-verse');
+        if(sv)sv.textContent=err;
+        const empty=document.getElementById('passageEmptyState'),filled=document.getElementById('passageFilled');
+        if(empty)empty.hidden=true;
+        if(filled)filled.hidden=false;
+        const sn=document.getElementById('sidebar-nav');
+        if(sn)sn.style.display='none';
+        syncStep1BodyVisibility();
+      }
+    });
+}
+
+function shiftVerse(dir){
+  if(!currentBook||!currentChapter||!currentVerse)return;
+  const maxV=BIBLE[currentBook][parseInt(currentChapter)-1];
+  const s=parseInt(currentVerse,10);
+  const e=getVerseEndInclusive();
+  const span=e-s+1;
+  const newS=Math.min(maxV-span+1,Math.max(1,s+dir));
+  const newE=newS+span-1;
+  if(newS===s&&newE===e)return;
+  currentVerse=String(newS);
+  currentVerseEnd=newE===newS?'':String(newE);
+  document.getElementById('sel-verse').value=currentVerse;
+  rebuildVerseEndOptions();
+  document.getElementById('sel-verse-end').value=currentVerseEnd;
+  syncAll();displayVerse();
+}
+
+function displayVerse(){
+  const s=parseInt(currentVerse,10);
+  const e=getVerseEndInclusive();
+  const shv=document.getElementById('sidebar-verse'),shr=document.getElementById('sidebar-ref'),snav=document.getElementById('sidebar-nav');
+  const empty=document.getElementById('passageEmptyState'),filled=document.getElementById('passageFilled');
+  empty.hidden=true;
+  filled.hidden=false;
+  for(let v=s;v<=e;v++){
+    if(!chapterVerses[v]){
+      const loading='<span class="verse-loading">Loading…</span>';
+      shv.innerHTML=loading;shr.textContent='';snav.style.display='none';
+      syncStep1BodyVisibility();
+      const endRef=e;
+      chapterLoadPromise&&chapterLoadPromise.then(()=>{if(parseInt(currentVerse,10)===s&&getVerseEndInclusive()===endRef)displayVerse()});
+      return;
+    }
+  }
+  const lines=[];
+  for(let v=s;v<=e;v++){
+    lines.push(`<span class="verse-line"><span class="verse-num">${v}</span>${escapeHtml(chapterVerses[v])}</span>`);
+  }
+  const html=lines.join('');
+  const refSuffix=e>s?`${s}-${e}`:String(s);
+  const refText=`${currentBook} ${currentChapter}:${refSuffix} (WEB)`;
+  const maxV=BIBLE[currentBook][parseInt(currentChapter)-1];
+  const showNav=maxV>1;
+  shv.innerHTML=html;
+  shr.textContent=refText;
+  snav.style.display=showNav?'flex':'none';
+  document.getElementById('sidebar-verse-up').disabled=(s<=1);
+  document.getElementById('sidebar-verse-down').disabled=(e>=maxV);
+  syncStep1BodyVisibility();
+}
+
+function clearVerse(){
+  const empty=document.getElementById('passageEmptyState'),filled=document.getElementById('passageFilled');
+  if(empty)empty.hidden=false;
+  if(filled)filled.hidden=true;
+  const shv=document.getElementById('sidebar-verse');
+  if(shv)shv.textContent='';
+  const sr=document.getElementById('sidebar-ref');
+  if(sr)sr.textContent='';
+  const sn=document.getElementById('sidebar-nav');
+  if(sn)sn.style.display='none';
+  syncStep1BodyVisibility();
+}
+
+function loadFromURL(){
+  const slug=new URLSearchParams(window.location.search).get('v');
+  if(!slug)return;
+  suppressScriptureModal=true;
+  try{
+  for(const book of Object.keys(BIBLE)){
+    const bs=book.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+    if(!slug.startsWith(bs+'-'))continue;
+    const rest=slug.slice(bs.length+1).split('-');
+    if(rest.length<2)continue;
+    const ch=rest[0];
+    let startV,endV='';
+    if(rest.length===2){startV=rest[1]}
+    else if(rest.length===3){startV=rest[1];endV=rest[2]}
+    else continue;
+    const chN=parseInt(ch,10),sN=parseInt(startV,10),eN=endV?parseInt(endV,10):sN;
+    const max=BIBLE[book][chN-1];
+    if(!max||sN>max||eN>max||eN<sN)continue;
+    document.getElementById('sel-book').value=book;onBookChange();
+    document.getElementById('sel-chapter').value=String(chN);onChapterChange();
+    document.getElementById('sel-verse').value=String(sN);
+    currentVerse=String(sN);
+    rebuildVerseEndOptions();
+    if(eN>sN){
+      document.getElementById('sel-verse-end').value=String(eN);
+      currentVerseEnd=String(eN);
+    }else{currentVerseEnd=''}
+    syncAll();
+    if(currentVerse)displayVerse();
+    break;
+  }
+  }finally{
+    suppressScriptureModal=false;
+  }
+}
+
+function getUnlockedStep(){
+  return Math.min(7,Math.max(1,completedThrough+1));
+}
+
+function updateStepRevisitClasses(){
+  const unlocked=getUnlockedStep();
+  for(let i=1;i<=7;i++){
+    document.getElementById('s'+i).classList.toggle('step-revisit',i<=unlocked);
+  }
+}
+
+function buildProgress(){
+  const el=document.getElementById('prog');
+  el.innerHTML='';
+  const unlocked=getUnlockedStep();
+  for(let i=1;i<=7;i++){
+    const d=document.createElement('div');
+    const active=i===current;
+    const done=i<=completedThrough&&i!==current;
+    d.className='prog-pip'+(active?' active':done?' done':'');
+    if(i<=unlocked){
+      d.classList.add('nav');
+      d.title='Go to step '+i;
+      d.addEventListener('click',()=>goToStep(i));
+    }
+    el.appendChild(d);
+  }
+  updateStepRevisitClasses();
+}
+
+function goToStep(stepNum){
+  const unlocked=getUnlockedStep();
+  if(stepNum<1||stepNum>7||stepNum>unlocked)return;
+  for(let i=1;i<=7;i++){
+    const card=document.getElementById('s'+i);
+    const body=card.querySelector('.step-body');
+    card.classList.remove('active','done');
+    if(i===stepNum){card.classList.add('active');body.style.display=''}
+    else if(i<=completedThrough&&i!==stepNum){card.classList.add('done');body.style.display='none'}
+    else{body.style.display='none'}
+  }
+  current=stepNum;
+  if(stepNum===5)populatePick();
+  buildProgress();
+  syncStep1BodyVisibility();
+  document.getElementById('s'+stepNum).scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function advance(step){
+  if(step===1&&!currentVerse)return;
+  completedThrough=Math.max(completedThrough,step);
+  const prev=document.getElementById('s'+step);
+  prev.classList.remove('active');
+  prev.classList.add('done');
+  prev.querySelector('.step-body').style.display='none';
+  const next=step+1;
+  if(next>7){
+    current=8;
+    buildProgress();
+    syncStep1BodyVisibility();
+    queueCompleteModal();
+    return;
+  }
+  current=next;
+  const nc=document.getElementById('s'+next);
+  nc.classList.add('active');
+  nc.querySelector('.step-body').style.display='';
+  if(next===5)populatePick();
+  buildProgress();
+  syncStep1BodyVisibility();
+  nc.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function addQ(){
+  const inp=document.getElementById('q-input');
+  const val=inp.value.trim();
+  if(!val)return;
+  questions.push(val);
+  hasEdits=true;
+  inp.value='';
+  renderQList();
+  inp.focus();
+}
+
+function renderQList(){
+  const ul=document.getElementById('q-list');
+  ul.innerHTML='';
+  questions.forEach(function(q){
+    const li=document.createElement('li');
+    li.className='q-item';
+    const bullet=document.createElement('div');bullet.className='q-bullet';
+    const text=document.createElement('div');text.className='q-text';text.textContent=q;
+    li.appendChild(bullet);li.appendChild(text);
+    ul.appendChild(li);
+  });
+}
+
+function populatePick(){
+  const ul=document.getElementById('q-pick');
+  ul.innerHTML='';
+  if(!questions.length){
+    const li=document.createElement('li');
+    li.className='q-item';
+    li.style.cssText='font-style:italic;color:var(--bp-gray);cursor:default';
+    li.textContent='No questions added in step 2 yet. You can go back to add some, or continue with your notes below.';
+    ul.appendChild(li);
+    return;
+  }
+  questions.forEach(function(q){
+    const li=document.createElement('li');
+    li.className='q-item selectable';
+    const bullet=document.createElement('div');bullet.className='q-bullet';
+    const text=document.createElement('div');text.className='q-text';text.textContent=q;
+    li.appendChild(bullet);li.appendChild(text);
+    li.onclick=function(){
+      ul.querySelectorAll('.q-item').forEach(function(x){x.classList.remove('selected')});
+      li.classList.add('selected');
+      hasEdits=true;
+    };
+    ul.appendChild(li);
+  });
+}
+
+function handlePrint(){window.print()}
+
+function getPassageLineForExport(){
+  const refEl=document.getElementById('verse-ref');
+  if(refEl&&refEl.classList.contains('visible')&&refEl.textContent.trim())return'Passage: '+refEl.textContent.trim();
+  if(currentBook&&currentChapter&&currentVerse){
+    const s=parseInt(currentVerse,10),e=getVerseEndInclusive();
+    const r=e>s?`${currentBook} ${currentChapter}:${s}-${e}`:`${currentBook} ${currentChapter}:${s}`;
+    return'Passage: '+r;
+  }
+  return'Passage: (not set)';
+}
+
+function buildResponsesText(){
+  const lines=[];
+  lines.push(getPassageLineForExport());
+  lines.push('');
+  lines.push('Questions (step 2)');
+  if(questions.length)questions.forEach((q,i)=>lines.push((i+1)+'. '+q));
+  else lines.push('(none)');
+  lines.push('');
+  lines.push('Step 4 — Observe');
+  lines.push((document.querySelector('#s4 textarea')&&document.querySelector('#s4 textarea').value.trim())||'(empty)');
+  lines.push('');
+  const pick=document.querySelector('#q-pick .q-item.selected .q-text');
+  lines.push('Step 5 — Question chosen');
+  lines.push(pick?pick.textContent.trim():'(none selected)');
+  lines.push('');
+  lines.push('Step 5 — Notes');
+  lines.push((document.querySelector('#s5 textarea')&&document.querySelector('#s5 textarea').value.trim())||'(empty)');
+  lines.push('');
+  lines.push('Step 6 — Hyperlink observations');
+  lines.push((document.querySelector('#s6 textarea')&&document.querySelector('#s6 textarea').value.trim())||'(empty)');
+  lines.push('');
+  lines.push('Step 7 — Discern wisdom');
+  lines.push((document.querySelector('#s7 textarea')&&document.querySelector('#s7 textarea').value.trim())||'(empty)');
+  lines.push('');
+  return lines.join('\n');
+}
+
+function downloadResponsesFromComplete(){
+  const text=buildResponsesText();
+  const blob=new Blob([text],{type:'text/plain;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='bible-study-responses.txt';
+  a.rel='noopener';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),400);
+  closeCompleteModal();
+}
+
+function printFromCompleteModal(){
+  closeCompleteModal();
+  setTimeout(handlePrint,150);
+}
+
+window.addEventListener('beforeprint',()=>{
+  document.querySelectorAll('.step-card .step-body').forEach(el=>{
+    el.setAttribute('data-print-display',el.style.display==='none'?'none':(el.style.display||''));
+    el.style.setProperty('display','block','important');
+  });
+});
+window.addEventListener('afterprint',()=>{
+  document.querySelectorAll('.step-card .step-body').forEach(el=>{
+    const v=el.getAttribute('data-print-display');
+    el.removeAttribute('data-print-display');
+    el.style.removeProperty('display');
+    if(v==='none')el.style.display='none';
+  });
+});
+function queueCompleteModal(){
+  requestAnimationFrame(()=>{
+    requestAnimationFrame(()=>{openCompleteModal()});
+  });
+}
+function openCompleteModal(){
+  const el=document.getElementById('complete-modal');
+  if(!el)return;
+  el.classList.add('open');
+  el.setAttribute('aria-hidden','false');
+  document.body.style.overflow='hidden';
+}
+function closeCompleteModal(){
+  const el=document.getElementById('complete-modal');
+  if(!el)return;
+  el.classList.remove('open');
+  el.setAttribute('aria-hidden','true');
+  document.body.style.overflow='';
+}
+function openModal(){document.getElementById('exit-modal').classList.add('open')}
+function closeModal(){document.getElementById('exit-modal').classList.remove('open')}
+function openScriptureResetModal(){document.getElementById('scripture-reset-modal').classList.add('open')}
+function closeScriptureResetModal(){document.getElementById('scripture-reset-modal').classList.remove('open')}
+function confirmScriptureReset(){closeScriptureResetModal();location.href=location.pathname}
+function confirmLeave(){hasEdits=false;closeModal()}
+function printThenClose(){closeModal();setTimeout(()=>window.print(),150)}
+</script>
+</body>
+</html>
