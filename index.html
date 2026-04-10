@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Communal Bible Study Tool — BibleProject</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
-<link rel="icon" href="logo.svg" type="image/svg+xml">
+<link rel="icon" href="bibleproject-logo-mark.svg" type="image/svg+xml">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -23,10 +23,11 @@ body{background:var(--bp-cream);color:var(--bp-black);font-family:'Inter',sans-s
 
 /* Header */
 .header{background:var(--bp-white);border-bottom:0.5px solid var(--bp-border);padding:0 40px;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-mark{height:26px;width:auto;display:block}
-.logo-text{font-size:.78rem;font-weight:500;letter-spacing:.08em;text-transform:uppercase}
-.logo-divider{width:1px;height:13px;background:var(--bp-border)}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.logo-mark-img{height:28px;width:auto;display:block;flex-shrink:0}
+.logo-word-img{height:22px;width:auto;display:block;flex-shrink:0}
+.logo-divider{width:1px;height:18px;background:var(--bp-border);flex-shrink:0}
 .logo-sub{font-size:.73rem;color:var(--bp-gray);letter-spacing:.03em}
 
 /* Scripture bar */
@@ -204,8 +205,10 @@ button:hover{background:var(--bp-cream)}
 
 <header class="header">
   <div class="logo">
-    <img src="logo.svg" alt="BibleProject logo" class="logo-mark">
-    <span class="logo-text">BibleProject</span>
+    <div class="logo-brand">
+      <img src="bibleproject-logo-mark.svg" alt="" class="logo-mark-img" width="48" height="48" decoding="async" aria-hidden="true">
+      <img src="bibleproject-word-mark.svg" alt="BibleProject" class="logo-word-img" width="148" height="27" decoding="async">
+    </div>
     <div class="logo-divider"></div>
     <span class="logo-sub">Communal Bible Study Tool</span>
   </div>
