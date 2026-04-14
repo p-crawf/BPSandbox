@@ -47,15 +47,14 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
 .lang-select:focus{outline:none;border-color:var(--color-brand-blue)}
 
 /* Hero — centered tagline + decorative carousel */
-.hero{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:36px 24px 20px;overflow:hidden}
-.hero-stack{max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;padding-bottom:8px}
-.hero-heading{font-family:var(--font-sans);font-size:clamp(24px,4vw,32px);font-weight:700;line-height:1.25;color:var(--color-text-primary);max-width:22ch}
-.home-carousel-outer{height:clamp(270px,40.5vw,405px);position:relative;width:100%;max-width:1100px;margin:0 auto}
-.home-carousel{height:clamp(300px,75vw,1500px);inset:0;overflow:hidden;position:absolute;width:100%;left:0;right:0;pointer-events:none}
-.home-carousel-svg{display:block;height:auto;left:50%;position:absolute;top:24px;transform:translateX(-50%);width:min(600px,100vw);max-width:100%}
-.home-carousel-svg .home-carousel-spin{transform-origin:500px 500px;transform-box:view-box;animation:home-carousel-rotate 85s linear infinite}
-.home-carousel-svg .home-carousel-spin--b{animation-duration:68s;animation-direction:reverse}
-@keyframes home-carousel-rotate{to{transform:rotate(360deg)}}
+.hero{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:48px 0 0;overflow:hidden}
+.hero-stack{max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;padding:0 24px 36px}
+.hero-heading{font-family:var(--font-sans);font-size:clamp(36px,5.5vw,60px);font-weight:800;line-height:1.15;color:var(--color-text-primary);max-width:14ch}
+.hero-cards-outer{width:100%;overflow:hidden;padding-bottom:40px}
+.hero-cards-row{display:flex;gap:10px;justify-content:center}
+.hero-cards-row+.hero-cards-row{margin-top:10px}
+.hero-card{flex:0 0 clamp(110px,14.5vw,185px);aspect-ratio:16/9;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.14)}
+.hero-card img{width:100%;height:100%;object-fit:cover;display:block}
 
 /* Sections — labels + headings */
 .ds-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-secondary);margin-bottom:0.75rem}
@@ -169,42 +168,24 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
   <div class="hero-stack">
     <h1 class="hero-heading" id="hero-title" data-i18n="heroTitle">We create resources to help people understand the Bible.</h1>
   </div>
-  <div class="home-carousel-outer" data-testid="home-carousel">
-    <div class="home-carousel">
-      <svg class="home-carousel-svg" viewBox="0 0 1000 1000" aria-hidden="true">
-        <g class="home-carousel-spin">
-          <g transform="rotate(8.62, 500, 500)">
-            <g transform="rotate(0,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#2a9fd6"/></g>
-            <g transform="rotate(30,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#E8B86D"/></g>
-            <g transform="rotate(60,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#C07A5A"/></g>
-            <g transform="rotate(90,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#7B6BBF"/></g>
-            <g transform="rotate(120,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#4A9E78"/></g>
-            <g transform="rotate(150,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#D4647A"/></g>
-            <g transform="rotate(180,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#111111"/></g>
-            <g transform="rotate(210,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#F5F3EE" stroke="#e0ddd8" stroke-width="0.75"/></g>
-            <g transform="rotate(240,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#2a9fd6"/></g>
-            <g transform="rotate(270,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#E8B86D"/></g>
-            <g transform="rotate(300,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#C07A5A"/></g>
-            <g transform="rotate(330,500,500) translate(456,4)"><rect width="46" height="30" rx="3.9" fill="#7B6BBF"/></g>
-          </g>
-        </g>
-        <g class="home-carousel-spin home-carousel-spin--b">
-          <g transform="rotate(-8.62, 500, 500)">
-            <g transform="rotate(15,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#4A9E78"/></g>
-            <g transform="rotate(45,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#D4647A"/></g>
-            <g transform="rotate(75,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#111111"/></g>
-            <g transform="rotate(105,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#F5F3EE" stroke="#e0ddd8" stroke-width="0.75"/></g>
-            <g transform="rotate(135,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#2a9fd6"/></g>
-            <g transform="rotate(165,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#E8B86D"/></g>
-            <g transform="rotate(195,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#C07A5A"/></g>
-            <g transform="rotate(225,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#7B6BBF"/></g>
-            <g transform="rotate(255,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#4A9E78"/></g>
-            <g transform="rotate(285,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#D4647A"/></g>
-            <g transform="rotate(315,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#111111"/></g>
-            <g transform="rotate(345,500,500) translate(456,38)"><rect width="46" height="30" rx="3.9" fill="#E8B86D"/></g>
-          </g>
-        </g>
-      </svg>
+  <div class="hero-cards-outer" aria-hidden="true">
+    <div class="hero-cards-row">
+      <div class="hero-card" style="background:#c9b5a0;transform:rotate(-5deg) translateY(18px)"></div>
+      <div class="hero-card" style="background:#F79968;transform:rotate(-3deg) translateY(7px)"></div>
+      <div class="hero-card" style="background:#E8B86D;transform:rotate(-1.5deg) translateY(2px)"></div>
+      <div class="hero-card" style="background:#7B6BBF;transform:rotate(0deg)"></div>
+      <div class="hero-card" style="background:#4A9E78;transform:rotate(1.5deg) translateY(2px)"></div>
+      <div class="hero-card" style="background:#D4647A;transform:rotate(3deg) translateY(7px)"></div>
+      <div class="hero-card" style="background:#2a9fd6;transform:rotate(5deg) translateY(18px)"></div>
+    </div>
+    <div class="hero-cards-row">
+      <div class="hero-card" style="background:#8B6F47;transform:rotate(-5deg) translateY(18px)"></div>
+      <div class="hero-card" style="background:#C07A5A;transform:rotate(-3deg) translateY(7px)"></div>
+      <div class="hero-card" style="background:#2a9fd6;transform:rotate(-1.5deg) translateY(2px)"></div>
+      <div class="hero-card" style="background:#D4647A;transform:rotate(0deg)"></div>
+      <div class="hero-card" style="background:#F79968;transform:rotate(1.5deg) translateY(2px)"></div>
+      <div class="hero-card" style="background:#7B6BBF;transform:rotate(3deg) translateY(7px)"></div>
+      <div class="hero-card" style="background:#E8B86D;transform:rotate(5deg) translateY(18px)"></div>
     </div>
   </div>
 </section>
