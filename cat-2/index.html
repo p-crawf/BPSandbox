@@ -105,6 +105,15 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
 .ipv2-overview-video-title{margin-top:10px;font-size:14px;font-weight:600;line-height:1.35;color:var(--color-text-primary);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
 .plan-empty{font-size:15px;color:var(--color-text-secondary);font-style:italic;padding:16px 0}
 
+/* About */
+.section-about{border-top:0.5px solid var(--color-border-tertiary);border-bottom:0.5px solid var(--color-border-tertiary);padding-top:2.5rem;padding-bottom:2.5rem}
+.about-intro{max-width:720px;margin:0 auto 2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.about-intro-title{font-family:var(--font-sans);font-size:clamp(20px,3vw,26px);font-weight:700;line-height:1.25;color:var(--color-text-primary);max-width:36ch;text-align:center}
+.about-body{max-width:720px;margin:0 auto}
+.about-story-heading{font-size:20px;font-weight:700;line-height:1.3;margin:2rem 0 0.5rem;color:var(--color-text-primary)}
+.about-story-subheading{font-size:15px;font-weight:600;line-height:1.35;color:var(--color-text-primary);margin:0.5rem 0 0.75rem}
+.about-story-p{font-size:15px;line-height:1.6;color:var(--color-text-secondary);margin-bottom:1rem}
+
 /* Footer */
 .site-footer{background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary);padding:40px 24px 48px;margin-top:0}
 .footer-inner{max-width:900px;margin:0 auto}
@@ -220,6 +229,22 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
     <p class="downloads-intro-note" data-i18n="dlPageNote">Note: Not all videos have accompanying transcripts, study notes, and posters. We're working to add missing transcripts over time. But if study notes or posters are unavailable, it's because they were not created for that video.</p>
   </div>
   <div class="downloads-acc" id="downloads-acc" role="region" aria-label="Download categories"></div>
+</section>
+
+<section class="section section-about" id="about" aria-labelledby="about-main-title">
+  <p class="ds-label">About BibleProject</p>
+  <div class="about-intro">
+    <h2 class="about-intro-title" id="about-main-title">We Help People Experience the Bible as a Unified Story That Leads to Jesus</h2>
+    <p class="about-story-p">BibleProject is a nonprofit, crowdfunded organization based in the United States that makes free videos and resources designed to help people experience the Bible in a way that is approachable and transformative. We want to help people everywhere encounter the life-changing story of Jesus, so we work with teams around the world to localize BibleProject videos into 55 languages and dialects. In addition to videos, BibleProject also produces other resources, like a weekly podcast in both English and Spanish, online classes in English, and a mobile app in English.</p>
+  </div>
+  <div class="about-body">
+    <h2 class="about-story-heading">Our Story</h2>
+    <h3 class="about-story-subheading">It Began With a Love of the Bible</h3>
+    <p class="about-story-p">Tim Mackie and Jon Collins (long-time friends and one-time roommates at Multnomah University in Oregon, USA) set out to help people read through Scripture while avoiding the common pitfalls and misunderstandings. They wanted to create resources that would present complex biblical themes in a way that was authentic and unapologetic but still approachable.</p>
+    <p class="about-story-p">BibleProject was born out of Tim's deep biblical understanding and Jon's passion for visual storytelling. And in 2014, BibleProject created our first two videos in English and put them online for free. Since then, BibleProject has grown to an organization of over 140 people and released thousands of videos in 55 languages and dialects through the diligent work of native speakers and teams around the world.</p>
+    <h2 class="about-story-heading">The Localization Process</h2>
+    <p class="about-story-p">To create the [Language] version of each video, we work with native speakers to translate the English video scripts, record translated voiceovers, and re-illustrate animated text—all while reviewing and adjusting the phrasing and graphics for the cultural context of each language. Our [Language] language advisor reviews each video throughout production to ensure translation accuracy and appropriate cultural adaptation.</p>
+  </div>
 </section>
 
 <footer class="site-footer">
