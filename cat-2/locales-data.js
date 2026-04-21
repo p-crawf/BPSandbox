@@ -9,7 +9,7 @@ var DEFAULTS={
   heroEyebrow:'BibleProject',
   heroTitle:'We create resources to help people understand the Bible.',
   sectionLabelPlans:'Reading plans',
-  sectionLabelDownloads:'Downloads available',
+  sectionLabelDownloads:'Watch & Download',
   plansTitle:'Reading Plans',
   plansIntro:'Reading plans on YouVersion that match your language. Open the Bible App to start.',
   plansOverview:'Our reading plans incorporate animated videos and insightful summaries to inspire people in personal study, small groups, or with family—and help them learn more about the Bible.',
@@ -19,19 +19,6 @@ var DEFAULTS={
   dlPageSub:'Access videos, posters, transcripts, and study notes.',
   dlPageNote:'Note: Not all videos have accompanying transcripts, study notes, and posters. We\'re working to add missing transcripts over time. But if study notes or posters are unavailable, it\'s because they were not created for that video.',
   navAbout:'About',
-  navVideos:'Videos',
-  sectionLabelVideos:'Featured Videos',
-  videosTitle:'Watch BibleProject Videos',
-  featuredVideos:[
-    {title:'Genesis 1–11 Overview',category:'Old Testament',bg:'#F79968',url:'https://bibleproject.com/explore/video/genesis-1/'},
-    {title:'The Kingdom of God',category:'Biblical Themes',bg:'#7B6BBF',url:'https://bibleproject.com/explore/video/kingdom-of-god/'},
-    {title:'How to Read the Bible Series',category:'Bible Series',bg:'#4A9E78',url:'https://bibleproject.com/explore/video/literary-styles-bible/'},
-    {title:'Luke Overview',category:'New Testament',bg:'#E8B86D',url:'https://bibleproject.com/explore/video/luke/'},
-    {title:'The Shema',category:'Biblical Themes',bg:'#D4647A',url:'https://bibleproject.com/explore/video/shema/'},
-    {title:'Word Study: Shalom',category:'Word Studies',bg:'#2a9fd6',url:'https://bibleproject.com/explore/video/shalom-peace/'},
-    {title:'Gospel of John Overview',category:'New Testament',bg:'#8B6F47',url:'https://bibleproject.com/explore/video/john/'},
-    {title:'Sermon on the Mount',category:'Teachings of Jesus',bg:'#C07A5A',url:'https://bibleproject.com/explore/video/sermon-on-the-mount/'}
-  ],
   videoSingular:'video',
   videoPlural:'videos',
   signupTitle:'Email updates',
@@ -78,7 +65,7 @@ function add(key,htmlLang,dir,label,navD,navP,langL,heroT,heroL,extra){
 window.CAT2_LOCALES={};
 
 /* ── English ─────────────────────────────────────────────────────────── */
-add('english','en','ltr','English','Downloads','Reading Plans','Language',
+add('english','en','ltr','English','Watch & Download','Reading Plans','Language',
 'We create resources to help people understand the Bible.',
 'Explore reading plans and video downloads available in your language.',
 {readingPlans:[
