@@ -96,6 +96,16 @@ mux-player{width:100%;height:100%;display:block}
 
 /* ── BP header/footer shell ── */
 bp-global-header,bp-global-footer{display:block}
+
+/* ── Meditation panel ── */
+.med-panel{position:fixed;right:-220px;top:50%;transform:translateY(-50%);background:#fff;border:1px solid var(--bp-border);border-right:none;border-radius:16px 0 0 16px;padding:20px 16px 20px 20px;box-shadow:-6px 0 24px rgba(0,0,0,.1);cursor:pointer;transition:right .5s cubic-bezier(.34,1.56,.64,1);z-index:200;width:190px;text-align:center;user-select:none}
+.med-panel.visible{right:0}
+.med-panel:hover{background:#fafaf8}
+.med-ring-wrap{position:relative;width:56px;height:56px;margin:0 auto 10px}
+.med-ring-wrap svg{width:56px;height:56px;display:block}
+.med-ring-count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:var(--bp-black)}
+.med-panel-label{font-size:.75rem;font-weight:600;color:var(--bp-gray);line-height:1.45;margin-bottom:10px}
+.med-panel-arrow{font-size:1.3rem;color:var(--bp-blue)}
 </style>
 </head>
 <body>
@@ -241,13 +251,65 @@ bp-global-header,bp-global-footer{display:block}
 
 <bp-global-footer></bp-global-footer>
 
+<div class="med-panel" id="med-panel" onclick="goToMeditation()" role="button" tabindex="0" aria-label="Start meditation experience">
+  <div class="med-ring-wrap">
+    <svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="28" cy="28" r="22" stroke="#e0ddd8" stroke-width="3" fill="none"/>
+      <circle id="med-ring-prog" cx="28" cy="28" r="22" stroke="#2a9fd6" stroke-width="3"
+        fill="none" stroke-dasharray="138.2" stroke-dashoffset="0" stroke-linecap="round"
+        transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .9s linear"/>
+    </svg>
+    <div class="med-ring-count" id="med-panel-count">30</div>
+  </div>
+  <div class="med-panel-label">Start meditation<br>experience</div>
+  <div class="med-panel-arrow">→</div>
+</div>
+
 <script>
+const MEDITATION_URL = '../meditation/';
+const NEXT_URL = 'https://bibleproject.com/videos/3rd-commandment-do-not-carry-the-name-in-vain/';
+const QUESTIONS = [
+  'What modern equivalents of idols do you see in your own life or culture — things that promise life, security, or meaning but can\'t ultimately deliver?',
+  'The video connects the ban on idols to the dignity of humans as image-bearers. How does idol worship diminish human dignity, and what does it mean to honor the image of God in people instead?',
+  'God says he is a "jealous God" in this commandment. How does that phrase sit with you? In what ways is God\'s jealousy different from human jealousy?',
+  'How does Jesus fulfill and redefine what it means to be the true image of God (Colossians 1:15)? What does that mean for how we worship?'
+];
+const CIRC = 138.2;
+let panelTimer = null, panelSecsLeft = 30;
+
+function showMedPanel(startSecs) {
+  panelSecsLeft = Math.min(Math.ceil(startSecs), 30);
+  document.getElementById('med-panel').classList.add('visible');
+  updateRing();
+  panelTimer = setInterval(() => {
+    panelSecsLeft--;
+    document.getElementById('med-panel-count').textContent = panelSecsLeft;
+    updateRing();
+    if (panelSecsLeft <= 0) { clearInterval(panelTimer); goToMeditation(); }
+  }, 1000);
+}
+function updateRing() {
+  document.getElementById('med-ring-prog').style.strokeDashoffset = CIRC * (1 - panelSecsLeft / 30);
+}
+function goToMeditation() {
+  clearInterval(panelTimer);
+  sessionStorage.setItem('meditation', JSON.stringify({ next: NEXT_URL, questions: QUESTIONS }));
+  window.location.href = MEDITATION_URL;
+}
+
 customElements.whenDefined('mux-player').then(() => {
   const player = document.querySelector('mux-player');
   if (!player) return;
+  let triggered = false;
   if (new URLSearchParams(location.search).get('autoplay') === '1') {
     player.play().catch(() => {});
   }
+  player.addEventListener('timeupdate', () => {
+    if (triggered || !player.duration) return;
+    const left = player.duration - player.currentTime;
+    if (left <= 30 && left > 0) { triggered = true; showMedPanel(left); }
+  });
+  player.addEventListener('ended', () => { if (!triggered) goToMeditation(); });
 });
 </script>
 

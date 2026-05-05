@@ -41,15 +41,15 @@ body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;font-s
 .video-main{}
 .video-player-wrap{position:relative;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:16/9;width:100%;margin-bottom:24px}
 
-/* ── Autoplay overlay ── */
-.autoplay-overlay{position:absolute;inset:0;background:rgba(0,0,0,.82);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;opacity:0;pointer-events:none;transition:opacity .3s;z-index:10}
-.autoplay-overlay.visible{opacity:1;pointer-events:auto}
-.autoplay-thumb{width:160px;border-radius:8px;object-fit:cover;aspect-ratio:16/9}
-.autoplay-label{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.65)}
-.autoplay-title{font-size:.95rem;font-weight:600;color:#fff;text-align:center;max-width:280px;line-height:1.35}
-.autoplay-count{font-size:2.8rem;font-weight:700;color:#fff;line-height:1}
-.autoplay-cancel{padding:8px 20px;border:1px solid rgba(255,255,255,.4);border-radius:8px;background:transparent;color:#fff;font-size:.85rem;font-weight:500;cursor:pointer;transition:background .15s;margin-top:4px}
-.autoplay-cancel:hover{background:rgba(255,255,255,.12)}
+/* ── Meditation panel ── */
+.med-panel{position:fixed;right:-220px;top:50%;transform:translateY(-50%);background:#fff;border:1px solid var(--bp-border);border-right:none;border-radius:16px 0 0 16px;padding:20px 16px 20px 20px;box-shadow:-6px 0 24px rgba(0,0,0,.1);cursor:pointer;transition:right .5s cubic-bezier(.34,1.56,.64,1);z-index:200;width:190px;text-align:center;user-select:none}
+.med-panel.visible{right:0}
+.med-panel:hover{background:#fafaf8}
+.med-ring-wrap{position:relative;width:56px;height:56px;margin:0 auto 10px}
+.med-ring-wrap svg{width:56px;height:56px;display:block}
+.med-ring-count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:var(--bp-black)}
+.med-panel-label{font-size:.75rem;font-weight:600;color:var(--bp-gray);line-height:1.45;margin-bottom:10px}
+.med-panel-arrow{font-size:1.3rem;color:var(--bp-blue)}
 mux-player{width:100%;height:100%;display:block}
 .video-title{font-size:1.6rem;font-weight:700;line-height:1.3;margin-bottom:12px}
 .video-meta{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
@@ -134,13 +134,6 @@ bp-global-header,bp-global-footer{display:block}
           accent-color="#2a9fd6"
           style="--media-object-fit:contain"
         ></mux-player>
-        <div class="autoplay-overlay" id="autoplay-overlay" aria-hidden="true">
-          <div class="autoplay-label">Up Next</div>
-          <img class="autoplay-thumb" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Word2_horizontal_no%20text_v1.jpg" alt="">
-          <div class="autoplay-title">2nd Commandment: No Idols</div>
-          <div class="autoplay-count" id="autoplay-count">10</div>
-          <button class="autoplay-cancel" onclick="cancelAutoplay()">Cancel</button>
-        </div>
       </div>
 
       <a class="video-series" href="#">The 10 Commandments</a>
@@ -258,40 +251,62 @@ bp-global-header,bp-global-footer{display:block}
 
 <bp-global-footer></bp-global-footer>
 
+<div class="med-panel" id="med-panel" onclick="goToMeditation()" role="button" tabindex="0" aria-label="Start meditation experience">
+  <div class="med-ring-wrap">
+    <svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="28" cy="28" r="22" stroke="#e0ddd8" stroke-width="3" fill="none"/>
+      <circle id="med-ring-prog" cx="28" cy="28" r="22" stroke="#2a9fd6" stroke-width="3"
+        fill="none" stroke-dasharray="138.2" stroke-dashoffset="0" stroke-linecap="round"
+        transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .9s linear"/>
+    </svg>
+    <div class="med-ring-count" id="med-panel-count">30</div>
+  </div>
+  <div class="med-panel-label">Start meditation<br>experience</div>
+  <div class="med-panel-arrow">→</div>
+</div>
+
 <script>
-const NEXT_URL = '../2nd-commandment-no-idols/?autoplay=1';
-const COUNTDOWN_SEC = 10;
-let countdownTimer = null;
-let remaining = COUNTDOWN_SEC;
+const MEDITATION_URL = '../meditation/';
+const NEXT_URL = '../2nd-commandment-no-idols/';
+const QUESTIONS = [
+  'What are some “gods” that compete for our loyalty and trust in today’s culture? How do they subtly claim the place that belongs to God?',
+  'The first commandment is given after God rescues Israel from Egypt. Why does the redemption story come before the command? What does that order tell us about the nature of God’s relationship with his people?',
+  'How does placing God first practically shape the way you make decisions, spend your time, and order your relationships?',
+  'Jesus summarized the law as loving God and loving neighbor. How does the 1st commandment anchor that summary? What happens when either love is out of order?'
+];
+const CIRC = 138.2;
+let panelTimer = null, panelSecsLeft = 30;
 
-function showAutoplayOverlay() {
-  const overlay = document.getElementById('autoplay-overlay');
-  const countEl = document.getElementById('autoplay-count');
-  remaining = COUNTDOWN_SEC;
-  countEl.textContent = remaining;
-  overlay.classList.add('visible');
-  overlay.removeAttribute('aria-hidden');
-
-  countdownTimer = setInterval(() => {
-    remaining--;
-    countEl.textContent = remaining;
-    if (remaining <= 0) {
-      clearInterval(countdownTimer);
-      window.location.href = NEXT_URL;
-    }
+function showMedPanel(startSecs) {
+  panelSecsLeft = Math.min(Math.ceil(startSecs), 30);
+  document.getElementById('med-panel').classList.add('visible');
+  updateRing();
+  panelTimer = setInterval(() => {
+    panelSecsLeft--;
+    document.getElementById('med-panel-count').textContent = panelSecsLeft;
+    updateRing();
+    if (panelSecsLeft <= 0) { clearInterval(panelTimer); goToMeditation(); }
   }, 1000);
 }
-
-function cancelAutoplay() {
-  clearInterval(countdownTimer);
-  const overlay = document.getElementById('autoplay-overlay');
-  overlay.classList.remove('visible');
-  overlay.setAttribute('aria-hidden', 'true');
+function updateRing() {
+  document.getElementById('med-ring-prog').style.strokeDashoffset = CIRC * (1 - panelSecsLeft / 30);
+}
+function goToMeditation() {
+  clearInterval(panelTimer);
+  sessionStorage.setItem('meditation', JSON.stringify({ next: NEXT_URL, questions: QUESTIONS }));
+  window.location.href = MEDITATION_URL;
 }
 
 customElements.whenDefined('mux-player').then(() => {
   const player = document.querySelector('mux-player');
-  if (player) player.addEventListener('ended', showAutoplayOverlay);
+  if (!player) return;
+  let triggered = false;
+  player.addEventListener('timeupdate', () => {
+    if (triggered || !player.duration) return;
+    const left = player.duration - player.currentTime;
+    if (left <= 30 && left > 0) { triggered = true; showMedPanel(left); }
+  });
+  player.addEventListener('ended', () => { if (!triggered) goToMeditation(); });
 });
 </script>
 
