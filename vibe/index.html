@@ -7,6 +7,7 @@
 <meta name="description" content="BibleProject resources in your language — reading plans and downloads.">
 <link rel="icon" href="../bibleproject-logo-mark.svg" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -161,6 +162,32 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
   .acc-panel-inner{padding-inline-start:64px}
   .acc-video-btn{padding:4px 8px;font-size:12px}
 }
+
+/* ── Vibe: sticky scroll scene ── */
+.scroll-scene{position:relative;height:350vh}
+.scroll-sticky{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;background:#080808;overflow:hidden}
+.scroll-eyebrow{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em;color:rgba(255,255,255,.45)}
+.thumb-row{display:flex;align-items:center;justify-content:center;gap:clamp(8px,1.1vw,14px);width:100%;padding:0 32px}
+.thumb-item{flex-shrink:0;border-radius:10px;overflow:hidden;will-change:opacity,transform}
+.thumb-item img{display:block;object-fit:cover;pointer-events:none}
+@media(max-width:680px){.side-outer{display:none}}
+
+/* Fixed overlay that grows from thumbnail to fullscreen */
+.center-overlay{position:fixed;overflow:hidden;z-index:600;display:none;background:#000;border-radius:10px}
+.center-overlay>img{width:100%;height:100%;object-fit:cover;display:block}
+.overlay-video-wrap{position:absolute;inset:0}
+.overlay-video-wrap mux-player{width:100%;height:100%;display:block}
+
+/* Meditation panel (same as video pages, higher z-index) */
+.med-panel{position:fixed;right:-220px;top:50%;transform:translateY(-50%);background:#fff;border:1px solid #e0ddd8;border-right:none;border-radius:16px 0 0 16px;padding:20px 16px 20px 20px;box-shadow:-6px 0 24px rgba(0,0,0,.1);cursor:pointer;transition:right .5s cubic-bezier(.34,1.56,.64,1);z-index:700;width:190px;text-align:center;user-select:none}
+.med-panel.visible{right:0}
+.med-panel:hover{background:#fafaf8}
+.med-ring-wrap{position:relative;width:56px;height:56px;margin:0 auto 10px}
+.med-ring-wrap svg{width:56px;height:56px;display:block}
+.med-ring-count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:#1a1a1a}
+.med-panel-label{font-size:.75rem;font-weight:600;color:#6b6b6b;line-height:1.45;margin-bottom:10px}
+.med-panel-arrow{font-size:1.3rem;color:#2a9fd6}
+body.scroll-locked{overflow:hidden}
 </style>
 </head>
 <body>
@@ -216,6 +243,30 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
     </div>
   </div>
 </section>
+
+<!-- ── Sticky scroll scene ── -->
+<div class="scroll-scene" id="scroll-scene">
+  <div class="scroll-sticky">
+    <p class="scroll-eyebrow" id="scroll-eyebrow">The 10 Commandments</p>
+    <div class="thumb-row">
+      <div class="thumb-item side-outer">
+        <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word5_horizontal_no%20text_v1.jpg" width="170" height="96" loading="lazy" alt="">
+      </div>
+      <div class="thumb-item side-item">
+        <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word4_horizontal_no%20text_v1.jpg" width="200" height="113" loading="lazy" alt="">
+      </div>
+      <div class="thumb-item" id="flex-center">
+        <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Word1_horizontal_no%20text_v1.jpg" width="264" height="148" loading="lazy" alt="1st Commandment: No Other Gods">
+      </div>
+      <div class="thumb-item side-item">
+        <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word2_horizontal_no%20text_v1.jpg" width="200" height="113" loading="lazy" alt="">
+      </div>
+      <div class="thumb-item side-outer">
+        <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word3_horizontal_no%20text_v1.jpg" width="170" height="96" loading="lazy" alt="">
+      </div>
+    </div>
+  </div>
+</div>
 
 <section class="section section-downloads" id="downloads" aria-labelledby="downloads-block-title">
   <p class="ds-label" data-i18n="sectionLabelDownloads">Watch &amp; Download</p>
@@ -295,6 +346,34 @@ body{background:var(--color-background-primary);color:var(--color-text-primary);
     </div>
   </div>
 </footer>
+
+<!-- Center overlay (fixed, grows from thumbnail to fullscreen) -->
+<div class="center-overlay" id="center-overlay">
+  <img id="overlay-img" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-1200/10C_YT%20Thumbnails_Word1_horizontal_no%20text_v1.jpg" alt="">
+  <div class="overlay-video-wrap" id="overlay-video" style="display:none">
+    <mux-player id="vibe-player"
+      playback-id="kmUoo4745gIarp4nhib958PnPPpD9YGkfvmtZrIvLyo"
+      metadata-video-title="1st Commandment: No Other Gods"
+      accent-color="#2a9fd6"
+      style="--media-object-fit:contain;width:100%;height:100%;display:block">
+    </mux-player>
+  </div>
+</div>
+
+<!-- Meditation panel -->
+<div class="med-panel" id="med-panel" onclick="vibeGoToMeditation()" role="button" tabindex="0" aria-label="Start meditation experience">
+  <div class="med-ring-wrap">
+    <svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="28" cy="28" r="22" stroke="#e0ddd8" stroke-width="3" fill="none"/>
+      <circle id="med-ring-prog" cx="28" cy="28" r="22" stroke="#2a9fd6" stroke-width="3"
+        fill="none" stroke-dasharray="138.2" stroke-dashoffset="0" stroke-linecap="round"
+        transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .9s linear"/>
+    </svg>
+    <div class="med-ring-count" id="med-panel-count">30</div>
+  </div>
+  <div class="med-panel-label">Start meditation<br>experience</div>
+  <div class="med-panel-arrow">→</div>
+</div>
 
 <script src="locales-data.js"></script>
 <script>
@@ -559,6 +638,128 @@ document.addEventListener('click',function(){
   }
 });
 })();
+</script>
+<script>
+// ── Vibe scroll scene + video + meditation ──
+(function () {
+  var CIRC = 138.2;
+  var panelSecsLeft = 30;
+
+  var scene = document.getElementById('scroll-scene');
+  var overlay = document.getElementById('center-overlay');
+  var flexCenter = document.getElementById('flex-center');
+  var sideItems = document.querySelectorAll('.side-item, .side-outer');
+  var eyebrow = document.getElementById('scroll-eyebrow');
+  var overlayImg = document.getElementById('overlay-img');
+  var overlayVideo = document.getElementById('overlay-video');
+  var videoStarted = false;
+  var fcRect = null;
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function easeInOut(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
+
+  function onScroll() {
+    if (!scene) return;
+    var sTop = scene.getBoundingClientRect().top;
+    var sH = scene.offsetHeight - window.innerHeight;
+    var raw = clamp(-sTop / sH, 0, 1);
+
+    if (raw <= 0) {
+      overlay.style.display = 'none';
+      flexCenter.style.opacity = '1';
+      sideItems.forEach(function (it) { it.style.opacity = '1'; it.style.transform = ''; });
+      eyebrow.style.opacity = '1';
+      fcRect = null;
+      return;
+    }
+
+    if (!fcRect) fcRect = flexCenter.getBoundingClientRect();
+
+    // Animation completes at 80% of total scroll travel
+    var p = clamp(raw / 0.8, 0, 1);
+    var pe = easeInOut(p);
+
+    overlay.style.display = 'block';
+    flexCenter.style.opacity = '0';
+
+    sideItems.forEach(function (it) {
+      it.style.opacity = String(Math.max(0, 1 - pe));
+      it.style.transform = 'scale(' + lerp(1, 0.92, pe) + ')';
+    });
+    eyebrow.style.opacity = String(Math.max(0, 1 - pe));
+
+    // Grow overlay from thumbnail bounds → fullscreen
+    var r = fcRect;
+    var vw = window.innerWidth, vh = window.innerHeight;
+    overlay.style.left = lerp(r.left, 0, pe) + 'px';
+    overlay.style.top = lerp(r.top, 0, pe) + 'px';
+    overlay.style.width = lerp(r.width, vw, pe) + 'px';
+    overlay.style.height = lerp(r.height, vh, pe) + 'px';
+    overlay.style.borderRadius = lerp(10, 0, pe) + 'px';
+
+    if (p >= 1 && !videoStarted) {
+      videoStarted = true;
+      startVideo();
+    }
+  }
+
+  function startVideo() {
+    overlayImg.style.display = 'none';
+    overlayVideo.style.display = 'block';
+    document.body.classList.add('scroll-locked');
+
+    customElements.whenDefined('mux-player').then(function () {
+      var player = document.getElementById('vibe-player');
+      if (!player) return;
+      player.play().catch(function () {});
+
+      var triggered = false;
+      player.addEventListener('timeupdate', function () {
+        if (triggered || !player.duration) return;
+        var left = player.duration - player.currentTime;
+        if (left <= 30 && left > 0) { triggered = true; showMedPanel(left); }
+      });
+      player.addEventListener('ended', function () {
+        if (!triggered) vibeGoToMeditation();
+      });
+    });
+  }
+
+  function showMedPanel(startSecs) {
+    panelSecsLeft = Math.min(Math.ceil(startSecs), 30);
+    document.getElementById('med-panel').classList.add('visible');
+    updateRing();
+    window._vibePanelTimer = setInterval(function () {
+      panelSecsLeft--;
+      document.getElementById('med-panel-count').textContent = panelSecsLeft;
+      updateRing();
+      if (panelSecsLeft <= 0) { clearInterval(window._vibePanelTimer); vibeGoToMeditation(); }
+    }, 1000);
+  }
+
+  function updateRing() {
+    document.getElementById('med-ring-prog').style.strokeDashoffset = CIRC * (1 - panelSecsLeft / 30);
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', function () { fcRect = null; }, { passive: true });
+  onScroll();
+})();
+
+function vibeGoToMeditation() {
+  if (window._vibePanelTimer) clearInterval(window._vibePanelTimer);
+  sessionStorage.setItem('meditation', JSON.stringify({
+    next: '../videos/2nd-commandment-no-idols/',
+    questions: [
+      'What are some “gods” that compete for our loyalty and trust in today’s culture? How do they subtly claim the place that belongs to God?',
+      'The first commandment is given after God rescues Israel from Egypt. Why does the redemption story come before the command? What does that order tell us about the nature of God’s relationship with his people?',
+      'How does placing God first practically shape the way you make decisions, spend your time, and order your relationships?',
+      'Jesus summarized the law as loving God and loving neighbor. How does the 1st commandment anchor that summary? What happens when either love is out of order?'
+    ]
+  }));
+  window.location.href = '../videos/meditation/';
+}
 </script>
 </body>
 </html>
