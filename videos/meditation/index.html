@@ -20,24 +20,13 @@ body{
   color:var(--bp-black);
   font-family:'Inter',sans-serif;
   cursor:none;
-  min-height:100%;
-  overflow-y:auto;
+  height:100%;
+  overflow:hidden;
   display:flex;
-  flex-direction:column;
-  align-items:stretch;
-  position:relative;
-  transition:opacity .9s;
-}
-
-/* ── Candle section (full viewport height, centers candle) ── */
-.candle-section{
-  min-height:100vh;
-  display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
-  padding-top:80px;
-  flex-shrink:0;
+  position:relative;
+  transition:opacity .9s;
 }
 
 /* ── Custom cursor ── */
@@ -156,22 +145,21 @@ body{
 
 /* ── Questions ── */
 .questions-wrap{
-  display:flex;
-  justify-content:center;
-  padding:0 24px 120px;
+  position:fixed;
+  right:-420px;
+  top:50%;
+  transform:translateY(-50%);
+  width:360px;
   opacity:0;
-  transform:translateY(16px);
   pointer-events:none;
-  transition:opacity .9s,transform .9s;
+  transition:right .7s cubic-bezier(.34,1.56,.64,1),opacity .6s;
 }
-.questions-wrap.visible{opacity:1;transform:translateY(0);pointer-events:auto}
+.questions-wrap.visible{right:20px;opacity:1;pointer-events:auto}
 .questions-card{
   background:#fff;
   border:1px solid var(--bp-border);
   border-radius:16px;
-  padding:22px 28px;
-  max-width:580px;
-  width:100%;
+  padding:18px 22px;
   box-shadow:0 4px 28px rgba(0,0,0,.06);
 }
 .questions-eyebrow{
@@ -238,7 +226,6 @@ body{
 
 <div id="cursor">🔥</div>
 
-<div class="candle-section">
 <div class="scene">
   <div class="candle-wrap" id="candle-wrap" onclick="lightCandle()">
     <svg width="120" height="290" viewBox="0 0 120 290" xmlns="http://www.w3.org/2000/svg">
@@ -303,7 +290,6 @@ body{
   </div>
 
   <p class="light-prompt" id="light-prompt">Light the candle</p>
-</div>
 </div>
 
 <!-- Timer -->
@@ -409,7 +395,7 @@ function lightCandle() {
   if (QUESTIONS.length) {
     setTimeout(() => {
       document.getElementById('questions-wrap').classList.add('visible');
-    }, 1400);
+    }, 2000);
   }
 
   // Start 3-minute countdown

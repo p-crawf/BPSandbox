@@ -742,6 +742,32 @@ document.addEventListener('click',function(){
     document.getElementById('med-ring-prog').style.strokeDashoffset = CIRC * (1 - panelSecsLeft / 30);
   }
 
+  function exitVideo() {
+    if (window._vibePanelTimer) clearInterval(window._vibePanelTimer);
+    document.body.classList.remove('scroll-locked');
+    overlay.style.transition = 'opacity .4s';
+    overlay.style.opacity = '0';
+    setTimeout(function () {
+      overlay.style.display = 'none';
+      overlay.style.opacity = '';
+      overlay.style.transition = '';
+      videoStarted = false;
+    }, 400);
+    var player = document.getElementById('vibe-player');
+    if (player) { try { player.pause(); } catch (e) {} }
+    var sceneEnd = scene.offsetTop + scene.offsetHeight;
+    window.scrollTo({ top: sceneEnd, behavior: 'smooth' });
+  }
+
+  window.addEventListener('wheel', function (e) {
+    if (!document.body.classList.contains('scroll-locked')) return;
+    if (e.deltaY > 0) exitVideo();
+  }, { passive: true });
+
+  window.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && document.body.classList.contains('scroll-locked')) exitVideo();
+  });
+
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', function () { fcRect = null; }, { passive: true });
   onScroll();
