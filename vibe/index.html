@@ -653,6 +653,7 @@ document.addEventListener('click',function(){
   var overlayImg = document.getElementById('overlay-img');
   var overlayVideo = document.getElementById('overlay-video');
   var videoStarted = false;
+  var exitedState = false;
   var fcRect = null;
 
   function lerp(a, b, t) { return a + (b - a) * t; }
@@ -671,6 +672,14 @@ document.addEventListener('click',function(){
       sideItems.forEach(function (it) { it.style.opacity = '1'; it.style.transform = ''; });
       eyebrow.style.opacity = '1';
       fcRect = null;
+      exitedState = false;
+      videoStarted = false;
+      return;
+    }
+
+    // While in bungee-exit state, hand control back to scroll only when far enough back
+    if (exitedState) {
+      if (raw < 0.6) { exitedState = false; videoStarted = false; }
       return;
     }
 
@@ -742,36 +751,72 @@ document.addEventListener('click',function(){
     document.getElementById('med-ring-prog').style.strokeDashoffset = CIRC * (1 - panelSecsLeft / 30);
   }
 
-  function exitVideo() {
-    if (window._vibePanelTimer) clearInterval(window._vibePanelTimer);
-    document.body.classList.remove('scroll-locked');
-    overlay.style.transition = 'opacity .4s';
-    overlay.style.opacity = '0';
-    setTimeout(function () {
-      overlay.style.display = 'none';
-      overlay.style.opacity = '';
-      overlay.style.transition = '';
-      videoStarted = false;
-    }, 400);
-    var player = document.getElementById('vibe-player');
-    if (player) { try { player.pause(); } catch (e) {} }
-    var sceneEnd = scene.offsetTop + scene.offsetHeight;
-    window.scrollTo({ top: sceneEnd, behavior: 'smooth' });
+  // ── Bungee pull-to-exit ──
+  var pullY = 0;
+  var pullTimer = null;
+
+  function applyBungee(deltaY) {
+    pullY = Math.min(pullY + deltaY * 0.4, 200);
+    var visual = Math.min(pullY * 0.4, 80);
+    overlay.style.transition = 'none';
+    overlay.style.transform = 'translateY(-' + visual + 'px)';
+    clearTimeout(pullTimer);
+    if (pullY >= 200) { exitToThumbnail(); return; }
+    pullTimer = setTimeout(snapBack, 140);
   }
 
-  var scrollExitAccum = 0;
-  var scrollExitReset = null;
+  function snapBack() {
+    pullY = 0;
+    overlay.style.transition = 'transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1)';
+    overlay.style.transform = 'translateY(0)';
+  }
+
+  function exitToThumbnail() {
+    pullY = 0;
+    clearTimeout(pullTimer);
+    if (window._vibePanelTimer) clearInterval(window._vibePanelTimer);
+    document.getElementById('med-panel').classList.remove('visible');
+    exitedState = true;
+
+    var player = document.getElementById('vibe-player');
+    if (player) { try { player.pause(); } catch (e) {} }
+
+    // Shrink overlay back to thumbnail bounds
+    var r = fcRect || { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+    overlay.style.transition = 'left .5s ease, top .5s ease, width .5s ease, height .5s ease, border-radius .5s ease, transform .5s ease';
+    overlay.style.transform = 'translateY(0)';
+    overlay.style.left = r.left + 'px';
+    overlay.style.top = r.top + 'px';
+    overlay.style.width = r.width + 'px';
+    overlay.style.height = r.height + 'px';
+    overlay.style.borderRadius = '10px';
+
+    // Fade thumbnails back in
+    sideItems.forEach(function (it) {
+      it.style.transition = 'opacity .4s, transform .4s';
+      it.style.opacity = '1';
+      it.style.transform = '';
+    });
+    eyebrow.style.transition = 'opacity .4s';
+    eyebrow.style.opacity = '1';
+    flexCenter.style.opacity = '1';
+
+    // Unlock scroll and hide overlay after animation
+    setTimeout(function () {
+      document.body.classList.remove('scroll-locked');
+      overlay.style.display = 'none';
+      overlay.style.transition = '';
+      overlay.style.transform = '';
+    }, 500);
+  }
+
   window.addEventListener('wheel', function (e) {
     if (!document.body.classList.contains('scroll-locked')) return;
-    if (e.deltaY <= 0) return;
-    scrollExitAccum += e.deltaY;
-    clearTimeout(scrollExitReset);
-    scrollExitReset = setTimeout(function () { scrollExitAccum = 0; }, 600);
-    if (scrollExitAccum >= 400) { scrollExitAccum = 0; exitVideo(); }
+    if (e.deltaY > 0) applyBungee(e.deltaY);
   }, { passive: true });
 
   window.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && document.body.classList.contains('scroll-locked')) exitVideo();
+    if (e.key === 'Escape' && document.body.classList.contains('scroll-locked')) exitToThumbnail();
   });
 
   window.addEventListener('scroll', onScroll, { passive: true });
