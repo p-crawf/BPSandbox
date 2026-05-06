@@ -759,9 +759,15 @@ document.addEventListener('click',function(){
     window.scrollTo({ top: sceneEnd, behavior: 'smooth' });
   }
 
+  var scrollExitAccum = 0;
+  var scrollExitReset = null;
   window.addEventListener('wheel', function (e) {
     if (!document.body.classList.contains('scroll-locked')) return;
-    if (e.deltaY > 0) exitVideo();
+    if (e.deltaY <= 0) return;
+    scrollExitAccum += e.deltaY;
+    clearTimeout(scrollExitReset);
+    scrollExitReset = setTimeout(function () { scrollExitAccum = 0; }, 600);
+    if (scrollExitAccum >= 400) { scrollExitAccum = 0; exitVideo(); }
   }, { passive: true });
 
   window.addEventListener('keydown', function (e) {
@@ -776,7 +782,7 @@ document.addEventListener('click',function(){
 function vibeGoToMeditation() {
   if (window._vibePanelTimer) clearInterval(window._vibePanelTimer);
   sessionStorage.setItem('meditation', JSON.stringify({
-    next: '../videos/2nd-commandment-no-idols/',
+    next: '../videos/2nd-commandment-no-idols/?autoplay=1',
     questions: [
       'What are some “gods” that compete for our loyalty and trust in today’s culture? How do they subtly claim the place that belongs to God?',
       'The first commandment is given after God rescues Israel from Egypt. Why does the redemption story come before the command? What does that order tell us about the nature of God’s relationship with his people?',
