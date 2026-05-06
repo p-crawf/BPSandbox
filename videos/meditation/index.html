@@ -358,7 +358,7 @@ let isLit = false;
 let isPaused = false;
 let secondsLeft = 180;
 let timerInterval = null;
-let audioCtx = null;
+let ambientAudio = null;
 const TIMER_CIRC = 131.9;
 
 function lightCandle() {
@@ -423,54 +423,39 @@ function updateTimer() {
 function togglePause() {
   isPaused = !isPaused;
   document.getElementById('pause-label').textContent = isPaused ? 'Resume' : 'Pause';
-  if (audioCtx) {
-    isPaused ? audioCtx.suspend() : audioCtx.resume();
+  if (ambientAudio) {
+    if (isPaused) { ambientAudio.pause(); } else { ambientAudio.play().catch(() => {}); }
   }
 }
 
 function fadeNavigate() {
+  if (ambientAudio) {
+    const audio = ambientAudio;
+    const fadeOut = setInterval(() => {
+      audio.volume = Math.max(0, audio.volume - 0.04);
+      if (audio.volume <= 0) { audio.pause(); clearInterval(fadeOut); }
+    }, 50);
+  }
   document.body.style.opacity = '0';
   setTimeout(() => { window.location.href = NEXT_URL; }, 900);
 }
 
-// ── Ambient drone (Web Audio API) ──
+// ── Ambient audio ──
+const AMBIENT_SRC = 'tunetank.com_4273.mp3';
 function startAmbient() {
   try {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const master = audioCtx.createGain();
-    master.gain.setValueAtTime(0, audioCtx.currentTime);
-    master.gain.linearRampToValueAtTime(0.22, audioCtx.currentTime + 5);
-    master.connect(audioCtx.destination);
-
-    // Slow LFO for breathing feel
-    const lfo = audioCtx.createOscillator();
-    const lfoGain = audioCtx.createGain();
-    lfo.frequency.value = 0.07;
-    lfoGain.gain.value = 0.05;
-    lfo.connect(lfoGain);
-    lfoGain.connect(master.gain);
-    lfo.start();
-
-    // Layered sine drones
-    [
-      [174.6, 0.50, 0],
-      [261.6, 0.25, 1.5],
-      [349.2, 0.12, 3.0],
-      [523.3, 0.06, 5.0],
-    ].forEach(([freq, rel, delay]) => {
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0, audioCtx.currentTime);
-      gain.gain.linearRampToValueAtTime(rel * 0.09, audioCtx.currentTime + delay + 3);
-      osc.connect(gain);
-      gain.connect(master);
-      osc.start(audioCtx.currentTime + delay);
-    });
-  } catch (e) {
-    // Audio not available — continue silently
-  }
+    ambientAudio = new Audio(AMBIENT_SRC);
+    ambientAudio.loop = true;
+    ambientAudio.volume = 0;
+    ambientAudio.play().catch(() => {});
+    // Fade in over ~5 seconds
+    const target = 0.65;
+    const step = target / 50;
+    const fadeIn = setInterval(() => {
+      ambientAudio.volume = Math.min(ambientAudio.volume + step, target);
+      if (ambientAudio.volume >= target) clearInterval(fadeIn);
+    }, 100);
+  } catch (e) {}
 }
 </script>
 
