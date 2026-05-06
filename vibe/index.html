@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BibleProject — Language hub (prototype)</title>
+<meta name="description" content="BibleProject resources in your language — reading plans and downloads.">
+<link rel="icon" href="../bibleproject-logo-mark.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --font-sans:'Inter',system-ui,sans-serif;
+  --color-text-primary:#111111;
+  --color-text-secondary:#6b6b6b;
+  --color-background-primary:#ffffff;
+  --color-background-secondary:#f5f3ee;
+  --color-border-primary:#e0ddd8;
+  --color-border-tertiary:#e0ddd8;
+  --color-brand-blue:#2a9fd6;
+  --color-brand-blue-dark:#1e8abb;
+  --bp-blue:var(--color-brand-blue);
+  --bp-blue-dark:var(--color-brand-blue-dark);
+  --bp-cream:var(--color-background-secondary);
+  --bp-white:var(--color-background-primary);
+  --bp-black:var(--color-text-primary);
+  --bp-gray:var(--color-text-secondary);
+  --bp-border:var(--color-border-tertiary);
+}
+html{scroll-behavior:smooth}
+body{background:var(--color-background-primary);color:var(--color-text-primary);font-family:var(--font-sans);font-size:15px;font-weight:400;line-height:1.6;min-height:100vh}
+
+/* Header */
+.site-header{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);position:sticky;top:0;z-index:200}
+.header-inner{display:flex;align-items:center;padding:0 32px;height:60px}
+.logo-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex-shrink:0}
+.logo-link img{height:28px;width:auto;display:block}
+.logo-mark{height:32px!important}
+.header-nav{display:flex;align-items:center;gap:28px;margin-inline-start:40px}
+.header-nav a{font-size:14px;font-weight:500;color:var(--color-text-secondary);text-decoration:none;white-space:nowrap}
+.header-nav a:hover{color:var(--color-text-primary)}
+.lang-picker-wrap{margin-inline-start:auto;position:relative}
+.lang-globe-btn{display:flex;align-items:center;gap:6px;background:none;border:0.5px solid transparent;border-radius:8px;cursor:pointer;padding:7px 10px;color:var(--color-text-secondary);font-family:var(--font-sans);font-size:13px;font-weight:500;line-height:1;white-space:nowrap}
+.lang-globe-btn:hover{background:rgba(17,17,17,.06);color:var(--color-text-primary);border-color:var(--color-border-tertiary)}
+.lang-globe-btn svg{width:16px;height:16px;flex-shrink:0}
+.lang-dropdown{position:absolute;right:0;top:calc(100% + 6px);background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:10px;box-shadow:0 4px 20px rgba(0,0,0,.12);min-width:200px;list-style:none;padding:6px;margin:0;z-index:300}
+.lang-dropdown[hidden]{display:none}
+.lang-dropdown li{padding:9px 12px;border-radius:6px;font-size:14px;cursor:pointer;color:var(--color-text-primary);user-select:none}
+.lang-dropdown li:hover{background:rgba(17,17,17,.05)}
+.lang-dropdown li[aria-selected="true"]{font-weight:600;color:var(--color-brand-blue)}
+
+/* Hero — centered tagline + decorative carousel */
+.hero{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:48px 0 0;overflow:hidden}
+.hero-stack{max-width:720px;margin:0 auto;display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;padding:0 24px 36px}
+.hero-heading{font-family:var(--font-sans);font-size:clamp(36px,5.5vw,60px);font-weight:800;line-height:1.15;color:var(--color-text-primary);max-width:14ch}
+.hero-cards-outer{width:100%;overflow:hidden;padding-bottom:40px}
+.hero-cards-row{display:flex;gap:10px;justify-content:center}
+.hero-cards-row+.hero-cards-row{margin-top:10px}
+.hero-card{flex:0 0 clamp(110px,14.5vw,185px);aspect-ratio:16/9;border-radius:10px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.14)}
+.hero-card img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* Sections — labels + headings */
+.ds-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.08em;color:var(--color-text-secondary);margin-bottom:0.75rem}
+.ds-heading{font-size:20px;font-weight:700;line-height:1.3;margin:0 0 1rem;color:var(--color-text-primary)}
+.section{max-width:900px;margin:0 auto;padding:2.5rem 24px}
+.section-intro{font-size:15px;color:var(--color-text-secondary);margin-bottom:1.75rem;line-height:1.6}
+
+/* Downloads */
+.section-downloads{background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary);border-bottom:0.5px solid var(--color-border-tertiary);padding-top:2.5rem;padding-bottom:2.5rem}
+.downloads-intro--center{max-width:720px;margin:0 auto 2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.downloads-intro-title{font-family:var(--font-sans);font-size:clamp(20px,3vw,26px);font-weight:700;line-height:1.25;color:var(--color-text-primary)}
+.downloads-intro-sub{font-size:17px;font-weight:600;line-height:1.35;color:var(--color-text-primary);max-width:50ch}
+.downloads-intro-note{font-size:15px;line-height:1.6;color:var(--color-text-secondary);max-width:60ch;text-align:center}
+.downloads-acc{border:none;border-radius:0;background:transparent;overflow:visible;margin-top:0.25rem}
+.acc-item{border-bottom:0.5px solid var(--color-border-tertiary)}
+.acc-item:last-child{border-bottom:none}
+.acc-btn{width:100%;text-align:left;display:flex;align-items:center;gap:16px;padding:20px 4px 20px 0;background:transparent;border:none;font-family:var(--font-sans);cursor:pointer;transition:background .12s}
+.acc-btn:hover{background:rgba(17,17,17,.03)}
+.acc-btn[aria-expanded="true"]{background:rgba(17,17,17,.03)}
+.acc-thumb{width:56px;height:56px;flex-shrink:0;border-radius:50%;background:linear-gradient(145deg,hsl(var(--thumb-h,210),48%,88%),hsl(var(--thumb-h,210),42%,72%));box-shadow:inset 0 0 0 0.5px rgba(0,0,0,.06)}
+.acc-text{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;text-align:left}
+.acc-title{font-size:15px;font-weight:600;color:var(--color-text-primary);line-height:1.35}
+.acc-meta{font-size:13px;font-weight:400;color:var(--color-text-secondary)}
+.acc-chevron{width:20px;height:20px;flex-shrink:0;color:var(--color-text-secondary);transition:transform .2s ease}
+.acc-btn[aria-expanded="true"] .acc-chevron{transform:rotate(180deg)}
+.acc-panel{display:none;padding:0 0 20px 0;margin:0;border:none}
+.acc-panel.open{display:block}
+.acc-panel-inner{padding:4px 0 8px 0;padding-inline-start:72px;max-width:100%}
+.acc-video-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.acc-video-row:last-child{border-bottom:none}
+.acc-video-title{flex:1;min-width:0;font-size:14px;font-weight:500;color:var(--color-text-primary);line-height:1.35}
+.acc-video-actions{display:flex;gap:8px;flex-shrink:0}
+.acc-video-btn{display:inline-flex;align-items:center;padding:5px 12px;border:0.5px solid var(--color-border-tertiary);border-radius:6px;font-size:13px;font-weight:500;font-family:var(--font-sans);color:var(--color-text-primary);text-decoration:none;background:transparent;white-space:nowrap;transition:background .12s,border-color .12s}
+.acc-video-btn:hover{background:rgba(17,17,17,.05);border-color:rgba(17,17,17,.25)}
+
+/* Reading plans — ipv2-style overview + horizontal rail */
+.ipv2-overview-container{max-width:1100px;margin:0 auto}
+.ipv2-overview-head{display:flex;flex-wrap:wrap;gap:20px 28px;align-items:flex-start;margin-bottom:1.5rem}
+.ipv2-overview-logo-container{flex-shrink:0}
+.ipv2-overview-logo{width:80px;height:auto;display:block}
+.ipv2-overview-description{flex:1;min-width:min(100%,240px);font-size:15px;line-height:1.6;color:var(--color-text-primary);max-width:65ch}
+.swiper-bible-studies{margin:0 -24px;padding:0 24px}
+.plan-scroll{display:flex;flex-direction:row;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:12px;scrollbar-width:thin}
+.plan-scroll:focus-visible{outline:2px solid var(--color-brand-blue);outline-offset:4px;border-radius:4px}
+.ipv2-overview-plan{flex:0 0 148px;scroll-snap-align:start;min-width:0}
+.ipv2-overview-video{display:block;text-decoration:none;color:inherit}
+.ipv2-overview-video:hover .ipv2-overview-video-title{color:var(--color-brand-blue)}
+.ipv2-overview-video-image-container{border-radius:8px;overflow:hidden;aspect-ratio:320/180;background:#f79968}
+.ipv2-overview-video-image{width:100%;height:100%;object-fit:cover;display:block}
+.ipv2-overview-video-title{margin-top:10px;font-size:14px;font-weight:600;line-height:1.35;color:var(--color-text-primary);display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.plan-empty{font-size:15px;color:var(--color-text-secondary);font-style:italic;padding:16px 0}
+
+/* About */
+.section-about{border-top:0.5px solid var(--color-border-tertiary);border-bottom:0.5px solid var(--color-border-tertiary);padding-top:2.5rem;padding-bottom:2.5rem}
+.about-intro{max-width:720px;margin:0 auto 2rem;text-align:center;display:flex;flex-direction:column;align-items:center;gap:1rem}
+.about-intro-title{font-family:var(--font-sans);font-size:clamp(20px,3vw,26px);font-weight:700;line-height:1.25;color:var(--color-text-primary);max-width:36ch;text-align:center}
+.about-body{max-width:720px;margin:0 auto}
+.about-story-heading{font-size:20px;font-weight:700;line-height:1.3;margin:2rem 0 0.5rem;color:var(--color-text-primary)}
+.about-story-subheading{font-size:15px;font-weight:600;line-height:1.35;color:var(--color-text-primary);margin:0.5rem 0 0.75rem}
+.about-story-p{font-size:15px;line-height:1.6;color:var(--color-text-secondary);margin-bottom:1rem}
+
+/* Footer */
+.site-footer{background:var(--color-background-primary);border-top:0.5px solid var(--color-border-tertiary);padding:40px 24px 48px;margin-top:0}
+.footer-inner{max-width:900px;margin:0 auto}
+.footer-links{display:flex;flex-wrap:wrap;gap:16px 24px;margin-bottom:28px}
+.footer-links a{font-size:13px;color:var(--color-text-secondary);text-decoration:none}
+.footer-links a:hover{color:var(--color-brand-blue)}
+.footer-note{font-size:13px;color:var(--color-text-secondary);margin-bottom:20px;line-height:1.5}
+.footer-signup{font-size:15px;font-weight:600;margin-bottom:10px;color:var(--color-text-primary)}
+.signup-row{display:flex;flex-wrap:wrap;gap:10px;max-width:400px}
+.signup-row input[type="email"]{flex:1;min-width:180px;border:0.5px solid var(--color-border-primary);border-radius:8px;padding:10px 12px;font-size:14px;font-family:var(--font-sans);color:var(--color-text-primary)}
+.signup-row input:focus{outline:none;border-color:var(--color-brand-blue)}
+.signup-row button{padding:10px 20px;background:var(--color-text-primary);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:500;font-family:var(--font-sans);cursor:pointer}
+.signup-row button:hover{background:#333}
+.footer-back{margin-top:28px;padding-top:20px;border-top:0.5px solid var(--color-border-tertiary)}
+.footer-back a{font-size:13px;color:var(--color-text-secondary);text-decoration:none}
+.footer-back a:hover{color:var(--color-brand-blue)}
+
+/* Give button */
+.give-btn{display:inline-flex;align-items:center;padding:8px 16px;background:#111111;color:#ffffff;text-decoration:none;border-radius:8px;font-size:14px;font-weight:500;white-space:nowrap;margin-inline-start:12px;transition:background .12s}
+.give-btn:hover{background:#333333;color:#ffffff}
+
+/* About collapsible */
+.about-expanded{display:none}
+.about-expanded.open{display:block}
+.about-toggle-btn{display:inline-flex;align-items:center;gap:6px;margin-top:0.75rem;padding:8px 16px;background:transparent;border:0.5px solid var(--color-border-tertiary);border-radius:8px;font-size:14px;font-weight:500;font-family:var(--font-sans);cursor:pointer;color:var(--color-text-secondary);transition:background .12s}
+.about-toggle-btn:hover{background:rgba(17,17,17,.04);color:var(--color-text-primary)}
+.about-toggle-icon{display:inline-block;transition:transform .2s ease}
+.about-toggle-btn[aria-expanded="true"] .about-toggle-icon{transform:rotate(180deg)}
+
+/* Footer social */
+.footer-social{display:flex;gap:20px;margin-bottom:24px;align-items:center}
+.footer-social a{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--color-text-secondary);text-decoration:none}
+.footer-social a:hover{color:var(--color-text-primary)}
+.footer-social svg{width:18px;height:18px;flex-shrink:0}
+
+@media (max-width:640px){
+  .header-inner{padding:0 16px}
+  .header-nav{gap:16px;margin-inline-start:20px}
+  .acc-thumb{width:48px;height:48px}
+  .acc-panel-inner{padding-inline-start:64px}
+  .acc-video-btn{padding:4px 8px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header" dir="ltr">
+  <div class="header-inner">
+    <a class="logo-link" id="logo-link" href="https://p-crawf.github.io/BPSandbox" aria-label="BibleProject — home">
+      <img class="logo-mark" src="../bibleproject-logo-mark.svg" alt="" width="48" height="48" decoding="async" aria-hidden="true">
+      <img src="../bibleproject-word-mark.svg" alt="BibleProject" width="148" height="27" decoding="async">
+    </a>
+    <nav class="header-nav" aria-label="Primary">
+      <a href="#downloads" data-i18n="navDownloads">Watch &amp; Download</a>
+      <a href="#reading-plans" data-i18n="navPlans">Reading Plans</a>
+      <a href="#about" data-i18n="navAbout">About</a>
+    </nav>
+    <div class="lang-picker-wrap" id="lang-picker-wrap">
+      <button class="lang-globe-btn" id="lang-globe-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-dropdown">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+          <path d="M2 12h20"/>
+        </svg>
+        <span id="lang-current-label">English</span>
+      </button>
+      <ul class="lang-dropdown" id="lang-dropdown" role="listbox" aria-label="Select language" hidden></ul>
+    </div>
+    <a href="https://bibleproject.com/give/" target="_blank" rel="noopener noreferrer" class="give-btn">Give</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-stack">
+    <h1 class="hero-heading" id="hero-title" data-i18n="heroTitle">We create resources to help people understand the Bible.</h1>
+  </div>
+  <div class="hero-cards-outer" aria-hidden="true">
+    <div class="hero-cards-row">
+      <div class="hero-card" style="background:#c9b5a0;transform:rotate(-5deg) translateY(18px)"></div>
+      <div class="hero-card" style="background:#F79968;transform:rotate(-3deg) translateY(7px)"></div>
+      <div class="hero-card" style="background:#E8B86D;transform:rotate(-1.5deg) translateY(2px)"></div>
+      <div class="hero-card" style="background:#7B6BBF;transform:rotate(0deg)"></div>
+      <div class="hero-card" style="background:#4A9E78;transform:rotate(1.5deg) translateY(2px)"></div>
+      <div class="hero-card" style="background:#D4647A;transform:rotate(3deg) translateY(7px)"></div>
+      <div class="hero-card" style="background:#2a9fd6;transform:rotate(5deg) translateY(18px)"></div>
+    </div>
+    <div class="hero-cards-row">
+      <div class="hero-card" style="background:#8B6F47;transform:rotate(-5deg) translateY(18px)"></div>
+      <div class="hero-card" style="background:#C07A5A;transform:rotate(-3deg) translateY(7px)"></div>
+      <div class="hero-card" style="background:#2a9fd6;transform:rotate(-1.5deg) translateY(2px)"></div>
+      <div class="hero-card" style="background:#D4647A;transform:rotate(0deg)"></div>
+      <div class="hero-card" style="background:#F79968;transform:rotate(1.5deg) translateY(2px)"></div>
+      <div class="hero-card" style="background:#7B6BBF;transform:rotate(3deg) translateY(7px)"></div>
+      <div class="hero-card" style="background:#E8B86D;transform:rotate(5deg) translateY(18px)"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-downloads" id="downloads" aria-labelledby="downloads-block-title">
+  <p class="ds-label" data-i18n="sectionLabelDownloads">Watch &amp; Download</p>
+  <div class="downloads-intro--center">
+    <h2 class="downloads-intro-title" id="downloads-block-title" data-i18n="dlPageTitle">Download Free BibleProject Resources for Sharing and Teaching</h2>
+    <p class="downloads-intro-sub" data-i18n="dlPageSub">Access videos, posters, transcripts, and study notes.</p>
+    <p class="downloads-intro-note" data-i18n="dlPageNote">Note: Not all videos have accompanying transcripts, study notes, and posters. We're working to add missing transcripts over time. But if study notes or posters are unavailable, it's because they were not created for that video.</p>
+  </div>
+  <div class="downloads-acc" id="downloads-acc" role="region" aria-label="Download categories"></div>
+</section>
+
+<section class="section section-reading" id="reading-plans" aria-labelledby="reading-plans-heading">
+  <p class="ds-label" data-i18n="sectionLabelPlans">Reading plans</p>
+  <h2 class="ds-heading" id="reading-plans-heading" data-i18n="plansTitle">Reading Plans</h2>
+  <div class="ipv2-overview-container">
+    <div class="ipv2-overview-head">
+      <div class="ipv2-overview-logo-container">
+        <img class="ipv2-overview-logo" src="https://d1bsmz3sdihplr.cloudfront.net/media/pages/sunday-school/bible-app-logo.png" alt="" width="80" height="80" loading="lazy" decoding="async">
+      </div>
+      <div class="ipv2-overview-description" id="plans-overview-desc"></div>
+    </div>
+    <div class="swiper-bible-studies">
+      <div class="plan-scroll" id="plan-scroll" role="list" tabindex="0" aria-label="Reading plans"></div>
+    </div>
+  </div>
+</section>
+
+<section class="section section-about" id="about" aria-labelledby="about-main-title">
+  <p class="ds-label">About BibleProject</p>
+  <div class="about-intro">
+    <h2 class="about-intro-title" id="about-main-title">We Help People Experience the Bible as a Unified Story That Leads to Jesus</h2>
+    <p class="about-story-p">BibleProject is a nonprofit, crowdfunded organization based in the United States that makes free videos and resources designed to help people experience the Bible in a way that is approachable and transformative.</p>
+    <button class="about-toggle-btn" id="about-toggle-btn" aria-expanded="false" aria-controls="about-expanded">
+      <span class="about-toggle-label">Read more</span>
+      <span class="about-toggle-icon" aria-hidden="true">↓</span>
+    </button>
+  </div>
+  <div class="about-expanded" id="about-expanded">
+    <p class="about-story-p" style="max-width:720px;margin:0 auto 1.5rem;text-align:center">We want to help people everywhere encounter the life-changing story of Jesus, so we work with teams around the world to localize BibleProject videos into 55 languages and dialects. In addition to videos, BibleProject also produces other resources, like a weekly podcast in both English and Spanish, online classes in English, and a mobile app in English.</p>
+    <div class="about-body">
+      <h2 class="about-story-heading">Our Story</h2>
+      <h3 class="about-story-subheading">It Began With a Love of the Bible</h3>
+      <p class="about-story-p">Tim Mackie and Jon Collins (long-time friends and one-time roommates at Multnomah University in Oregon, USA) set out to help people read through Scripture while avoiding the common pitfalls and misunderstandings. They wanted to create resources that would present complex biblical themes in a way that was authentic and unapologetic but still approachable.</p>
+      <p class="about-story-p">BibleProject was born out of Tim's deep biblical understanding and Jon's passion for visual storytelling. And in 2014, BibleProject created our first two videos in English and put them online for free. Since then, BibleProject has grown to an organization of over 140 people and released thousands of videos in 55 languages and dialects through the diligent work of native speakers and teams around the world.</p>
+      <h2 class="about-story-heading">The Localization Process</h2>
+      <p class="about-story-p">To create the [Language] version of each video, we work with native speakers to translate the English video scripts, record translated voiceovers, and re-illustrate animated text—all while reviewing and adjusting the phrasing and graphics for the cultural context of each language. Our [Language] language advisor reviews each video throughout production to ensure translation accuracy and appropriate cultural adaptation.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-links">
+      <a href="https://bibleproject.com/about" target="_blank" rel="noopener noreferrer">About</a>
+      <a href="https://bibleproject.com/downloads" target="_blank" rel="noopener noreferrer">Downloads</a>
+      <a href="https://bibleproject.com/terms" target="_blank" rel="noopener noreferrer">Terms of Use</a>
+      <a href="https://bibleproject.com/privacy" target="_blank" rel="noopener noreferrer">Privacy</a>
+    </div>
+    <p class="footer-note">Legal links above are shown in English as a global standard; localized legal pages may be added in Sanity.</p>
+    <p class="footer-signup" data-i18n="signupTitle">Email updates</p>
+    <form class="signup-row" action="#" method="post" onsubmit="event.preventDefault();alert('Prototype: connect to your newsletter API.');">
+      <input type="email" name="email" placeholder="you@example.com" autocomplete="email" aria-label="Email">
+      <button type="submit" data-i18n="signupBtn">Subscribe</button>
+    </form>
+    <div class="footer-social">
+      <a href="https://www.youtube.com/c/bibleproject" target="_blank" rel="noopener noreferrer" aria-label="BibleProject on YouTube">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        YouTube
+      </a>
+      <a href="https://www.instagram.com/bibleproject/" target="_blank" rel="noopener noreferrer" aria-label="BibleProject on Instagram">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Instagram
+      </a>
+    </div>
+    <div class="footer-back">
+      <a href="../">← Home</a>
+    </div>
+  </div>
+</footer>
+
+<script src="locales-data.js"></script>
+<script>
+(function(){
+const CATEGORY_ORDER=[
+  ['ten-commandments','The 10 Commandments'],
+  ['ot-overviews','Old Testament Overviews'],
+  ['nt-overviews','New Testament Overviews'],
+  ['biblical-themes','Biblical Themes'],
+  ['sermon-on-the-mount','Sermon on the Mount'],
+  ['sermon-on-the-mount-visual','Sermon on the Mount Visual Commentaries'],
+  ['how-to-read-bible','How to Read the Bible'],
+  ['insights','Insights'],
+  ['god-spiritual-beings','God and Spiritual Beings'],
+  ['royal-priesthood','Royal Priesthood'],
+  ['creation','Creation'],
+  ['cog-word-studies','Character of God Word Studies'],
+  ['word-studies','Word Studies'],
+  ['bad-words','Bad Words'],
+  ['advent','Advent'],
+  ['luke-acts','Luke-Acts'],
+  ['wisdom','Wisdom'],
+  ['shema','The Shema'],
+  ['torah','Torah'],
+  ['deuterocanon','The Deuterocanon / Apocrypha'],
+  ['streetlights-remix','Streetlights Remix']
+];
+
+const LOCALES=window.CAT2_LOCALES||{};
+
+function getQueryLang(){
+  const q=new URLSearchParams(window.location.search).get('lang');
+  if(q&&LOCALES[q])return q;
+  return 'english';
+}
+
+function setLang(langKey){
+  const loc=LOCALES[langKey];
+  if(!loc)return;
+  document.documentElement.lang=loc.htmlLang;
+  document.documentElement.dir=loc.dir;
+  document.title='BibleProject — '+(loc.label||loc.slug)+' (prototype)';
+
+  document.querySelectorAll('[data-i18n]').forEach(function(el){
+    const k=el.getAttribute('data-i18n');
+    if(loc[k]!==undefined)el.textContent=loc[k];
+  });
+  const overviewEl=document.getElementById('plans-overview-desc');
+  if(overviewEl)overviewEl.textContent=loc.plansOverview!==undefined?loc.plansOverview:loc.plansIntro;
+  const currentLabel=document.getElementById('lang-current-label');
+  if(currentLabel)currentLabel.textContent=loc.label||loc.slug||'';
+  const dropdown=document.getElementById('lang-dropdown');
+  if(dropdown)dropdown.querySelectorAll('li').forEach(function(li){
+    li.setAttribute('aria-selected',li.dataset.lang===langKey?'true':'false');
+  });
+
+  function planThumbBg(seed){
+    var colors=['#F79968','#E8B86D','#7B6BBF','#4A9E78','#C07A5A','#D4647A'];
+    var h=0,i;
+    for(i=0;i<seed.length;i++)h=(h+seed.charCodeAt(i)*7)%colors.length;
+    return colors[h];
+  }
+
+  const scroll=document.getElementById('plan-scroll');
+  scroll.innerHTML='';
+  if(!loc.readingPlans||!loc.readingPlans.length){
+    scroll.removeAttribute('role');
+    scroll.removeAttribute('tabindex');
+    scroll.innerHTML='<p class="plan-empty" role="status">'+(loc.plansEmpty||'No reading plans listed for this language yet.')+'</p>';
+  }else{
+    scroll.setAttribute('role','list');
+    scroll.setAttribute('tabindex','0');
+    loc.readingPlans.forEach(function(p){
+      const slide=document.createElement('div');
+      slide.className='ipv2-overview-plan';
+      slide.setAttribute('role','listitem');
+      const a=document.createElement('a');
+      a.className='ipv2-overview-video';
+      a.href=p.url;
+      a.target='_blank';
+      a.rel='noopener noreferrer';
+      a.setAttribute('aria-label',(p.title||'')+' — '+(loc.ctaOpenApp||'Open in Bible App'));
+      const wrap=document.createElement('div');
+      wrap.className='ipv2-overview-video-image-container';
+      wrap.style.background=p.thumbBg||planThumbBg(p.title||'x');
+      if(p.thumb){
+        const im=document.createElement('img');
+        im.className='ipv2-overview-video-image';
+        im.src=p.thumb;
+        im.alt='';
+        im.loading='lazy';
+        im.decoding='async';
+        im.onerror=function(){this.remove();};
+        wrap.appendChild(im);
+      }
+      const tit=document.createElement('div');
+      tit.className='ipv2-overview-video-title';
+      tit.textContent=p.title||'';
+      a.appendChild(wrap);
+      a.appendChild(tit);
+      slide.appendChild(a);
+      scroll.appendChild(slide);
+    });
+  }
+
+  function thumbHue(str){
+    var h=200;
+    for(var i=0;i<str.length;i++) h=(h+str.charCodeAt(i)*11)%360;
+    return h;
+  }
+  function formatVideoCount(n,loc){
+    if(loc.htmlLang==='ko') return n===1 ? '영상 1개' : '영상 '+n+'개';
+    var vs=loc.videoSingular||'video',vp=loc.videoPlural||'videos';
+    if(n===1) return '1 '+vs;
+    return n+' '+vp;
+  }
+
+  const acc=document.getElementById('downloads-acc');
+  acc.innerHTML='';
+  let idx=0;
+  CATEGORY_ORDER.forEach(function(entry){
+    const key=entry[0],label=entry[1];
+    const items=loc.downloads&&loc.downloads[key];
+    if(!items||!items.length)return;
+    const id='acc-'+idx++;
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.className='acc-btn';
+    btn.id=id+'-btn';
+    btn.setAttribute('aria-expanded','false');
+    btn.setAttribute('aria-controls',id+'-panel');
+    btn.innerHTML='<span class="acc-thumb" aria-hidden="true"></span><span class="acc-text"><span class="acc-title"></span><span class="acc-meta"></span></span><svg class="acc-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+    btn.querySelector('.acc-thumb').style.setProperty('--thumb-h',String(thumbHue(key)));
+    btn.querySelector('.acc-title').textContent=label;
+    btn.querySelector('.acc-meta').textContent=formatVideoCount(items.length,loc);
+    const panel=document.createElement('div');
+    panel.className='acc-panel';
+    panel.id=id+'-panel';
+    panel.setAttribute('role','region');
+    panel.setAttribute('aria-labelledby',id+'-btn');
+    const inner=document.createElement('div');
+    inner.className='acc-panel-inner';
+    items.forEach(function(it){
+      const row=document.createElement('div');
+      row.className='acc-video-row';
+      const titleEl=document.createElement('span');
+      titleEl.className='acc-video-title';
+      titleEl.textContent=it.title;
+      const actions=document.createElement('div');
+      actions.className='acc-video-actions';
+      const watchBtn=document.createElement('a');
+      watchBtn.href='https://www.youtube.com/channel/UCVfwlh9XpX2Y_tQfjeln9QA?themeRefresh=1';
+      watchBtn.target='_blank';
+      watchBtn.rel='noopener noreferrer';
+      watchBtn.className='acc-video-btn';
+      watchBtn.textContent='Watch Video';
+      const dlBtn=document.createElement('a');
+      dlBtn.href=it.url;
+      dlBtn.target='_blank';
+      dlBtn.rel='noopener noreferrer';
+      dlBtn.className='acc-video-btn';
+      dlBtn.textContent='Download Video';
+      actions.appendChild(watchBtn);
+      actions.appendChild(dlBtn);
+      row.appendChild(titleEl);
+      row.appendChild(actions);
+      inner.appendChild(row);
+    });
+    panel.appendChild(inner);
+    const wrap=document.createElement('div');
+    wrap.className='acc-item';
+    wrap.appendChild(btn);
+    wrap.appendChild(panel);
+    acc.appendChild(wrap);
+    btn.addEventListener('click',function(){
+      const open=btn.getAttribute('aria-expanded')==='true';
+      acc.querySelectorAll('.acc-btn').forEach(function(b){
+        b.setAttribute('aria-expanded','false');
+        b.nextElementSibling.classList.remove('open');
+      });
+      if(!open){
+        btn.setAttribute('aria-expanded','true');
+        panel.classList.add('open');
+      }
+    });
+  });
+  const firstAccBtn=acc.querySelector('.acc-btn');
+  if(firstAccBtn){
+    firstAccBtn.setAttribute('aria-expanded','true');
+    firstAccBtn.nextElementSibling.classList.add('open');
+  }
+  if(!acc.children.length){
+    acc.innerHTML='<p class="plan-empty" style="padding:20px">'+(loc.dlEmpty||'No download categories yet for this language.')+'</p>';
+  }
+
+  try{
+    history.replaceState({lang:langKey},'','?lang='+encodeURIComponent(langKey));
+  }catch(e){}
+}
+
+function fillPicker(current){
+  const dropdown=document.getElementById('lang-dropdown');
+  if(!dropdown)return;
+  dropdown.innerHTML='';
+  Object.keys(LOCALES).sort(function(a,b){
+    const la=(LOCALES[a].label||a),lb=(LOCALES[b].label||b);
+    return la.localeCompare(lb);
+  }).forEach(function(key){
+    const li=document.createElement('li');
+    li.setAttribute('role','option');
+    li.setAttribute('data-lang',key);
+    li.setAttribute('aria-selected',key===current?'true':'false');
+    li.textContent=LOCALES[key].label||key;
+    li.addEventListener('click',function(){
+      setLang(key);
+      dropdown.hidden=true;
+      const btn=document.getElementById('lang-globe-btn');
+      if(btn)btn.setAttribute('aria-expanded','false');
+    });
+    dropdown.appendChild(li);
+  });
+}
+
+const initial=getQueryLang();
+fillPicker(initial);
+setLang(initial);
+
+// About section toggle
+const aboutToggleBtn=document.getElementById('about-toggle-btn');
+const aboutExpandedEl=document.getElementById('about-expanded');
+if(aboutToggleBtn&&aboutExpandedEl){
+  aboutToggleBtn.addEventListener('click',function(){
+    const isOpen=aboutExpandedEl.classList.contains('open');
+    aboutExpandedEl.classList.toggle('open',!isOpen);
+    aboutToggleBtn.setAttribute('aria-expanded',String(!isOpen));
+    const label=aboutToggleBtn.querySelector('.about-toggle-label');
+    if(label)label.textContent=isOpen?'Read more':'Read less';
+  });
+}
+
+// Globe button — toggle dropdown
+const globeBtn=document.getElementById('lang-globe-btn');
+const langWrap=document.getElementById('lang-picker-wrap');
+if(globeBtn){
+  globeBtn.addEventListener('click',function(){
+    const dd=document.getElementById('lang-dropdown');
+    const open=dd.hidden;
+    dd.hidden=!open;
+    globeBtn.setAttribute('aria-expanded',open?'true':'false');
+  });
+}
+// Prevent clicks inside the picker from bubbling to the document handler
+if(langWrap){
+  langWrap.addEventListener('click',function(e){e.stopPropagation();});
+}
+// Close dropdown when clicking anywhere outside
+document.addEventListener('click',function(){
+  const dd=document.getElementById('lang-dropdown');
+  if(dd&&!dd.hidden){
+    dd.hidden=true;
+    if(globeBtn)globeBtn.setAttribute('aria-expanded','false');
+  }
+});
+})();
+</script>
+</body>
+</html>
