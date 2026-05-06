@@ -14,18 +14,30 @@
   --bp-gray:#6b6b6b;
   --bp-border:#e0ddd8;
 }
-html,body{height:100%;overflow:hidden}
+html{height:100%}
 body{
   background:#fff;
   color:var(--bp-black);
   font-family:'Inter',sans-serif;
   cursor:none;
+  min-height:100%;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  position:relative;
+  transition:opacity .9s;
+}
+
+/* ── Candle section (full viewport height, centers candle) ── */
+.candle-section{
+  min-height:100vh;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  position:relative;
-  transition:opacity .9s;
+  padding-top:80px;
+  flex-shrink:0;
 }
 
 /* ── Custom cursor ── */
@@ -144,11 +156,9 @@ body{
 
 /* ── Questions ── */
 .questions-wrap{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  padding:0 24px 96px;
   display:flex;
   justify-content:center;
+  padding:0 24px 120px;
   opacity:0;
   transform:translateY(16px);
   pointer-events:none;
@@ -228,6 +238,7 @@ body{
 
 <div id="cursor">🔥</div>
 
+<div class="candle-section">
 <div class="scene">
   <div class="candle-wrap" id="candle-wrap" onclick="lightCandle()">
     <svg width="120" height="290" viewBox="0 0 120 290" xmlns="http://www.w3.org/2000/svg">
@@ -292,6 +303,7 @@ body{
   </div>
 
   <p class="light-prompt" id="light-prompt">Light the candle</p>
+</div>
 </div>
 
 <!-- Timer -->
