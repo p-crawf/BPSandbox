@@ -8,6 +8,7 @@
 <link rel="icon" href="../bibleproject-logo-mark.svg" type="image/svg+xml">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
+<script type="module" src="https://static.bibleproject.com/bp-web-components/v0.26.0/bp-web-components.esm.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -192,31 +193,7 @@ body.scroll-locked{overflow:hidden}
 </head>
 <body>
 
-<header class="site-header" dir="ltr">
-  <div class="header-inner">
-    <a class="logo-link" id="logo-link" href="https://p-crawf.github.io/BPSandbox" aria-label="BibleProject — home">
-      <img class="logo-mark" src="../bibleproject-logo-mark.svg" alt="" width="48" height="48" decoding="async" aria-hidden="true">
-      <img src="../bibleproject-word-mark.svg" alt="BibleProject" width="148" height="27" decoding="async">
-    </a>
-    <nav class="header-nav" aria-label="Primary">
-      <a href="#downloads" data-i18n="navDownloads">Watch &amp; Download</a>
-      <a href="#reading-plans" data-i18n="navPlans">Reading Plans</a>
-      <a href="#about" data-i18n="navAbout">About</a>
-    </nav>
-    <div class="lang-picker-wrap" id="lang-picker-wrap">
-      <button class="lang-globe-btn" id="lang-globe-btn" aria-haspopup="listbox" aria-expanded="false" aria-controls="lang-dropdown">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-          <circle cx="12" cy="12" r="10"/>
-          <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-          <path d="M2 12h20"/>
-        </svg>
-        <span id="lang-current-label">English</span>
-      </button>
-      <ul class="lang-dropdown" id="lang-dropdown" role="listbox" aria-label="Select language" hidden></ul>
-    </div>
-    <a href="https://bibleproject.com/give/" target="_blank" rel="noopener noreferrer" class="give-btn">Give</a>
-  </div>
-</header>
+<bp-global-header></bp-global-header>
 
 <section class="hero">
   <div class="hero-stack">
