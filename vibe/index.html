@@ -756,12 +756,12 @@ document.addEventListener('click',function(){
   var pullTimer = null;
 
   function applyBungee(deltaY) {
-    pullY = Math.min(pullY + deltaY * 0.4, 200);
-    var visual = Math.min(pullY * 0.4, 80);
+    pullY = Math.min(pullY + deltaY * 0.3, 600);
+    var visual = Math.min(pullY * 0.13, 80);
     overlay.style.transition = 'none';
     overlay.style.transform = 'translateY(-' + visual + 'px)';
     clearTimeout(pullTimer);
-    if (pullY >= 200) { exitToThumbnail(); return; }
+    if (pullY >= 600) { exitToThumbnail(); return; }
     pullTimer = setTimeout(snapBack, 140);
   }
 
