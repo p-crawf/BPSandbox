@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2nd Commandment: No Idols — BibleProject</title>
+<link rel="icon" href="../../../bibleproject-logo-mark.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="module" src="https://static.bibleproject.com/bp-web-components/v0.26.0/bp-web-components.esm.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bp-blue:#2a9fd6;
+  --bp-blue-dark:#1e8abb;
+  --bp-black:#1a1a1a;
+  --bp-gray:#6b6b6b;
+  --bp-gray-light:#f5f5f5;
+  --bp-border:#e0ddd8;
+  --bp-cream:#f5f3ee;
+  --max-width:1100px;
+}
+html{scroll-behavior:smooth}
+body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;font-size:16px;line-height:1.6;min-height:100vh}
+
+/* ── Breadcrumb ── */
+.breadcrumb-bar{background:#fff;border-bottom:1px solid var(--bp-border);padding:10px 24px}
+.breadcrumb{max-width:var(--max-width);margin:0 auto;display:flex;align-items:center;gap:6px;font-size:.8rem;color:var(--bp-gray)}
+.breadcrumb a{color:var(--bp-gray);text-decoration:none}
+.breadcrumb a:hover{color:var(--bp-blue)}
+.breadcrumb-sep{color:#ccc}
+
+/* ── Main layout ── */
+.page-content{max-width:var(--max-width);margin:0 auto;padding:32px 24px 64px}
+.video-layout{display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start}
+@media(max-width:900px){
+  .video-layout{grid-template-columns:1fr}
+}
+
+/* ── Video column ── */
+.video-main{}
+.video-player-wrap{position:relative;border-radius:12px;overflow:hidden;background:#000;aspect-ratio:16/9;width:100%;margin-bottom:24px}
+mux-player{width:100%;height:100%;display:block}
+.video-title{font-size:1.6rem;font-weight:700;line-height:1.3;margin-bottom:12px}
+.video-meta{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.video-series{font-size:.85rem;color:var(--bp-blue);font-weight:500;text-decoration:none}
+.video-series:hover{text-decoration:underline}
+.video-desc{color:#333;line-height:1.7;margin-bottom:24px;font-size:.95rem}
+.share-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border:1px solid var(--bp-border);border-radius:8px;background:#fff;font-size:.85rem;font-weight:500;cursor:pointer;color:var(--bp-black);transition:border-color .15s,background .15s}
+.share-btn:hover{border-color:var(--bp-blue);background:var(--bp-gray-light)}
+.share-btn svg{width:16px;height:16px;flex-shrink:0}
+
+/* ── Reflect / Discussion ── */
+.section-block{margin-top:36px;border-top:1px solid var(--bp-border);padding-top:28px}
+.section-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--bp-gray);margin-bottom:12px}
+.section-title{font-size:1.1rem;font-weight:600;margin-bottom:16px}
+.questions-list{list-style:none;display:flex;flex-direction:column;gap:12px}
+.questions-list li{display:flex;gap:12px;align-items:flex-start;font-size:.93rem;line-height:1.6}
+.q-num{font-weight:600;color:var(--bp-blue);flex-shrink:0;min-width:20px}
+.guide-cta{margin-top:20px;padding:16px 20px;background:var(--bp-gray-light);border-radius:10px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-decoration:none;color:var(--bp-black);border:1px solid var(--bp-border);transition:border-color .15s}
+.guide-cta:hover{border-color:var(--bp-blue)}
+.guide-cta-text{font-size:.88rem;font-weight:500}
+.guide-cta-arrow{font-size:1.1rem;color:var(--bp-blue);flex-shrink:0}
+
+/* ── Downloads ── */
+.downloads-list{display:flex;flex-direction:column;gap:10px}
+.dl-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border:1px solid var(--bp-border);border-radius:8px;text-decoration:none;color:var(--bp-black);font-size:.88rem;transition:border-color .15s,background .15s}
+.dl-item:hover{border-color:var(--bp-blue);background:var(--bp-gray-light)}
+.dl-item-left{display:flex;align-items:center;gap:10px}
+.dl-icon{width:32px;height:32px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.7rem;font-weight:700;letter-spacing:.03em}
+.dl-icon-mp4{background:#e8f4fb;color:#1e8abb}
+.dl-icon-pdf{background:#fde8e8;color:#c0392b}
+.dl-name{font-weight:500}
+.dl-size{font-size:.78rem;color:var(--bp-gray);margin-top:1px}
+.dl-arrow{color:var(--bp-blue);font-size:1rem}
+
+/* ── Sidebar ── */
+.video-sidebar{}
+.next-card{border:1px solid var(--bp-border);border-radius:12px;overflow:hidden;margin-bottom:28px;text-decoration:none;color:var(--bp-black);display:block;transition:border-color .15s}
+.next-card:hover{border-color:var(--bp-blue)}
+.next-card-thumb{aspect-ratio:16/9;overflow:hidden;background:#000}
+.next-card-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.next-card-body{padding:14px 16px}
+.next-card-eyebrow{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--bp-gray);margin-bottom:6px}
+.next-card-title{font-size:.95rem;font-weight:600;line-height:1.35}
+.next-card-desc{font-size:.82rem;color:var(--bp-gray);margin-top:6px;line-height:1.5}
+
+.related-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--bp-gray);margin-bottom:14px}
+.related-list{display:flex;flex-direction:column;gap:12px}
+.related-item{display:flex;gap:12px;align-items:flex-start;text-decoration:none;color:var(--bp-black)}
+.related-item:hover .related-item-title{color:var(--bp-blue)}
+.related-thumb{width:96px;height:54px;border-radius:6px;object-fit:cover;flex-shrink:0;background:#eee}
+.related-item-info{flex:1;min-width:0}
+.related-item-title{font-size:.84rem;font-weight:500;line-height:1.35}
+.related-item-sub{font-size:.75rem;color:var(--bp-gray);margin-top:3px}
+
+/* ── BP header/footer shell ── */
+bp-global-header,bp-global-footer{display:block}
+
+/* ── Meditation panel ── */
+.med-panel{position:fixed;right:-220px;top:50%;transform:translateY(-50%);background:#fff;border:1px solid var(--bp-border);border-right:none;border-radius:16px 0 0 16px;padding:20px 16px 20px 20px;box-shadow:-6px 0 24px rgba(0,0,0,.1);cursor:pointer;transition:right .5s cubic-bezier(.34,1.56,.64,1);z-index:200;width:190px;text-align:center;user-select:none}
+.med-panel.visible{right:0}
+.med-panel:hover{background:#fafaf8}
+.med-ring-wrap{position:relative;width:56px;height:56px;margin:0 auto 10px}
+.med-ring-wrap svg{width:56px;height:56px;display:block}
+.med-ring-count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;color:var(--bp-black)}
+.med-panel-label{font-size:.75rem;font-weight:600;color:var(--bp-gray);line-height:1.45;margin-bottom:10px}
+.med-panel-arrow{font-size:1.3rem;color:var(--bp-blue)}
+
+/* Site header */
+.site-header{background:#fff;border-bottom:0.5px solid var(--bp-border);position:sticky;top:0;z-index:200}
+.header-inner{display:flex;align-items:center;padding:0 32px;height:60px}
+.logo-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex-shrink:0}
+.logo-link img{height:28px;width:auto;display:block}
+.logo-mark{height:32px!important}
+.header-nav{display:flex;align-items:center;gap:28px;margin-inline-start:auto}
+.header-nav a{font-size:14px;font-weight:500;color:var(--bp-gray);text-decoration:none;white-space:nowrap}
+.header-nav a:hover{color:var(--bp-black)}
+@media(max-width:640px){.header-inner{padding:0 16px}.header-nav{gap:16px}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo-link" href="https://p-crawf.github.io/BPSandbox" aria-label="BibleProject — home">
+      <img class="logo-mark" src="../../../bibleproject-logo-mark.svg" alt="" width="48" height="48" decoding="async" aria-hidden="true">
+      <img src="../../../bibleproject-word-mark.svg" alt="BibleProject" width="148" height="27" decoding="async">
+    </a>
+    <nav class="header-nav" aria-label="Primary">
+      <a href="../">← Videos</a>
+    </nav>
+  </div>
+</header>
+
+<div class="breadcrumb-bar">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="../">Videos</a>
+    <span class="breadcrumb-sep">›</span>
+    <span>The 10 Commandments</span>
+    <span class="breadcrumb-sep">›</span>
+    <span>2nd Commandment: No Idols</span>
+  </nav>
+</div>
+
+<main class="page-content">
+  <div class="video-layout">
+
+    <!-- ── Left: video + details ── -->
+    <div class="video-main">
+      <div class="video-player-wrap">
+        <mux-player
+          playback-id="00yUitmVFHOPNfaiWxOVhb3Q00i8ul01Fb00f1AYZOr00KBE"
+          metadata-video-title="2nd Commandment: No Idols"
+          accent-color="#2a9fd6"
+          style="--media-object-fit:contain"
+        ></mux-player>
+      </div>
+
+      <a class="video-series" href="#">The 10 Commandments</a>
+      <h1 class="video-title">2nd Commandment: No Idols</h1>
+
+      <p class="video-desc">
+        The second commandment forbids making and worshipping images of God — but why? In this video, we explore how the prohibition against idols is rooted in a high view of humanity. Humans are the true image-bearers of God, and idols distort that calling. The commandment isn't just about ancient statues — it's about where we place our ultimate trust and what that does to us over time.
+      </p>
+
+      <button class="share-btn" onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : navigator.clipboard.writeText(location.href).then(()=>alert('Link copied!'))">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+        Share
+      </button>
+
+      <!-- Reflect -->
+      <div class="section-block">
+        <p class="section-label">Reflect</p>
+        <h2 class="section-title">Discussion Questions</h2>
+        <ol class="questions-list">
+          <li><span class="q-num">1.</span><span>What modern equivalents of idols do you see in your own life or culture — things that promise life, security, or meaning but can't ultimately deliver?</span></li>
+          <li><span class="q-num">2.</span><span>The video connects the ban on idols to the dignity of humans as image-bearers. How does idol worship diminish human dignity, and what does it mean to honor the image of God in people instead?</span></li>
+          <li><span class="q-num">3.</span><span>God says he is a "jealous God" in this commandment. How does that phrase sit with you? In what ways is God's jealousy different from human jealousy?</span></li>
+          <li><span class="q-num">4.</span><span>How does Jesus fulfill and redefine what it means to be the true image of God (Colossians 1:15)? What does that mean for how we worship?</span></li>
+        </ol>
+
+        <a class="guide-cta" href="../../guides/the-10-commandments/">
+          <span class="guide-cta-text">Continue Exploring With Our Guide to the 10 Commandments</span>
+          <span class="guide-cta-arrow">→</span>
+        </a>
+      </div>
+
+      <!-- Downloads -->
+      <div class="section-block">
+        <p class="section-label">Downloads</p>
+        <div class="downloads-list">
+          <a class="dl-item" href="https://stream.mux.com/00yUitmVFHOPNfaiWxOVhb3Q00i8ul01Fb00f1AYZOr00KBE/high.mp4?download=2nd-commandment-no-idols.mp4" download>
+            <div class="dl-item-left">
+              <div class="dl-icon dl-icon-mp4">MP4</div>
+              <div>
+                <div class="dl-name">Full Video</div>
+                <div class="dl-size">High quality · MP4</div>
+              </div>
+            </div>
+            <span class="dl-arrow">↓</span>
+          </a>
+          <a class="dl-item" href="https://d1bsmz3sdihplr.cloudfront.net/media/10commandments/scripts/10c-word-2-transcript-svggaiu.pdf" target="_blank" rel="noopener noreferrer">
+            <div class="dl-item-left">
+              <div class="dl-icon dl-icon-pdf">PDF</div>
+              <div>
+                <div class="dl-name">Transcript</div>
+                <div class="dl-size">Full transcript · PDF</div>
+              </div>
+            </div>
+            <span class="dl-arrow">↓</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Right: sidebar ── -->
+    <aside class="video-sidebar">
+      <a class="next-card" href="#">
+        <div class="next-card-thumb">
+          <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Word3_horizontal_no%20text_v1.jpg" alt="3rd Commandment thumbnail" loading="lazy">
+        </div>
+        <div class="next-card-body">
+          <div class="next-card-eyebrow">Next Episode</div>
+          <div class="next-card-title">3rd Commandment: No Misuse of God's Name</div>
+          <div class="next-card-desc">More than just avoiding swear words — explore what it means to honor God's name in all of life.</div>
+        </div>
+      </a>
+
+      <p class="related-label">The 10 Commandments</p>
+      <div class="related-list">
+        <a class="related-item" href="../1st-commandment-no-other-gods/">
+          <img class="related-thumb" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-96/10C_YT%20Thumbnails_Word1_horizontal_no%20text_v1.jpg" alt="" loading="lazy">
+          <div class="related-item-info">
+            <div class="related-item-title">1st Commandment: No Other Gods</div>
+            <div class="related-item-sub">The 10 Commandments · Ep. 1</div>
+          </div>
+        </a>
+        <a class="related-item" href="#">
+          <img class="related-thumb" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-96/10C_YT%20Thumbnails_Word2_horizontal_no%20text_v1.jpg" alt="" loading="lazy">
+          <div class="related-item-info">
+            <div class="related-item-title">2nd Commandment: No Idols</div>
+            <div class="related-item-sub">The 10 Commandments · Ep. 2</div>
+          </div>
+        </a>
+        <a class="related-item" href="#">
+          <img class="related-thumb" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-96/10C_YT%20Thumbnails_Word3_horizontal_no%20text_v1.jpg" alt="" loading="lazy">
+          <div class="related-item-info">
+            <div class="related-item-title">3rd Commandment: No Misuse of God's Name</div>
+            <div class="related-item-sub">The 10 Commandments · Ep. 3</div>
+          </div>
+        </a>
+        <a class="related-item" href="#">
+          <img class="related-thumb" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-96/10C_YT%20Thumbnails_Word4_horizontal_no%20text_v1.jpg" alt="" loading="lazy">
+          <div class="related-item-info">
+            <div class="related-item-title">4th Commandment: Remember the Sabbath</div>
+            <div class="related-item-sub">The 10 Commandments · Ep. 4</div>
+          </div>
+        </a>
+        <a class="related-item" href="#">
+          <img class="related-thumb" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-96/10C_YT%20Thumbnails_Word5_horizontal_no%20text_v1.jpg" alt="" loading="lazy">
+          <div class="related-item-info">
+            <div class="related-item-title">5th Commandment: Honor Your Parents</div>
+            <div class="related-item-sub">The 10 Commandments · Ep. 5</div>
+          </div>
+        </a>
+      </div>
+    </aside>
+
+  </div>
+</main>
+
+<bp-global-footer></bp-global-footer>
+
+<div class="med-panel" id="med-panel" onclick="goToMeditation()" role="button" tabindex="0" aria-label="Start meditation experience">
+  <div class="med-ring-wrap">
+    <svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="28" cy="28" r="22" stroke="#e0ddd8" stroke-width="3" fill="none"/>
+      <circle id="med-ring-prog" cx="28" cy="28" r="22" stroke="#2a9fd6" stroke-width="3"
+        fill="none" stroke-dasharray="138.2" stroke-dashoffset="0" stroke-linecap="round"
+        transform="rotate(-90 28 28)" style="transition:stroke-dashoffset .9s linear"/>
+    </svg>
+    <div class="med-ring-count" id="med-panel-count">30</div>
+  </div>
+  <div class="med-panel-label">Start meditation<br>experience</div>
+  <div class="med-panel-arrow">→</div>
+</div>
+
+<script>
+const MEDITATION_URL = '../../meditation/';
+const NEXT_URL = 'https://bibleproject.com/videos/3rd-commandment-do-not-carry-the-name-in-vain/';
+const QUESTIONS = [
+  'What modern equivalents of idols do you see in your own life or culture — things that promise life, security, or meaning but can\'t ultimately deliver?',
+  'The video connects the ban on idols to the dignity of humans as image-bearers. How does idol worship diminish human dignity, and what does it mean to honor the image of God in people instead?',
+  'God says he is a "jealous God" in this commandment. How does that phrase sit with you? In what ways is God\'s jealousy different from human jealousy?',
+  'How does Jesus fulfill and redefine what it means to be the true image of God (Colossians 1:15)? What does that mean for how we worship?'
+];
+const CIRC = 138.2;
+let panelTimer = null, panelSecsLeft = 30;
+
+function showMedPanel(startSecs) {
+  panelSecsLeft = Math.min(Math.ceil(startSecs), 30);
+  document.getElementById('med-panel').classList.add('visible');
+  updateRing();
+  panelTimer = setInterval(() => {
+    panelSecsLeft--;
+    document.getElementById('med-panel-count').textContent = panelSecsLeft;
+    updateRing();
+    if (panelSecsLeft <= 0) { clearInterval(panelTimer); goToMeditation(); }
+  }, 1000);
+}
+function updateRing() {
+  document.getElementById('med-ring-prog').style.strokeDashoffset = CIRC * (1 - panelSecsLeft / 30);
+}
+function goToMeditation() {
+  clearInterval(panelTimer);
+  sessionStorage.setItem('meditation', JSON.stringify({ next: NEXT_URL, questions: QUESTIONS }));
+  window.location.href = MEDITATION_URL;
+}
+
+customElements.whenDefined('mux-player').then(() => {
+  const player = document.querySelector('mux-player');
+  if (!player) return;
+  let triggered = false;
+  if (new URLSearchParams(location.search).get('autoplay') === '1') {
+    player.play().catch(() => {});
+  }
+  player.addEventListener('timeupdate', () => {
+    if (triggered || !player.duration) return;
+    const left = player.duration - player.currentTime;
+    if (left <= 30 && left > 0) { triggered = true; showMedPanel(left); }
+  });
+  player.addEventListener('ended', () => { if (!triggered) goToMeditation(); });
+});
+</script>
+
+</body>
+</html>

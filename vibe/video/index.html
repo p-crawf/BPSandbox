@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Videos — BibleProject</title>
+<link rel="icon" href="../../bibleproject-logo-mark.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="module" src="https://static.bibleproject.com/bp-web-components/v0.26.0/bp-web-components.esm.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bp-blue:#2a9fd6;
+  --bp-blue-dark:#1e8abb;
+  --bp-black:#1a1a1a;
+  --bp-gray:#6b6b6b;
+  --bp-gray-light:#f5f5f5;
+  --bp-border:#e0ddd8;
+  --bp-cream:#f5f3ee;
+  --max-width:1100px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bp-cream);color:var(--bp-black);font-family:'Inter',sans-serif;font-size:16px;line-height:1.6;min-height:100vh}
+bp-global-header,bp-global-footer{display:block}
+
+.page-content{max-width:var(--max-width);margin:0 auto;padding:48px 24px 80px}
+.page-header{margin-bottom:36px}
+.page-title{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-sub{font-size:.92rem;color:var(--bp-gray)}
+
+.series-block{margin-bottom:52px}
+.series-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--bp-gray);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--bp-border)}
+
+.video-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px}
+
+.video-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--bp-border);border-radius:12px;overflow:hidden;text-decoration:none;color:var(--bp-black);transition:border-color .15s,box-shadow .15s}
+.video-card:hover{border-color:var(--bp-blue);box-shadow:0 4px 16px rgba(0,0,0,.07)}
+.video-card-thumb{position:relative;aspect-ratio:16/9;overflow:hidden;background:#000}
+.video-card-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .2s}
+.video-card:hover .video-card-thumb img{transform:scale(1.03)}
+.play-badge{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+.video-card:hover .play-badge{opacity:1}
+.play-badge-inner{width:44px;height:44px;background:rgba(0,0,0,.6);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.play-badge-inner svg{width:18px;height:18px;fill:#fff;margin-left:3px}
+.video-card-body{padding:14px 16px 18px;flex:1;display:flex;flex-direction:column;gap:4px}
+.video-card-ep{font-size:.72rem;color:var(--bp-blue);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.video-card-title{font-size:.92rem;font-weight:600;line-height:1.35}
+.video-card-desc{font-size:.8rem;color:var(--bp-gray);line-height:1.5;margin-top:4px}
+
+/* Site header */
+.site-header{background:#fff;border-bottom:0.5px solid var(--bp-border);position:sticky;top:0;z-index:200}
+.header-inner{display:flex;align-items:center;padding:0 32px;height:60px}
+.logo-link{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:inherit;flex-shrink:0}
+.logo-link img{height:28px;width:auto;display:block}
+.logo-mark{height:32px!important}
+.header-nav{display:flex;align-items:center;gap:28px;margin-inline-start:auto}
+.header-nav a{font-size:14px;font-weight:500;color:var(--bp-gray);text-decoration:none;white-space:nowrap}
+.header-nav a:hover{color:var(--bp-black)}
+@media(max-width:640px){.header-inner{padding:0 16px}.header-nav{gap:16px}}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <a class="logo-link" href="https://p-crawf.github.io/BPSandbox" aria-label="BibleProject — home">
+      <img class="logo-mark" src="../../bibleproject-logo-mark.svg" alt="" width="48" height="48" decoding="async" aria-hidden="true">
+      <img src="../../bibleproject-word-mark.svg" alt="BibleProject" width="148" height="27" decoding="async">
+    </a>
+    <nav class="header-nav" aria-label="Primary">
+      <a href="../">← Home</a>
+    </nav>
+  </div>
+</header>
+
+<main class="page-content">
+  <header class="page-header">
+    <h1 class="page-title">Videos</h1>
+    <p class="page-sub">Explore our library of animated Bible explainer videos.</p>
+  </header>
+
+  <section class="series-block">
+    <p class="series-label">The 10 Commandments</p>
+    <div class="video-grid">
+
+      <a class="video-card" href="1st-commandment-no-other-gods/">
+        <div class="video-card-thumb">
+          <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Word1_horizontal_no%20text_v1.jpg" alt="" loading="lazy">
+          <div class="play-badge"><div class="play-badge-inner"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+        </div>
+        <div class="video-card-body">
+          <div class="video-card-ep">Ep. 1</div>
+          <div class="video-card-title">1st Commandment: No Other Gods</div>
+          <div class="video-card-desc">What does it mean to put God first — and why does the order of the commandments matter?</div>
+        </div>
+      </a>
+
+      <a class="video-card" href="2nd-commandment-no-idols/">
+        <div class="video-card-thumb">
+          <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Word2_horizontal_no%20text_v1.jpg" alt="" loading="lazy">
+          <div class="play-badge"><div class="play-badge-inner"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+        </div>
+        <div class="video-card-body">
+          <div class="video-card-ep">Ep. 2</div>
+          <div class="video-card-title">2nd Commandment: No Idols</div>
+          <div class="video-card-desc">What is an idol, and how does the second commandment point to the dignity of every human being?</div>
+        </div>
+      </a>
+
+      <a class="video-card" href="#">
+        <div class="video-card-thumb">
+          <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Word3_horizontal_no%20text_v1.jpg" alt="" loading="lazy">
+          <div class="play-badge"><div class="play-badge-inner"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+        </div>
+        <div class="video-card-body">
+          <div class="video-card-ep">Ep. 3</div>
+          <div class="video-card-title">3rd Commandment: No Misuse of God's Name</div>
+          <div class="video-card-desc">More than just avoiding swear words — explore what it means to honor God's name in all of life.</div>
+        </div>
+      </a>
+
+      <a class="video-card" href="#">
+        <div class="video-card-thumb">
+          <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Word4_horizontal_no%20text_v1.jpg" alt="" loading="lazy">
+          <div class="play-badge"><div class="play-badge-inner"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+        </div>
+        <div class="video-card-body">
+          <div class="video-card-ep">Ep. 4</div>
+          <div class="video-card-title">4th Commandment: Remember the Sabbath</div>
+          <div class="video-card-desc">Rest as a radical act of trust — unpacking the gift and rhythm of the Sabbath.</div>
+        </div>
+      </a>
+
+      <a class="video-card" href="#">
+        <div class="video-card-thumb">
+          <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Word5_horizontal_no%20text_v1.jpg" alt="" loading="lazy">
+          <div class="play-badge"><div class="play-badge-inner"><svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg></div></div>
+        </div>
+        <div class="video-card-body">
+          <div class="video-card-ep">Ep. 5</div>
+          <div class="video-card-title">5th Commandment: Honor Your Parents</div>
+          <div class="video-card-desc">How honoring family is connected to the flourishing of all human community.</div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+</main>
+
+<bp-global-footer></bp-global-footer>
+
+</body>
+</html>

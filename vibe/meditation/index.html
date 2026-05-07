@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meditate — BibleProject</title>
+<link rel="icon" href="../../bibleproject-logo-mark.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bp-blue:#2a9fd6;
+  --bp-black:#1a1a1a;
+  --bp-gray:#6b6b6b;
+  --bp-border:#e0ddd8;
+}
+html{height:100%}
+body{
+  background:#fff;
+  color:var(--bp-black);
+  font-family:'Inter',sans-serif;
+  cursor:none;
+  height:100%;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  transition:opacity .9s;
+}
+
+/* ── Custom cursor ── */
+#cursor{
+  position:fixed;
+  top:0;left:0;
+  pointer-events:none;
+  z-index:9999;
+  font-size:26px;
+  line-height:1;
+  transform:translate(-50%,-80%);
+  will-change:left,top;
+  opacity:0;
+  transition:transform .08s, opacity .5s;
+}
+
+/* ── Scene ── */
+.scene{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:24px;
+  position:relative;
+  z-index:1;
+}
+
+/* ── Candle ── */
+.candle-wrap{
+  position:relative;
+  width:120px;
+  cursor:none;
+}
+.candle-wrap svg{overflow:visible}
+
+@keyframes flicker{
+  0%,100%{transform:scaleX(1) scaleY(1) rotate(0deg);opacity:.95}
+  20%{transform:scaleX(.91) scaleY(1.05) rotate(-2deg);opacity:.88}
+  40%{transform:scaleX(1.07) scaleY(.96) rotate(1.5deg);opacity:1}
+  60%{transform:scaleX(.94) scaleY(1.07) rotate(-1deg);opacity:.91}
+  80%{transform:scaleX(1.04) scaleY(.97) rotate(.5deg);opacity:1}
+}
+@keyframes glowPulse{
+  0%,100%{opacity:.18}
+  50%{opacity:.32}
+}
+
+.flame-group{
+  transform-origin:60px 80px;
+  opacity:0;
+  transition:opacity .9s;
+}
+.flame-group.lit{
+  opacity:1;
+  animation:flicker 1.9s ease-in-out infinite;
+}
+.candle-glow{
+  opacity:0;
+  transition:opacity .9s;
+}
+.candle-glow.lit{
+  animation:glowPulse 2.4s ease-in-out infinite;
+}
+
+/* ── Prompt ── */
+.light-prompt{
+  font-size:.82rem;
+  font-weight:400;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#bbb;
+  transition:opacity .7s;
+}
+.light-prompt.hidden{opacity:0;pointer-events:none}
+
+/* ── Timer ── */
+.timer-wrap{
+  position:fixed;
+  top:28px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .6s;
+}
+.timer-wrap.visible{opacity:1}
+.timer-count-wrap{
+  position:relative;
+  width:52px;
+  height:52px;
+}
+.timer-count-wrap svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+.timer-num{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.86rem;
+  font-weight:600;
+  color:var(--bp-black);
+  letter-spacing:-.01em;
+}
+.timer-label{
+  font-size:.75rem;
+  font-weight:500;
+  color:var(--bp-gray);
+  letter-spacing:.04em;
+}
+
+/* ── Questions ── */
+.questions-wrap{
+  position:fixed;
+  right:-420px;
+  top:50%;
+  transform:translateY(-50%);
+  width:360px;
+  opacity:0;
+  pointer-events:none;
+  transition:right 1.5s cubic-bezier(.25,1,.4,1),opacity 1s;
+}
+.questions-wrap.visible{right:20px;opacity:1;pointer-events:auto}
+.questions-card{
+  background:#fff;
+  border:1px solid var(--bp-border);
+  border-radius:16px;
+  padding:18px 22px;
+  box-shadow:0 4px 28px rgba(0,0,0,.06);
+}
+.questions-eyebrow{
+  font-size:.68rem;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  color:var(--bp-gray);
+  margin-bottom:14px;
+}
+.q-list{
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.q-list li{
+  display:flex;
+  gap:10px;
+  font-size:.87rem;
+  line-height:1.55;
+  color:#333;
+}
+.q-n{
+  font-weight:600;
+  color:var(--bp-blue);
+  flex-shrink:0;
+  min-width:16px;
+}
+
+/* ── Bottom controls ── */
+.bottom-controls{
+  position:fixed;
+  bottom:28px;
+  right:28px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  z-index:10;
+}
+.ctrl-btn{
+  padding:9px 18px;
+  border:1px solid var(--bp-border);
+  border-radius:8px;
+  background:#fff;
+  font-family:'Inter',sans-serif;
+  font-size:.82rem;
+  font-weight:500;
+  cursor:none;
+  color:var(--bp-black);
+  transition:border-color .15s,background .15s;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+.ctrl-btn:hover{border-color:var(--bp-blue);background:#f5f5f5}
+.ctrl-btn-primary{background:var(--bp-blue);color:#fff;border-color:var(--bp-blue)}
+.ctrl-btn-primary:hover{background:#1e8abb;border-color:#1e8abb}
+#pause-btn{display:none}
+
+/* ── Mini candle (mobile — appears beside timer after lighting) ── */
+.candle-mini{
+  flex-shrink:0;
+  width:30px;
+  opacity:0;
+  transition:opacity .7s;
+  pointer-events:none;
+}
+.candle-mini.visible{opacity:1}
+.flame-group-mini{
+  transform-origin:60px 80px;
+  animation:flicker 1.9s ease-in-out infinite;
+}
+</style>
+</head>
+<body>
+
+<div id="cursor">🔥</div>
+
+<div class="scene">
+  <div class="candle-wrap" id="candle-wrap" onclick="lightCandle()">
+    <svg width="120" height="290" viewBox="0 0 120 290" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="glowGrad" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#FFD060" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#FF8C00" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="candleBody" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#C8C0B0"/>
+          <stop offset="12%" stop-color="#F2EAE0"/>
+          <stop offset="88%" stop-color="#F2EAE0"/>
+          <stop offset="100%" stop-color="#B8B0A0"/>
+        </linearGradient>
+        <linearGradient id="candleTop" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#F8F2EA"/>
+          <stop offset="100%" stop-color="#E4DDD4"/>
+        </linearGradient>
+        <filter id="softBlur">
+          <feGaussianBlur stdDeviation="2"/>
+        </filter>
+      </defs>
+
+      <!-- Ambient glow (behind everything) -->
+      <ellipse class="candle-glow lit" id="candle-glow" cx="60" cy="75" rx="55" ry="55"
+        fill="url(#glowGrad)" filter="url(#softBlur)" style="opacity:0;transition:opacity .9s"/>
+
+      <!-- Flame -->
+      <g class="flame-group" id="flame-group">
+        <!-- outer diffuse glow -->
+        <ellipse cx="60" cy="54" rx="16" ry="24" fill="#FFB347" opacity=".35" filter="url(#softBlur)"/>
+        <!-- outer flame body -->
+        <path d="M60,22 C68,36 73,50 70,66 C67,78 63,82 60,83 C57,82 53,78 50,66 C47,50 52,36 60,22z"
+          fill="#FFB040"/>
+        <!-- mid flame -->
+        <path d="M60,34 C66,46 69,58 67,67 C65,75 62,79 60,80 C58,79 55,75 53,67 C51,58 54,46 60,34z"
+          fill="#FF6A00"/>
+        <!-- bright inner core -->
+        <path d="M60,50 C63,57 64,65 62,70 C61,74 60,75 60,75 C60,75 59,74 58,70 C56,65 57,57 60,50z"
+          fill="#FFF0A0"/>
+      </g>
+
+      <!-- Wick -->
+      <line x1="60" y1="83" x2="60" y2="96" stroke="#3a2a1a" stroke-width="2.5" stroke-linecap="round"/>
+
+      <!-- Wax pool (grows when lit) -->
+      <ellipse id="wax-pool" cx="60" cy="99" rx="0" ry="0" fill="#EDE6DA"
+        style="transition:rx 1.4s ease,ry 1.4s ease"/>
+
+      <!-- Candle top ellipse -->
+      <ellipse cx="60" cy="97" rx="28" ry="8" fill="url(#candleTop)"/>
+
+      <!-- Candle body -->
+      <rect x="32" y="97" width="56" height="183" rx="3" fill="url(#candleBody)"/>
+
+      <!-- Highlight streak -->
+      <rect x="44" y="102" width="5" height="173" rx="2.5" fill="rgba(255,255,255,.32)"/>
+
+      <!-- Base ellipse -->
+      <ellipse cx="60" cy="280" rx="28" ry="7" fill="#B0A898"/>
+    </svg>
+  </div>
+
+  <p class="light-prompt" id="light-prompt">Light the candle</p>
+</div>
+
+<!-- Timer -->
+<div class="timer-wrap" id="timer-wrap">
+  <!-- Mini lit candle shown on mobile after lighting -->
+  <div class="candle-mini" id="candle-mini" aria-hidden="true">
+    <svg width="30" height="44" viewBox="28 14 64 92" xmlns="http://www.w3.org/2000/svg">
+      <g class="flame-group-mini">
+        <ellipse cx="60" cy="54" rx="16" ry="24" fill="#FFB347" opacity=".35" filter="url(#softBlur)"/>
+        <path d="M60,22 C68,36 73,50 70,66 C67,78 63,82 60,83 C57,82 53,78 50,66 C47,50 52,36 60,22z" fill="#FFB040"/>
+        <path d="M60,34 C66,46 69,58 67,67 C65,75 62,79 60,80 C58,79 55,75 53,67 C51,58 54,46 60,34z" fill="#FF6A00"/>
+        <path d="M60,50 C63,57 64,65 62,70 C61,74 60,75 60,75 C60,75 59,74 58,70 C56,65 57,57 60,50z" fill="#FFF0A0"/>
+      </g>
+      <line x1="60" y1="83" x2="60" y2="96" stroke="#3a2a1a" stroke-width="2.5" stroke-linecap="round"/>
+      <ellipse cx="60" cy="97" rx="20" ry="6" fill="#EDE6DA"/>
+      <rect x="40" y="97" width="40" height="8" rx="2" fill="#F2EAE0"/>
+    </svg>
+  </div>
+  <div class="timer-count-wrap">
+    <svg viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="26" cy="26" r="21" stroke="#e0ddd8" stroke-width="2.5" fill="none"/>
+      <circle id="timer-ring" cx="26" cy="26" r="21" stroke="#2a9fd6" stroke-width="2.5" fill="none"
+        stroke-dasharray="131.9" stroke-dashoffset="0" stroke-linecap="round"
+        transform="rotate(-90 26 26)" style="transition:stroke-dashoffset 1s linear"/>
+    </svg>
+    <div class="timer-num" id="timer-num">3:00</div>
+  </div>
+  <div class="timer-label">Meditating</div>
+</div>
+
+<!-- Questions -->
+<div class="questions-wrap" id="questions-wrap">
+  <div class="questions-card">
+    <p class="questions-eyebrow">Reflect</p>
+    <ul class="q-list" id="q-list"></ul>
+  </div>
+</div>
+
+<!-- Controls -->
+<div class="bottom-controls">
+  <button class="ctrl-btn" id="pause-btn" onclick="togglePause()">
+    <span id="pause-label">Pause</span>
+  </button>
+  <a class="ctrl-btn ctrl-btn-primary" id="skip-btn" href="#">Skip to next video →</a>
+</div>
+
+<script>
+// ── Data from previous page ──
+const data = JSON.parse(sessionStorage.getItem('meditation') || '{}');
+const NEXT_URL = data.next || '../';
+const QUESTIONS = data.questions || [];
+
+document.getElementById('skip-btn').href = NEXT_URL;
+
+const ql = document.getElementById('q-list');
+QUESTIONS.forEach((q, i) => {
+  const li = document.createElement('li');
+  li.innerHTML = `<span class="q-n">${i + 1}.</span><span>${q}</span>`;
+  ql.appendChild(li);
+});
+
+// ── Custom cursor ──
+const cursor = document.getElementById('cursor');
+if ('ontouchstart' in window) {
+  cursor.style.display = 'none';
+} else {
+  let cursorTimer;
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    cursor.style.opacity = '1';
+    clearTimeout(cursorTimer);
+    cursorTimer = setTimeout(() => { cursor.style.opacity = '0'; }, 3000);
+  });
+}
+
+// ── Candle hover glow ──
+const candleWrap = document.getElementById('candle-wrap');
+candleWrap.addEventListener('mouseenter', () => {
+  if (!isLit) candleWrap.style.filter = 'drop-shadow(0 0 14px rgba(255,180,0,.45))';
+});
+candleWrap.addEventListener('mouseleave', () => {
+  if (!isLit) candleWrap.style.filter = '';
+});
+
+// ── State ──
+let isLit = false;
+let isPaused = false;
+let secondsLeft = 180;
+let timerInterval = null;
+let ambientAudio = null;
+const TIMER_CIRC = 131.9;
+
+function lightCandle() {
+  if (isLit) return;
+  isLit = true;
+
+  // Show flame & glow
+  document.getElementById('flame-group').classList.add('lit');
+  const glow = document.getElementById('candle-glow');
+  glow.style.opacity = '.2';
+  glow.style.animation = 'glowPulse 2.4s ease-in-out infinite';
+
+  // Grow wax pool
+  const pool = document.getElementById('wax-pool');
+  pool.setAttribute('rx', '28');
+  pool.setAttribute('ry', '7');
+
+  // Reset candle hover
+  candleWrap.style.filter = '';
+
+  // Fade "light the candle"
+  document.getElementById('light-prompt').classList.add('hidden');
+
+  // Show pause button
+  document.getElementById('pause-btn').style.display = 'inline-flex';
+
+  // Start ambient audio
+  startAmbient();
+
+  // Show timer
+  document.getElementById('timer-wrap').classList.add('visible');
+
+  // Show questions after a beat
+  if (QUESTIONS.length) {
+    setTimeout(() => {
+      document.getElementById('questions-wrap').classList.add('visible');
+    }, 2000);
+  }
+
+  // Start 3-minute countdown
+  timerInterval = setInterval(tick, 1000);
+
+  // Mobile: shrink main candle toward timer bar
+  if (window.matchMedia('(max-width:640px)').matches) {
+    setTimeout(() => {
+      const scene = document.querySelector('.scene');
+      scene.style.transition = 'opacity .5s, transform .65s cubic-bezier(.34,1.56,.64,1)';
+      scene.style.opacity = '0';
+      scene.style.transform = 'scale(.8) translateY(-24px)';
+      document.getElementById('candle-mini').classList.add('visible');
+    }, 700);
+  }
+}
+
+function tick() {
+  if (isPaused) return;
+  secondsLeft--;
+  updateTimer();
+  if (secondsLeft <= 0) {
+    clearInterval(timerInterval);
+    fadeNavigate();
+  }
+}
+
+function updateTimer() {
+  const m = Math.floor(secondsLeft / 60);
+  const s = secondsLeft % 60;
+  document.getElementById('timer-num').textContent = `${m}:${String(s).padStart(2, '0')}`;
+  const offset = TIMER_CIRC * (1 - secondsLeft / 180);
+  document.getElementById('timer-ring').style.strokeDashoffset = offset;
+}
+
+function togglePause() {
+  isPaused = !isPaused;
+  document.getElementById('pause-label').textContent = isPaused ? 'Resume' : 'Pause';
+  if (ambientAudio) {
+    if (isPaused) { ambientAudio.pause(); } else { ambientAudio.play().catch(() => {}); }
+  }
+}
+
+function fadeNavigate() {
+  if (ambientAudio) {
+    const audio = ambientAudio;
+    const fadeOut = setInterval(() => {
+      audio.volume = Math.max(0, audio.volume - 0.04);
+      if (audio.volume <= 0) { audio.pause(); clearInterval(fadeOut); }
+    }, 50);
+  }
+  document.body.style.opacity = '0';
+  setTimeout(() => { window.location.href = NEXT_URL; }, 900);
+}
+
+// ── Ambient audio ──
+const AMBIENT_SRC = 'tunetank.com_4273_muse_by_ahoami.mp3';
+function startAmbient() {
+  try {
+    ambientAudio = new Audio(AMBIENT_SRC);
+    ambientAudio.loop = true;
+    ambientAudio.volume = 0;
+    ambientAudio.play().catch(() => {});
+    // Fade in over ~5 seconds
+    const target = 0.65;
+    const step = target / 50;
+    const fadeIn = setInterval(() => {
+      ambientAudio.volume = Math.min(ambientAudio.volume + step, target);
+      if (ambientAudio.volume >= target) clearInterval(fadeIn);
+    }, 100);
+  } catch (e) {}
+}
+</script>
+
+</body>
+</html>
