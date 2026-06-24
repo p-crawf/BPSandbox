@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BibleProject — Explore the Bible Together</title>
+<link rel="icon" href="https://static.bibleproject.com/favicons/favicon.ico" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script type="module" src="https://static.bibleproject.com/bp-web-components/v0.27.2/bp-web-components.esm.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bp-blue:#2a9fd6;
+  --bp-blue-dark:#1e8abb;
+  --bp-cream:#f5f3ee;
+  --bp-black:#1a1a1a;
+  --bp-gray:#6b6b6b;
+  --bp-border:#e0ddd8;
+  --bp-white:#ffffff;
+}
+html{scroll-behavior:smooth}
+body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;font-weight:400;line-height:1.6}
+
+/* ── HERO ── */
+.hero{background:var(--bp-cream);padding:72px 24px 0;text-align:center;overflow:hidden}
+.hero-banner{display:inline-flex;align-items:center;gap:8px;background:#1a1a1a;color:#fff;font-size:.75rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;padding:6px 14px;border-radius:100px;text-decoration:none;margin-bottom:24px}
+.hero-banner span.new-badge{background:var(--bp-blue);color:#fff;font-size:.65rem;padding:2px 7px;border-radius:100px;letter-spacing:.05em}
+.hero h1{font-size:clamp(2rem,5vw,3.5rem);font-weight:700;line-height:1.15;max-width:700px;margin:0 auto 16px;letter-spacing:-.02em}
+.hero p{font-size:1rem;color:var(--bp-gray);max-width:480px;margin:0 auto 48px}
+
+/* ── CAROUSEL ── */
+.carousel-wrap{position:relative;width:100%;overflow:hidden;padding-bottom:48px}
+.carousel-track{display:flex;gap:16px;width:max-content;animation:scroll-left 40s linear infinite}
+.carousel-track:hover{animation-play-state:paused}
+@keyframes scroll-left{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.carousel-img{height:200px;width:auto;border-radius:16px;display:block;object-fit:cover;flex-shrink:0}
+.carousel-fade-l,.carousel-fade-r{position:absolute;top:0;bottom:48px;width:100px;pointer-events:none;z-index:2}
+.carousel-fade-l{left:0;background:linear-gradient(to right,var(--bp-cream),transparent)}
+.carousel-fade-r{right:0;background:linear-gradient(to left,var(--bp-cream),transparent)}
+
+/* ── SECTION SHARED ── */
+.section{padding:72px 24px}
+.section-inner{max-width:1100px;margin:0 auto}
+.section-label{font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bp-gray);margin-bottom:12px}
+.section-title{font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:700;letter-spacing:-.02em;margin-bottom:8px;line-height:1.2}
+.section-sub{font-size:.95rem;color:var(--bp-gray);max-width:500px;margin-bottom:40px}
+
+/* ── RESOURCE TYPES (Watch/Read/Listen/Learn) ── */
+.resource-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:20px}
+.resource-card{background:var(--bp-cream);border-radius:20px;padding:28px 24px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:12px;transition:transform .2s}
+.resource-card:hover{transform:translateY(-4px)}
+.resource-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.resource-icon img{width:32px;height:32px;object-fit:contain}
+.resource-card h3{font-size:1.05rem;font-weight:700}
+.resource-card p{font-size:.85rem;color:var(--bp-gray);line-height:1.5}
+
+/* ── COLLECTIONS ── */
+.collections-section{background:var(--bp-cream)}
+.collection-images{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:12px}
+.collection-images img{width:100%;aspect-ratio:1/1;border-radius:12px;object-fit:cover}
+@media(max-width:700px){.collection-images{grid-template-columns:repeat(3,1fr)}}
+.collection-cta{margin-top:28px}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--bp-black);color:#fff;font-size:.9rem;font-weight:600;padding:14px 24px;border-radius:100px;text-decoration:none;transition:background .15s}
+.btn-primary:hover{background:#333}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;border:1.5px solid var(--bp-black);color:var(--bp-black);font-size:.9rem;font-weight:600;padding:13px 24px;border-radius:100px;text-decoration:none;margin-left:12px;transition:background .15s}
+.btn-outline:hover{background:var(--bp-cream)}
+
+/* ── STACKED CARDS SECTIONS ── */
+.split-section{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+@media(max-width:768px){.split-section{grid-template-columns:1fr}}
+.stacked-cards{position:relative;height:340px}
+.stacked-cards img{position:absolute;border-radius:16px;width:56%;object-fit:cover;box-shadow:0 8px 32px rgba(0,0,0,.12)}
+.stacked-cards img:nth-child(1){top:0;left:0;transform:rotate(-4deg);z-index:1}
+.stacked-cards img:nth-child(2){top:30px;left:80px;transform:rotate(2deg);z-index:2}
+.stacked-cards img:nth-child(3){top:60px;left:160px;transform:rotate(-1deg);z-index:3}
+.stacked-cards img:nth-child(4){top:10px;left:240px;transform:rotate(3deg);z-index:2}
+.split-text{padding:24px 0}
+.split-text .section-title{margin-bottom:16px}
+.split-text p{font-size:.95rem;color:var(--bp-gray);margin-bottom:28px;line-height:1.65}
+
+/* ── STORY SECTION ── */
+.story-section{background:var(--bp-black);color:#fff;padding:72px 24px}
+.story-inner{max-width:1100px;margin:0 auto}
+.story-inner .section-label{color:#888}
+.story-inner .section-title{color:#fff;margin-bottom:16px}
+.story-inner p{color:#aaa;font-size:.95rem;max-width:500px;margin-bottom:32px;line-height:1.65}
+.story-collage{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:48px}
+.story-collage img{width:100%;aspect-ratio:4/5;border-radius:12px;object-fit:cover}
+@media(max-width:700px){.story-collage{grid-template-columns:repeat(3,1fr)}}
+
+/* ── FOOTER SPACER ── */
+.footer-spacer{height:32px}
+</style>
+</head>
+<body>
+
+<bp-global-header></bp-global-header>
+
+<!-- HERO -->
+<section class="hero">
+  <a class="hero-banner" href="../videos/">
+    <span class="new-badge">New</span>
+    The 10 Commandments — Watch the series
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6h7M6.5 3l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </a>
+  <h1>We create resources to help people experience the Bible.</h1>
+  <p>Free videos, podcasts, and study guides to help everyone explore the Bible.</p>
+
+  <!-- Carousel -->
+  <div class="carousel-wrap">
+    <div class="carousel-fade-l"></div>
+    <div class="carousel-fade-r"></div>
+    <div class="carousel-track" id="carouselTrack">
+      <!-- First set -->
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-1.jpg" alt="" loading="lazy">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-2.jpg" alt="" loading="lazy">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-3.jpg" alt="" loading="lazy">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-4.jpg" alt="" loading="lazy">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-5.jpg" alt="" loading="lazy">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-6.jpg" alt="" loading="lazy">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-7.jpg" alt="" loading="lazy">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-8.jpg" alt="" loading="lazy">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-9.jpg" alt="" loading="lazy">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-10.jpg" alt="" loading="lazy">
+      <!-- Duplicate for seamless loop -->
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-1.jpg" alt="" loading="lazy" aria-hidden="true">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-2.jpg" alt="" loading="lazy" aria-hidden="true">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-3.jpg" alt="" loading="lazy" aria-hidden="true">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-4.jpg" alt="" loading="lazy" aria-hidden="true">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-5.jpg" alt="" loading="lazy" aria-hidden="true">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-6.jpg" alt="" loading="lazy" aria-hidden="true">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-7.jpg" alt="" loading="lazy" aria-hidden="true">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-8.jpg" alt="" loading="lazy" aria-hidden="true">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-9.jpg" alt="" loading="lazy" aria-hidden="true">
+      <img class="carousel-img" src="https://ik.imagekit.io/bpweb1/media/home-remix/carousel/tr:q-80,h-200/home-remix_carousel-10.jpg" alt="" loading="lazy" aria-hidden="true">
+    </div>
+  </div>
+</section>
+
+<!-- WATCH READ LISTEN LEARN -->
+<section class="section">
+  <div class="section-inner">
+    <p class="section-label">Resources</p>
+    <h2 class="section-title">Watch. Read. Listen. Learn.</h2>
+    <p class="section-sub">Explore our free library of videos, study guides, podcasts, and classes.</p>
+    <div class="resource-grid">
+      <a class="resource-card" href="https://bibleproject.com/explore/">
+        <div class="resource-icon" style="background:#e8f4fb">
+          <img src="https://static.bibleproject.com/bp-web-components/v0.27.2/icons/icon-video.svg" alt="" onerror="this.style.display='none'">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true" style="display:none"><path d="M5 6l18 8L5 22V6z" fill="#2a9fd6"/></svg>
+        </div>
+        <h3>Videos</h3>
+        <p>Animated explainer videos covering the full Bible — books, characters, and big themes.</p>
+      </a>
+      <a class="resource-card" href="https://bibleproject.com/guides/">
+        <div class="resource-icon" style="background:#fef3e2">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><rect x="5" y="4" width="14" height="18" rx="2" stroke="#f59e0b" stroke-width="2"/><path d="M8 9h8M8 13h6M8 17h4" stroke="#f59e0b" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Guides</h3>
+        <p>Illustrated study guides to read alongside your Bible for deeper context.</p>
+      </a>
+      <a class="resource-card" href="https://bibleproject.com/podcasts/">
+        <div class="resource-icon" style="background:#f3e8ff">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><circle cx="14" cy="11" r="5" stroke="#9333ea" stroke-width="2"/><path d="M6 18c0-4 3.6-6 8-6s8 2 8 6" stroke="#9333ea" stroke-width="2" stroke-linecap="round"/><line x1="14" y1="22" x2="14" y2="16" stroke="#9333ea" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Podcast</h3>
+        <p>Long-form conversations on Scripture, theology, and the ideas behind our content.</p>
+      </a>
+      <a class="resource-card" href="https://bibleproject.com/classroom/">
+        <div class="resource-icon" style="background:#e8faf0">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true"><path d="M4 8l10-4 10 4-10 4L4 8z" stroke="#22c55e" stroke-width="2" stroke-linejoin="round"/><path d="M8 10v7c2 2 8 2 10 0v-7" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/><line x1="24" y1="8" x2="24" y2="17" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <h3>Classes</h3>
+        <p>Structured courses for small groups, churches, and individual learners.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOLLOW YOUR CURIOSITY (Collections) -->
+<section class="section collections-section">
+  <div class="section-inner">
+    <p class="section-label">Collections</p>
+    <h2 class="section-title">Follow Your Curiosity</h2>
+    <p class="section-sub">Explore curated topic collections across the whole Bible.</p>
+    <!-- Row 1: 10 Commandments episodes 1-5 -->
+    <div class="collection-images">
+      <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word1_horizontal_no%20text_v1.jpg" alt="1st Commandment" loading="lazy">
+      <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word2_horizontal_no%20text_v1.jpg" alt="2nd Commandment" loading="lazy">
+      <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word3_horizontal_no%20text_v1.jpg" alt="3rd Commandment" loading="lazy">
+      <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word4_horizontal_no%20text_v1.jpg" alt="4th Commandment" loading="lazy">
+      <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word5_horizontal_no%20text_v1.jpg" alt="5th Commandment" loading="lazy">
+    </div>
+    <!-- Row 2: 10 Commandments episodes 6-10 -->
+    <div class="collection-images">
+      <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word6_horizontal_no%20text_v1.jpg" alt="6th Commandment" loading="lazy">
+      <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word7_horizontal_no%20text_v1.jpg" alt="7th Commandment" loading="lazy">
+      <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word8_horizontal_no%20text_v1.jpg" alt="8th Commandment" loading="lazy">
+      <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word9_horizontal_no%20text_v1.jpg" alt="9th Commandment" loading="lazy">
+      <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-400/10C_YT%20Thumbnails_Word10_horizontal_no%20text_v1.jpg" alt="10th Commandment" loading="lazy">
+    </div>
+    <div class="collection-cta">
+      <a class="btn-primary" href="../videos/">Watch the series</a>
+      <a class="btn-outline" href="../videos/">Explore all collections</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEELING LOST IN THE BIBLE? (How to Read) -->
+<section class="section">
+  <div class="section-inner">
+    <div class="split-section">
+      <div class="stacked-cards">
+        <img src="https://ik.imagekit.io/bpweb1/web/series/tr:q-85,w-320/how-to-read-the-bible.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-320/10C_YT%20Thumbnails_Intro_horizontal_no%20text_v1.jpg'">
+        <img src="https://ik.imagekit.io/bpweb1/web/series/tr:q-85,w-320/the-bible-as-literature.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-320/10C_YT%20Thumbnails_Word1_horizontal_no%20text_v1.jpg'">
+        <img src="https://ik.imagekit.io/bpweb1/web/series/tr:q-85,w-320/literary-styles-of-the-bible.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-320/10C_YT%20Thumbnails_Word2_horizontal_no%20text_v1.jpg'">
+        <img src="https://ik.imagekit.io/bpweb1/web/series/tr:q-85,w-320/design-patterns-of-scripture.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-320/10C_YT%20Thumbnails_Word3_horizontal_no%20text_v1.jpg'">
+      </div>
+      <div class="split-text">
+        <p class="section-label">How to Read</p>
+        <h2 class="section-title">Feeling Lost in the Bible?</h2>
+        <p>The Bible is a unified story that leads to Jesus — but it can feel overwhelming without a guide. Our How to Read the Bible series helps you understand its structure, literary styles, and design patterns so you can read with confidence.</p>
+        <a class="btn-primary" href="https://bibleproject.com/explore/series/how-to-read-the-bible/">Start the series</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPLORING A BOOK OF THE BIBLE? (Bible Overview) -->
+<section class="section" style="background:var(--bp-cream)">
+  <div class="section-inner">
+    <div class="split-section">
+      <div class="split-text">
+        <p class="section-label">Bible Overview</p>
+        <h2 class="section-title">Exploring a Book of the Bible?</h2>
+        <p>We've created short animated videos for every book of the Old and New Testament. Each video highlights the book's literary design, key themes, and how it fits in the larger biblical story.</p>
+        <a class="btn-primary" href="https://bibleproject.com/explore/category/book-overviews/">Browse all books</a>
+      </div>
+      <div class="stacked-cards">
+        <img src="https://ik.imagekit.io/bpweb1/web/series/tr:q-85,w-320/genesis.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-320/10C_YT%20Thumbnails_Word4_horizontal_no%20text_v1.jpg'">
+        <img src="https://ik.imagekit.io/bpweb1/web/series/tr:q-85,w-320/psalms.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-320/10C_YT%20Thumbnails_Word5_horizontal_no%20text_v1.jpg'">
+        <img src="https://ik.imagekit.io/bpweb1/web/series/tr:q-85,w-320/romans.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-320/10C_YT%20Thumbnails_Word6_horizontal_no%20text_v1.jpg'">
+        <img src="https://ik.imagekit.io/bpweb1/web/series/tr:q-85,w-320/revelation.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-320/10C_YT%20Thumbnails_Word7_horizontal_no%20text_v1.jpg'">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LEARN OUR STORY -->
+<section class="story-section">
+  <div class="story-inner">
+    <p class="section-label">About Us</p>
+    <h2 class="section-title">Learn Our Story</h2>
+    <p>BibleProject is a nonprofit animation studio that produces free Bible videos, podcasts, and study guides. We believe the Bible is a unified story that leads to Jesus — and we exist to help all people experience it for free.</p>
+    <a class="btn-primary" href="https://bibleproject.com/about/" style="background:#fff;color:#1a1a1a">About BibleProject</a>
+    <div class="story-collage">
+      <img src="https://ik.imagekit.io/bpweb1/media/home-remix/about/tr:q-80,w-300/home-remix_about-1.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-300/10C_YT%20Thumbnails_Word1_horizontal_no%20text_v1.jpg'">
+      <img src="https://ik.imagekit.io/bpweb1/media/home-remix/about/tr:q-80,w-300/home-remix_about-2.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-300/10C_YT%20Thumbnails_Word2_horizontal_no%20text_v1.jpg'">
+      <img src="https://ik.imagekit.io/bpweb1/media/home-remix/about/tr:q-80,w-300/home-remix_about-3.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-300/10C_YT%20Thumbnails_Word3_horizontal_no%20text_v1.jpg'">
+      <img src="https://ik.imagekit.io/bpweb1/media/home-remix/about/tr:q-80,w-300/home-remix_about-4.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-300/10C_YT%20Thumbnails_Word4_horizontal_no%20text_v1.jpg'">
+      <img src="https://ik.imagekit.io/bpweb1/media/home-remix/about/tr:q-80,w-300/home-remix_about-5.jpg" alt="" loading="lazy" onerror="this.src='https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-300/10C_YT%20Thumbnails_Word5_horizontal_no%20text_v1.jpg'">
+    </div>
+  </div>
+</section>
+
+<div class="footer-spacer"></div>
+<bp-global-footer></bp-global-footer>
+
+</body>
+</html>
