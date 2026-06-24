@@ -31,20 +31,12 @@ body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;font-s
 .breadcrumb-sep{color:#ccc}
 
 /* ── Main layout ── */
-.page-content{max-width:var(--max-width);margin:0 auto;padding:32px 24px 64px;transition:max-width .35s ease,padding .35s ease}
-.video-layout{display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start;transition:grid-template-columns .35s ease}
+.page-content{max-width:var(--max-width);margin:0 auto;padding:32px 24px 64px}
+.video-layout{display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start}
 @media(max-width:900px){
   .video-layout{grid-template-columns:1fr}
 }
 
-/* ── Theatre Mode ── */
-body.theatre-mode .page-content{max-width:100%;padding:32px 40px 64px}
-body.theatre-mode .video-layout{grid-template-columns:1fr}
-body.theatre-mode .video-sidebar{display:grid;grid-template-columns:340px 1fr;gap:40px;align-items:start}
-@media(max-width:900px){
-  body.theatre-mode .page-content{padding:24px 16px 48px}
-  body.theatre-mode .video-sidebar{grid-template-columns:1fr}
-}
 
 /* ── Video column ── */
 .video-main{}
@@ -58,13 +50,6 @@ mux-player{width:100%;height:100%;display:block}
 .share-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border:1px solid var(--bp-border);border-radius:8px;background:#fff;font-size:.85rem;font-weight:500;cursor:pointer;color:var(--bp-black);transition:border-color .15s,background .15s}
 .share-btn:hover{border-color:var(--bp-blue);background:var(--bp-gray-light)}
 .share-btn svg{width:16px;height:16px;flex-shrink:0}
-.theatre-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 18px;border:1px solid var(--bp-border);border-radius:8px;background:#fff;font-size:.85rem;font-weight:500;cursor:pointer;color:var(--bp-black);transition:border-color .15s,background .15s}
-.theatre-btn:hover{border-color:var(--bp-blue);background:var(--bp-gray-light)}
-.theatre-btn svg{width:16px;height:16px;flex-shrink:0}
-body.theatre-mode .theatre-btn{background:var(--bp-blue);color:#fff;border-color:var(--bp-blue)}
-body.theatre-mode .theatre-btn:hover{background:var(--bp-blue-dark);border-color:var(--bp-blue-dark)}
-.video-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-
 /* ── Reflect / Discussion ── */
 .section-block{margin-top:36px;border-top:1px solid var(--bp-border);padding-top:28px}
 .section-label{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--bp-gray);margin-bottom:12px}
@@ -179,16 +164,10 @@ bp-global-header,bp-global-footer{display:block}
         The second commandment forbids making and worshipping images of God — but why? In this video, we explore how the prohibition against idols is rooted in a high view of humanity. Humans are the true image-bearers of God, and idols distort that calling. The commandment isn't just about ancient statues — it's about where we place our ultimate trust and what that does to us over time.
       </p>
 
-      <div class="video-actions">
-        <button class="share-btn" onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : navigator.clipboard.writeText(location.href).then(()=>alert('Link copied!'))">
+      <button class="share-btn" onclick="navigator.share ? navigator.share({title:document.title,url:location.href}) : navigator.clipboard.writeText(location.href).then(()=>alert('Link copied!'))">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
           Share
         </button>
-        <button class="theatre-btn" id="theatre-btn" onclick="toggleTheatre()" aria-pressed="false" aria-label="Toggle Theatre Mode">
-          <svg id="theatre-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          Theatre
-        </button>
-      </div>
 
       <!-- Reflect -->
       <div class="section-block">
@@ -308,16 +287,8 @@ bp-global-header,bp-global-footer{display:block}
 </div>
 
 <script>
-function toggleTheatre() {
-  const active = document.body.classList.toggle('theatre-mode');
-  const btn = document.getElementById('theatre-btn');
-  btn.setAttribute('aria-pressed', active);
-  try { localStorage.setItem('bp-theatre-mode', active ? '1' : '0'); } catch(e){}
+ catch(e){}
 }
-(function(){
-  try { if (localStorage.getItem('bp-theatre-mode') === '1') { document.body.classList.add('theatre-mode'); document.getElementById('theatre-btn').setAttribute('aria-pressed','true'); } } catch(e){}
-})();
-
 const MEDITATION_URL = '../meditation/';
 const NEXT_URL = 'https://bibleproject.com/videos/3rd-commandment-do-not-carry-the-name-in-vain/';
 const QUESTIONS = [
