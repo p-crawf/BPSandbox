@@ -24,6 +24,8 @@
   function setAuthed(v) { write(LS_AUTH, !!v); }
   function history() { return read(LS_HIST, {}); }
   function stars() { return read(LS_STAR, {}); }
+  function savedInfo() { return read('bp_saved', null); }
+  function setSaved(email) { write('bp_saved', { email: email || '', at: Date.now() }); }
 
   // ---- id / url helpers ----
   function normId(pathname) {
@@ -41,7 +43,8 @@
 
   // ---- history model ----
   function recordProgress(item, position, duration) {
-    if (!isAuthed()) return;
+    // History is captured even when signed out, so an anonymous visitor's
+    // exploration can be surfaced (and offered to save) on exit intent.
     if (!duration || duration < 1) return;
     var h = history();
     var prev = h[item.id] || {};
@@ -70,10 +73,37 @@
     decorateProgress();
   }
   function clearHistory() {
-    write(LS_HIST, {});
-    write(LS_STAR, {});
+    // Keep anything the user starred; clear the rest.
+    var h = history(), s = stars();
+    var keptHist = {}, keptStars = {};
+    Object.keys(h).forEach(function (k) {
+      if (s[k]) { keptHist[k] = h[k]; keptStars[k] = true; }
+    });
+    write(LS_HIST, keptHist);
+    write(LS_STAR, keptStars);
     renderDrawer();
     decorateProgress();
+  }
+
+  // Record that a content page was explored (no media progress needed).
+  // Never clobbers an entry that already has real playback progress.
+  function recordView(item) {
+    if (!item || !item.id) return;
+    var h = history();
+    var prev = h[item.id] || {};
+    if (prev.duration) { prev.updated = Date.now(); h[item.id] = prev; write(LS_HIST, h); return; }
+    h[item.id] = {
+      id: item.id,
+      title: item.title || prev.title || 'Untitled',
+      type: item.type || prev.type || 'Page',
+      url: item.url || prev.url || item.id,
+      thumb: item.thumb || prev.thumb || '',
+      progress: prev.progress || 0,
+      position: prev.position || 0,
+      duration: prev.duration || 0,
+      updated: Date.now()
+    };
+    write(LS_HIST, h);
   }
 
   function sortedHistory() {
@@ -101,6 +131,7 @@
     + '.bpux-scrim{position:fixed;inset:0;background:rgba(10,16,24,.45);z-index:99998;opacity:0;transition:opacity .25s}'
     + '.bpux-scrim.show{opacity:1}'
     + '.bpux-drawer{position:fixed;top:0;right:0;height:100%;width:380px;max-width:92vw;background:#fff;z-index:99999;box-shadow:-14px 0 40px rgba(0,0,0,.2);transform:translateX(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif}'
+    + '.bpux-drawer[hidden]{display:none}'
     + '.bpux-drawer.show{transform:none}'
     + '.bpux-dhead{display:flex;align-items:center;gap:12px;padding:20px;border-bottom:1px solid #eee}'
     + '.bpux-dhead .av{width:42px;height:42px;border-radius:50%;background:#2a9fd6;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}'
@@ -134,6 +165,24 @@
     + '.bpux-epbar{height:4px;border-radius:100px;background:#e6e2da;overflow:hidden;margin-top:8px;max-width:280px}'
     + '.bpux-epbar span{display:block;height:100%;background:#2a9fd6}'
     + '.bpux-resume{display:inline-flex;align-items:center;gap:8px;background:#eaf5fb;border:1px solid #bfe4f5;color:#12557a;font-size:.8rem;font-weight:600;padding:8px 14px;border-radius:100px;margin-bottom:14px}'
+    // exit-intent save modal
+    + '.bpux-mscrim{position:fixed;inset:0;background:rgba(10,16,24,.55);z-index:100001;opacity:0;transition:opacity .22s;display:flex;align-items:center;justify-content:center;padding:20px}'
+    + '.bpux-mscrim[hidden]{display:none}'
+    + '.bpux-mscrim.show{opacity:1}'
+    + '.bpux-modal{background:#fff;border-radius:20px;max-width:400px;width:100%;box-shadow:0 24px 70px rgba(0,0,0,.35);padding:30px 28px 26px;transform:translateY(14px) scale(.98);transition:transform .22s cubic-bezier(.2,.8,.2,1);font-family:Inter,system-ui,sans-serif}'
+    + '.bpux-mscrim.show .bpux-modal{transform:none}'
+    + '.bpux-modal .em{font-size:1.7rem;margin-bottom:10px}'
+    + '.bpux-modal h3{font-size:1.25rem;font-weight:800;color:#1a1a1a;letter-spacing:-.01em;margin:0 0 8px}'
+    + '.bpux-modal p{font-size:.88rem;color:#6b6b6b;line-height:1.5;margin:0 0 18px}'
+    + '.bpux-modal .cnt{font-weight:700;color:#1a1a1a}'
+    + '.bpux-form{display:flex;flex-direction:column;gap:10px}'
+    + '.bpux-form input{font-family:inherit;font-size:.9rem;padding:12px 14px;border:1px solid #d9d5cd;border-radius:10px;outline:none;transition:border-color .15s}'
+    + '.bpux-form input:focus{border-color:#2a9fd6}'
+    + '.bpux-form .save{background:#1a1a1a;color:#fff;border:0;font-size:.9rem;font-weight:700;padding:13px;border-radius:100px;cursor:pointer;transition:background .15s}'
+    + '.bpux-form .save:hover{background:#000}'
+    + '.bpux-mno{margin-top:12px;width:100%;background:none;border:0;color:#9a9a9a;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit}'
+    + '.bpux-mno:hover{color:#6b6b6b}'
+    + '.bpux-mnote{font-size:.72rem;color:#a7a7a7;text-align:center;margin-top:12px}'
     + '@media(max-width:520px){.bpux-status{display:none}}';
 
   function injectStyle() {
@@ -144,7 +193,7 @@
   }
 
   // ---- UI: widget ----
-  var rootEl, switchEl, statusEl, profileBtn, drawerEl, scrimEl;
+  var rootEl, switchEl, statusEl, profileBtn, drawerEl, scrimEl, mscrimEl;
 
   function buildWidget() {
     rootEl = document.createElement('div');
@@ -198,14 +247,17 @@
       + '<button class="bpux-close" aria-label="Close">&times;</button>'
       + '</div>'
       + '<div class="bpux-dbody" id="bpux-dbody"></div>'
-      + '<div class="bpux-dfoot"><button class="bpux-clear">Clear watch history</button></div>';
+      + '<div class="bpux-dfoot"><button class="bpux-clear">Clear history (keeps starred)</button></div>';
     document.body.appendChild(drawerEl);
     drawerEl.querySelector('.bpux-close').addEventListener('click', closeDrawer);
     drawerEl.querySelector('.bpux-clear').addEventListener('click', clearHistory);
   }
 
-  function openDrawer() {
-    if (!isAuthed()) return;
+  function openDrawer(force) {
+    // force === true opens even when signed out (used by exit intent).
+    // Event objects passed by click handlers are not === true, so normal
+    // toggle/profile clicks still require auth.
+    if (force !== true && !isAuthed()) return;
     renderDrawer();
     scrimEl.hidden = false; drawerEl.hidden = false;
     requestAnimationFrame(function () { scrimEl.classList.add('show'); drawerEl.classList.add('show'); });
@@ -215,8 +267,93 @@
     setTimeout(function () { scrimEl.hidden = true; drawerEl.hidden = true; }, 280);
   }
 
+  // ---- exit-intent save modal ----
+  function buildModal() {
+    mscrimEl = document.createElement('div');
+    mscrimEl.className = 'bpux-mscrim';
+    mscrimEl.hidden = true;
+    mscrimEl.innerHTML =
+      '<div class="bpux-modal" role="dialog" aria-modal="true" aria-label="Save your progress">'
+      + '<div class="em">📖</div>'
+      + '<h3>Save your place before you go</h3>'
+      + '<p>You explored <span class="cnt">a few things</span> here. Drop your email and we\'ll keep your history and progress so you can pick up right where you left off.</p>'
+      + '<form class="bpux-form" novalidate>'
+      + '<input type="email" name="email" placeholder="you@example.com" autocomplete="email" required>'
+      + '<button type="submit" class="save">Save my progress</button>'
+      + '</form>'
+      + '<button class="bpux-mno" type="button">No thanks, keep exploring</button>'
+      + '<div class="bpux-mnote">Demo only — nothing leaves this device.</div>'
+      + '</div>';
+    document.body.appendChild(mscrimEl);
+
+    var form = mscrimEl.querySelector('.bpux-form');
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var email = (form.email.value || '').trim();
+      setSaved(email);
+      setAuthed(true);
+      reflectAuth();
+      closeSaveModal();
+      if (drawerEl.hidden) openDrawer(true); else renderDrawer();
+    });
+    mscrimEl.querySelector('.bpux-mno').addEventListener('click', closeSaveModal);
+    mscrimEl.addEventListener('click', function (e) { if (e.target === mscrimEl) closeSaveModal(); });
+  }
+
+  function openSaveModal() {
+    if (!mscrimEl) return;
+    var n = sortedHistory().length;
+    var cnt = mscrimEl.querySelector('.cnt');
+    if (cnt) cnt.textContent = n + (n === 1 ? ' item' : ' items');
+    mscrimEl.hidden = false;
+    requestAnimationFrame(function () { mscrimEl.classList.add('show'); });
+    var inp = mscrimEl.querySelector('input');
+    if (inp) setTimeout(function () { try { inp.focus(); } catch (e) {} }, 260);
+  }
+  function closeSaveModal() {
+    if (!mscrimEl) return;
+    mscrimEl.classList.remove('show');
+    setTimeout(function () { mscrimEl.hidden = true; }, 240);
+  }
+
+  function seenExit() { try { return sessionStorage.getItem('bpux_exit') === '1'; } catch (e) { return false; } }
+  function markExit() { try { sessionStorage.setItem('bpux_exit', '1'); } catch (e) {} }
+
+  function armExitIntent() {
+    document.addEventListener('mouseout', function (e) {
+      if (e.relatedTarget || e.toElement) return;   // still inside the window
+      if (e.clientY > 0) return;                     // only when leaving toward the top
+      if (isAuthed() || savedInfo()) return;         // already captured
+      if (seenExit()) return;                        // once per session
+      if (!sortedHistory().length) return;           // nothing worth saving yet
+      markExit();
+      openDrawer(true);
+      openSaveModal();
+    });
+  }
+
+  // ---- record that the current content page was explored ----
+  function recordCurrentView() {
+    var player = document.querySelector('mux-player');
+    if (player) {
+      var pid = player.getAttribute('playback-id') || '';
+      var title = player.getAttribute('metadata-video-title')
+        || document.title.replace(/\s*[—-]\s*BibleProject.*$/i, '').trim();
+      recordView({ id: pageId(), title: title, type: 'Video', url: pageId(), thumb: pid ? muxThumb(pid) : '' });
+      return;
+    }
+    var art = document.querySelector('article.article');
+    if (art) {
+      var h1 = art.querySelector('h1');
+      var img = art.querySelector('.hero-img');
+      recordView({ id: pageId(), title: h1 ? h1.textContent.trim() : document.title,
+        type: 'Article', url: pageId(), thumb: (img && img.getAttribute('src')) || '' });
+    }
+  }
+
   function pctLabel(it) {
-    if (it.progress >= 0.95) return 'Watched';
+    if (!it.duration) return it.type === 'Article' ? 'Read' : 'Explored';
+    if (it.progress >= 0.95) return it.type === 'Podcast' ? 'Finished' : 'Watched';
     if (it.progress <= 0.01) return 'Just started';
     return Math.round(it.progress * 100) + '% complete';
   }
@@ -246,7 +383,7 @@
         + '<div class="bpux-imeta">'
         + '<div class="bpux-itype">' + it.type + '</div>'
         + '<div class="bpux-ititle">' + it.title + '</div>'
-        + '<div class="bpux-bar"><span style="width:' + Math.round(it.progress * 100) + '%"></span></div>'
+        + (it.duration ? '<div class="bpux-bar"><span style="width:' + Math.round(it.progress * 100) + '%"></span></div>' : '')
         + '<div class="bpux-pct">' + pctLabel(it) + '</div>'
         + '</div>'
         + '<button class="bpux-star ' + (starred ? 'on' : '') + '" data-star="' + it.id + '" aria-label="Star" title="Star for quick reference">' + (starred ? '★' : '☆') + '</button>'
@@ -392,9 +529,12 @@
   function boot() {
     injectStyle();
     buildWidget();
+    buildModal();
+    recordCurrentView();
     trackVideo();
     trackPodcast();
     decorateProgress();
+    armExitIntent();
     // keep listing decorations fresh if cards load late
     setTimeout(decorateProgress, 800);
   }
