@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Articles — BibleProject</title>
+<link rel="icon" href="../bibleproject-logo-mark.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script type="module" src="https://static.bibleproject.com/bp-web-components/v0.27.2/bp-web-components.esm.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bp-blue:#2a9fd6;--bp-blue-dark:#1e8abb;--bp-black:#1a1a1a;--bp-gray:#6b6b6b;--bp-cream:#faf6ef;--bp-border:#e0ddd8;--bp-white:#fff}
+html{scroll-behavior:smooth}
+body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* sub-nav */
+.subnav{border-bottom:1px solid var(--bp-border);background:#fff;position:sticky;top:0;z-index:50}
+.subnav-inner{max-width:1140px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:8px;height:52px;overflow-x:auto}
+.subnav a{font-size:.85rem;font-weight:600;color:var(--bp-gray);text-decoration:none;padding:7px 14px;border-radius:100px;white-space:nowrap;transition:background .15s,color .15s}
+.subnav a:hover{color:var(--bp-black);background:var(--bp-cream)}
+.subnav a.active{color:#fff;background:var(--bp-black)}
+
+/* hero */
+.ahero{padding:52px 24px 8px}
+.ahero-inner{max-width:1100px;margin:0 auto}
+.ahero .eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bp-blue);margin-bottom:12px}
+.ahero h1{font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:12px}
+.ahero p{font-size:1rem;color:var(--bp-gray);max-width:520px}
+
+/* featured */
+.featured{padding:32px 0}
+.featured a{display:grid;grid-template-columns:1.1fr 1fr;gap:0;border:1px solid var(--bp-border);border-radius:20px;overflow:hidden;text-decoration:none;color:inherit;transition:box-shadow .2s}
+.featured a:hover{box-shadow:0 12px 34px rgba(0,0,0,.1)}
+.featured .fimg{aspect-ratio:16/10;object-fit:cover;width:100%;height:100%;background:#0d1a26}
+.featured .fbody{padding:36px}
+.featured .cat{font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bp-blue)}
+.featured .fbody h2{font-size:1.7rem;font-weight:800;letter-spacing:-.01em;line-height:1.2;margin:8px 0 12px}
+.featured .fbody p{font-size:.92rem;color:var(--bp-gray);margin-bottom:16px}
+.meta{font-size:.78rem;color:var(--bp-gray)}
+@media(max-width:700px){.featured a{grid-template-columns:1fr}.featured .fbody{padding:24px}}
+
+/* grid */
+.section{padding:16px 0 64px}
+.section-head{margin-bottom:20px}
+.section-head h2{font-size:1.35rem;font-weight:800;letter-spacing:-.01em}
+.article-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:26px}
+.article-card{text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:10px;transition:transform .18s}
+.article-card:hover{transform:translateY(-4px)}
+.article-card .aimg{width:100%;aspect-ratio:16/9;border-radius:12px;object-fit:cover;background:#0d1a26;box-shadow:0 8px 22px rgba(0,0,0,.08)}
+.article-card .cat{font-size:.68rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--bp-blue)}
+.article-card h3{font-size:1.08rem;font-weight:700;line-height:1.32}
+.article-card p{font-size:.84rem;color:var(--bp-gray);line-height:1.5}
+
+/* explore */
+.explore-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.explore-card{border-radius:18px;padding:26px;text-decoration:none;color:inherit;min-height:140px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;transition:transform .2s}
+.explore-card:hover{transform:translateY(-4px)}
+.explore-card h3{font-size:1.1rem;font-weight:800}
+.explore-card p{font-size:.83rem;color:var(--bp-gray)}
+.explore-card.c1{background:#e7eff0}.explore-card.c2{background:var(--bp-cream)}.explore-card.c3{background:#eef0f7}
+</style>
+</head>
+<body>
+
+<bp-global-header></bp-global-header>
+
+<nav class="subnav" aria-label="Sandbox sections">
+  <div class="subnav-inner">
+    <a href="../home/">Home</a>
+    <a href="../videos/">Videos</a>
+    <a href="../podcast/">Podcast</a>
+    <a href="../guides/">Guides</a>
+    <a href="./" class="active">Articles</a>
+    <a href="../Bible-Reading-Guided-Study/">Study</a>
+  </div>
+</nav>
+
+<section class="ahero">
+  <div class="ahero-inner">
+    <p class="eyebrow">Articles</p>
+    <h1>Go deeper into the text.</h1>
+    <p>Essays and reflections on how the Bible was written, how to read it well, and the ideas that shape everything we make.</p>
+  </div>
+</section>
+
+<div class="wrap">
+  <!-- FEATURED -->
+  <section class="featured">
+    <a href="why-the-bible-is-one-unified-story/">
+      <img class="fimg" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-800/10C_YT%20Thumbnails_Word7_horizontal_no%20text_v1.jpg" alt="" loading="eager" onerror="this.style.display='none'">
+      <div class="fbody">
+        <span class="cat">Big Idea</span>
+        <h2>Why the Bible Is One Unified Story That Leads to Jesus</h2>
+        <p>The Bible can feel like a random collection of ancient texts. But read closely, it's a single, intentional story — and every part points somewhere.</p>
+        <p class="meta">8 min read</p>
+      </div>
+    </a>
+  </section>
+
+  <!-- GRID -->
+  <section class="section">
+    <div class="section-head"><h2>Latest articles</h2></div>
+    <div class="article-grid">
+
+      <a class="article-card" href="reading-the-bible-as-meditation-literature/">
+        <img class="aimg" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Word4_horizontal_no%20text_v1.jpg" alt="" loading="lazy" onerror="this.style.display='none'">
+        <span class="cat">How to Read</span>
+        <h3>Reading the Bible as Meditation Literature</h3>
+        <p>Scripture was written to be read slowly, out loud, and over and over. Here's what that changes.</p>
+      </a>
+
+      <a class="article-card" href="what-the-ten-commandments-are-really-about/">
+        <img class="aimg" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Word1_horizontal_no%20text_v1.jpg" alt="" loading="lazy" onerror="this.style.display='none'">
+        <span class="cat">The Law</span>
+        <h3>What the Ten Commandments Are Really About</h3>
+        <p>Not a list of rules, but a portrait of the good life. A short walk through the heart of the Law.</p>
+      </a>
+
+      <a class="article-card" href="why-the-bible-is-one-unified-story/">
+        <img class="aimg" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Word7_horizontal_no%20text_v1.jpg" alt="" loading="lazy" onerror="this.style.display='none'">
+        <span class="cat">Big Idea</span>
+        <h3>The Bible Is One Unified Story</h3>
+        <p>How thousands of years of writing hold together as a single narrative that leads to Jesus.</p>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- EXPLORE -->
+  <section class="section">
+    <div class="section-head"><h2>Keep exploring</h2></div>
+    <div class="explore-grid">
+      <a class="explore-card c1" href="../videos/"><h3>Videos</h3><p>Watch the ideas in these articles come to life.</p></a>
+      <a class="explore-card c2" href="../guides/"><h3>Guides</h3><p>Read alongside your Bible with an illustrated guide.</p></a>
+      <a class="explore-card c3" href="../podcast/"><h3>Podcast</h3><p>Hear the longer conversations behind the essays.</p></a>
+    </div>
+  </section>
+</div>
+
+<bp-global-footer></bp-global-footer>
+
+</body>
+</html>

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Podcast — BibleProject</title>
+<link rel="icon" href="../bibleproject-logo-mark.svg" type="image/svg+xml">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script type="module" src="https://static.bibleproject.com/bp-web-components/v0.27.2/bp-web-components.esm.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bp-blue:#2a9fd6;
+  --bp-blue-dark:#1e8abb;
+  --bp-black:#1a1a1a;
+  --bp-gray:#6b6b6b;
+  --bp-cream:#faf6ef;
+  --bp-border:#e0ddd8;
+  --bp-white:#ffffff;
+}
+html{scroll-behavior:smooth}
+body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px}
+
+/* ── SUB NAV (internal) ── */
+.subnav{border-bottom:1px solid var(--bp-border);background:#fff;position:sticky;top:0;z-index:50}
+.subnav-inner{max-width:1140px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:8px;height:52px;overflow-x:auto}
+.subnav a{font-size:.85rem;font-weight:600;color:var(--bp-gray);text-decoration:none;padding:7px 14px;border-radius:100px;white-space:nowrap;transition:background .15s,color .15s}
+.subnav a:hover{color:var(--bp-black);background:var(--bp-cream)}
+.subnav a.active{color:#fff;background:var(--bp-black)}
+
+/* ── HERO ── */
+.phero{background:linear-gradient(160deg,#122b3f 0%,#0b1a28 100%);color:#fff;padding:56px 24px}
+.phero-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1.3fr 1fr;gap:40px;align-items:center}
+@media(max-width:760px){.phero-inner{grid-template-columns:1fr;gap:28px}}
+.phero-eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#bfe4f5;margin-bottom:14px}
+.phero h1{font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:-.02em;line-height:1.1;margin-bottom:16px}
+.phero p{font-size:1rem;color:rgba(255,255,255,.78);max-width:460px;margin-bottom:26px}
+.phero-cover{aspect-ratio:1;border-radius:20px;overflow:hidden;background:#0d1a26;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.phero-cover img{width:100%;height:100%;object-fit:cover}
+
+/* ── FEATURED PLAYER ── */
+.featured{margin-top:-36px;position:relative;z-index:5}
+.player-card{background:#fff;border:1px solid var(--bp-border);border-radius:20px;box-shadow:0 16px 44px rgba(0,0,0,.1);padding:22px 24px;display:flex;align-items:center;gap:20px}
+.player-cover{width:88px;height:88px;border-radius:14px;object-fit:cover;flex-shrink:0;background:#0d1a26}
+.player-meta{flex:1;min-width:0}
+.player-badge{font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--bp-blue)}
+.player-title{font-size:1.15rem;font-weight:800;letter-spacing:-.01em;margin:2px 0 4px}
+.player-desc{font-size:.85rem;color:var(--bp-gray);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.play-btn{width:56px;height:56px;border-radius:50%;background:var(--bp-black);border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .15s,transform .1s}
+.play-btn:hover{background:#000}
+.play-btn:active{transform:scale(.94)}
+.play-btn svg{width:20px;height:20px;fill:#fff}
+.play-btn .icon-pause{display:none}
+.play-btn.playing .icon-play{display:none}
+.play-btn.playing .icon-pause{display:block}
+@media(max-width:560px){.player-card{flex-wrap:wrap}.player-cover{width:64px;height:64px}}
+
+/* ── EPISODE LIST ── */
+.episodes{padding:52px 0 20px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:8px}
+.section-head h2{font-size:1.35rem;font-weight:800;letter-spacing:-.01em}
+.ep{display:flex;align-items:center;gap:18px;padding:20px 4px;border-bottom:1px solid var(--bp-border);cursor:pointer}
+.ep:hover{background:var(--bp-cream)}
+.ep-play{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--bp-border);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:border-color .15s,background .15s}
+.ep:hover .ep-play{border-color:var(--bp-blue)}
+.ep-play svg{width:15px;height:15px;fill:var(--bp-black);margin-left:2px}
+.ep-play .icon-pause{display:none;margin-left:0}
+.ep-play.playing .icon-play{display:none}
+.ep-play.playing .icon-pause{display:block}
+.ep-play.playing{background:var(--bp-black);border-color:var(--bp-black)}
+.ep-play.playing svg{fill:#fff}
+.ep-info{flex:1;min-width:0}
+.ep-num{font-size:.7rem;font-weight:700;color:var(--bp-blue);text-transform:uppercase;letter-spacing:.06em}
+.ep-title{font-size:1rem;font-weight:700;line-height:1.35;margin:2px 0}
+.ep-desc{font-size:.85rem;color:var(--bp-gray);line-height:1.5}
+.ep-dur{font-size:.8rem;color:var(--bp-gray);font-variant-numeric:tabular-nums;flex-shrink:0}
+@media(max-width:560px){.ep-desc{display:none}}
+
+/* ── SERIES ── */
+.pseries{padding:24px 0 72px}
+.pseries-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px;margin-top:18px}
+.pseries-card{border-radius:18px;padding:26px;text-decoration:none;color:inherit;min-height:150px;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;transition:transform .2s}
+.pseries-card:hover{transform:translateY(-4px)}
+.pseries-card h3{font-size:1.1rem;font-weight:800}
+.pseries-card p{font-size:.83rem;color:var(--bp-gray)}
+.pseries-card.s1{background:#e7eff0}
+.pseries-card.s2{background:var(--bp-cream)}
+.pseries-card.s3{background:#eef0f7}
+
+.note{max-width:1000px;margin:0 auto;padding:0 24px 64px}
+.note p{font-size:.8rem;color:var(--bp-gray);background:var(--bp-cream);border:1px solid var(--bp-border);border-radius:12px;padding:14px 18px}
+</style>
+</head>
+<body>
+
+<bp-global-header></bp-global-header>
+
+<!-- Sandbox sub-nav (all internal) -->
+<nav class="subnav" aria-label="Sandbox sections">
+  <div class="subnav-inner">
+    <a href="../home/">Home</a>
+    <a href="../videos/">Videos</a>
+    <a href="./" class="active">Podcast</a>
+    <a href="../guides/">Guides</a>
+    <a href="../articles/">Articles</a>
+    <a href="../Bible-Reading-Guided-Study/">Study</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="phero">
+  <div class="phero-inner">
+    <div>
+      <p class="phero-eyebrow">BibleProject Podcast</p>
+      <h1>The conversations behind the videos.</h1>
+      <p>Go deeper into Scripture, theology, and the ideas that shape everything we make. New episodes every week.</p>
+    </div>
+    <div class="phero-cover">
+      <img src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-600/10C_YT%20Thumbnails_Intro_horizontal_no%20text_v1.jpg" alt="" loading="eager" onerror="this.style.display='none'">
+    </div>
+  </div>
+</section>
+
+<div class="wrap">
+  <!-- FEATURED PLAYER -->
+  <section class="featured">
+    <div class="player-card">
+      <img class="player-cover" src="https://ik.imagekit.io/bpweb1/web/media/10commandments/icons/16x9/tr:q-90,w-200/10C_YT%20Thumbnails_Word1_horizontal_no%20text_v1.jpg" alt="" loading="lazy" onerror="this.style.background='#0d1a26'">
+      <div class="player-meta">
+        <div class="player-badge">Latest Episode</div>
+        <div class="player-title">The Law Series: A Portrait of the Good Life</div>
+        <div class="player-desc">Tim and Jon explore how the ten commandments reveal the heart of God's wisdom.</div>
+      </div>
+      <button class="play-btn" data-ep="0" aria-label="Play featured episode">
+        <svg class="icon-play" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg>
+        <svg class="icon-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- EPISODE LIST -->
+  <section class="episodes">
+    <div class="section-head"><h2>Recent episodes</h2></div>
+
+    <div class="ep" data-ep="1">
+      <button class="ep-play" aria-label="Play episode"><svg class="icon-play" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg><svg class="icon-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button>
+      <div class="ep-info">
+        <div class="ep-num">Episode 128</div>
+        <div class="ep-title">No Other Gods — What Comes First</div>
+        <div class="ep-desc">Why the order of the commandments matters, and what it means to give God our whole allegiance.</div>
+      </div>
+      <div class="ep-dur">48 min</div>
+    </div>
+
+    <div class="ep" data-ep="2">
+      <button class="ep-play" aria-label="Play episode"><svg class="icon-play" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg><svg class="icon-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button>
+      <div class="ep-info">
+        <div class="ep-num">Episode 127</div>
+        <div class="ep-title">Idols of the Heart</div>
+        <div class="ep-desc">A conversation about the second commandment and the surprising dignity of being made in God's image.</div>
+      </div>
+      <div class="ep-dur">52 min</div>
+    </div>
+
+    <div class="ep" data-ep="3">
+      <button class="ep-play" aria-label="Play episode"><svg class="icon-play" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg><svg class="icon-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button>
+      <div class="ep-info">
+        <div class="ep-num">Episode 126</div>
+        <div class="ep-title">Carrying the Name</div>
+        <div class="ep-desc">More than avoiding swear words — how we represent God's reputation in the world.</div>
+      </div>
+      <div class="ep-dur">45 min</div>
+    </div>
+
+    <div class="ep" data-ep="4">
+      <button class="ep-play" aria-label="Play episode"><svg class="icon-play" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg><svg class="icon-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button>
+      <div class="ep-info">
+        <div class="ep-num">Episode 125</div>
+        <div class="ep-title">The Gift of Rest</div>
+        <div class="ep-desc">Sabbath as trust — exploring the rhythm of work and rest woven into creation.</div>
+      </div>
+      <div class="ep-dur">57 min</div>
+    </div>
+
+    <div class="ep" data-ep="5">
+      <button class="ep-play" aria-label="Play episode"><svg class="icon-play" viewBox="0 0 24 24"><polygon points="6,4 20,12 6,20"/></svg><svg class="icon-pause" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg></button>
+      <div class="ep-info">
+        <div class="ep-num">Episode 124</div>
+        <div class="ep-title">Honor and Community</div>
+        <div class="ep-desc">How honoring father and mother is tied to the flourishing of a whole society.</div>
+      </div>
+      <div class="ep-dur">50 min</div>
+    </div>
+  </section>
+
+  <!-- PODCAST SERIES -->
+  <section class="pseries">
+    <div class="section-head"><h2>Podcast series</h2></div>
+    <div class="pseries-grid">
+      <a class="pseries-card s1" href="../videos/">
+        <h3>The Law</h3>
+        <p>Companion conversations to the 10 Commandments video series.</p>
+      </a>
+      <a class="pseries-card s2" href="../Bible-Reading-Guided-Study/">
+        <h3>How to Read the Bible</h3>
+        <p>Learn the literary art of Scripture, one conversation at a time.</p>
+      </a>
+      <a class="pseries-card s3" href="../home/">
+        <h3>Word Studies</h3>
+        <p>Trace key Hebrew and Greek words across the whole biblical story.</p>
+      </a>
+    </div>
+  </section>
+</div>
+
+<div class="note">
+  <p>Sandbox note: episode audio uses a sample track so the player is functional while we iterate. Swap in real episode files under <code>/podcast/</code> when ready.</p>
+</div>
+
+<!-- Shared audio element (sample track from the repo) -->
+<audio id="podAudio" preload="none" src="../videos/meditation/tunetank.com_4273_muse_by_ahoami.mp3"></audio>
+
+<bp-global-footer></bp-global-footer>
+
+<script>
+(function(){
+  var audio = document.getElementById('podAudio');
+  if(!audio) return;
+  var current = null; // currently active play button
+
+  function reset(btn){ if(btn){ btn.classList.remove('playing'); } }
+
+  function toggle(btn){
+    if(current === btn){
+      if(audio.paused){ audio.play(); btn.classList.add('playing'); }
+      else { audio.pause(); btn.classList.remove('playing'); }
+      return;
+    }
+    // switching episodes
+    if(current) reset(current);
+    current = btn;
+    audio.currentTime = 0;
+    audio.play().then(function(){ btn.classList.add('playing'); }).catch(function(){});
+  }
+
+  document.querySelectorAll('.play-btn, .ep-play').forEach(function(btn){
+    btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(btn); });
+  });
+  // clicking an episode row (not just the button) plays it
+  document.querySelectorAll('.ep').forEach(function(row){
+    row.addEventListener('click', function(){ toggle(row.querySelector('.ep-play')); });
+  });
+
+  audio.addEventListener('ended', function(){ if(current){ reset(current); current = null; } });
+  audio.addEventListener('pause', function(){ if(current) current.classList.remove('playing'); });
+  audio.addEventListener('play',  function(){ if(current) current.classList.add('playing'); });
+})();
+</script>
+
+</body>
+</html>
