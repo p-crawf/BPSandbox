@@ -95,11 +95,29 @@ body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;font-w
 .patron-inner p{font-size:.9rem;font-weight:500}
 .patron-inner .btn-dark{background:var(--bp-blue)}
 .patron-inner .btn-dark:hover{background:var(--bp-blue-dark)}
+
+/* ── SUB NAV (internal, sandbox) ── */
+.subnav{border-bottom:1px solid var(--bp-border);background:#fff;position:sticky;top:0;z-index:50}
+.subnav-inner{max-width:1140px;margin:0 auto;padding:0 24px;display:flex;align-items:center;gap:8px;height:52px;overflow-x:auto}
+.subnav a{font-size:.85rem;font-weight:600;color:var(--bp-gray);text-decoration:none;padding:7px 14px;border-radius:100px;white-space:nowrap;transition:background .15s,color .15s}
+.subnav a:hover{color:var(--bp-black);background:var(--bp-cream)}
+.subnav a.active{color:#fff;background:var(--bp-black)}
 </style>
 </head>
 <body>
 
 <bp-global-header></bp-global-header>
+
+<nav class="subnav" aria-label="Sandbox sections">
+  <div class="subnav-inner">
+    <a href="./" class="active">Home</a>
+    <a href="../videos/">Videos</a>
+    <a href="../podcast/">Podcast</a>
+    <a href="../guides/">Guides</a>
+    <a href="../articles/">Articles</a>
+    <a href="../Bible-Reading-Guided-Study/">Study</a>
+  </div>
+</nav>
 
 <!-- HERO -->
 <section class="hero">
