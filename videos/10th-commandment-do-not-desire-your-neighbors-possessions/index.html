@@ -181,5 +181,6 @@ function updateRing(){document.getElementById('med-ring-prog').style.strokeDasho
 function goToMeditation(){clearInterval(panelTimer);sessionStorage.setItem('meditation',JSON.stringify({next:NEXT_URL,questions:QUESTIONS}));window.location.href=MEDITATION_URL;}
 customElements.whenDefined('mux-player').then(()=>{const player=document.querySelector('mux-player');if(!player)return;let triggered=false;if(new URLSearchParams(location.search).get('autoplay')==='1'){player.play().catch(()=>{});}player.addEventListener('timeupdate',()=>{if(triggered||!player.duration)return;const left=player.duration-player.currentTime;if(left<=30&&left>0){triggered=true;showMedPanel(left);}});player.addEventListener('ended',()=>{if(!triggered)goToMeditation();});});
 </script>
+<script src="../../assets/bp-ux.js" defer></script>
 </body>
 </html>
