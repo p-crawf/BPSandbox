@@ -7,6 +7,7 @@
 <link rel="icon" href="https://static.bibleproject.com/favicons/favicon.ico" type="image/x-icon">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script type="module" src="https://static.bibleproject.com/bp-web-components/v0.27.2/bp-web-components.esm.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player" defer></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -90,11 +91,71 @@ body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;font-w
 
 /* ── FOOTER SPACER ── */
 .footer-spacer{height:32px}
+
+/* ── LAUNCH STAGE (marketing moments) ── */
+.launch-stage{position:relative;overflow:hidden;min-height:clamp(480px,74vh,660px);display:flex;align-items:center;justify-content:center;padding:64px 24px;background:radial-gradient(125% 125% at 50% -10%,#154266 0%,#0d2338 52%,#0a1420 100%);color:#fff;isolation:isolate}
+.launch-bubbles{position:absolute;inset:0;z-index:0;pointer-events:none;transition:opacity .9s ease}
+.launch-bubble{position:absolute;top:0;left:0;border-radius:50%;pointer-events:auto;will-change:transform;mix-blend-mode:screen;animation:launch-hue 16s linear infinite}
+@keyframes launch-hue{from{filter:hue-rotate(0deg) blur(.4px)}to{filter:hue-rotate(360deg) blur(.4px)}}
+.launch-content{position:relative;z-index:2;max-width:720px;text-align:center;pointer-events:none}
+.launch-content a,.launch-content button,.launch-content mux-player{pointer-events:auto}
+.launch-pill{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:7px 16px;border-radius:100px;margin-bottom:22px}
+.launch-dot{width:8px;height:8px;border-radius:50%;background:var(--bp-blue);box-shadow:0 0 0 0 rgba(42,159,214,.6);animation:launch-pulse 2s infinite}
+.launch-pill-live{background:rgba(255,77,77,.14);border-color:rgba(255,77,77,.4)}
+.launch-pill-live .launch-dot{background:#ff4d4d;animation:launch-pulse-live 1.2s infinite}
+@keyframes launch-pulse{0%{box-shadow:0 0 0 0 rgba(42,159,214,.6)}70%{box-shadow:0 0 0 10px rgba(42,159,214,0)}100%{box-shadow:0 0 0 0 rgba(42,159,214,0)}}
+@keyframes launch-pulse-live{0%{box-shadow:0 0 0 0 rgba(255,77,77,.6)}70%{box-shadow:0 0 0 12px rgba(255,77,77,0)}100%{box-shadow:0 0 0 0 rgba(255,77,77,0)}}
+.launch-headline{font-size:clamp(2rem,5vw,3.4rem);font-weight:700;line-height:1.12;letter-spacing:-.02em;margin-bottom:14px}
+.launch-subhead{font-size:1rem;color:rgba(255,255,255,.72);max-width:460px;margin:0 auto 32px}
+.launch-countdown{display:inline-flex;gap:12px;margin-bottom:18px}
+.lc-unit{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px 10px;min-width:74px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.lc-num{display:block;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.lc-label{display:block;font-size:.66rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:6px}
+.launch-when{font-size:.82rem;color:rgba(255,255,255,.5)}
+.launch-live{display:none}
+.launch-stage[data-state="live"] .launch-pre,.launch-stage[data-state="post"] .launch-pre{display:none}
+.launch-stage[data-state="live"] .launch-live,.launch-stage[data-state="post"] .launch-live{display:block;animation:launch-reveal .9s cubic-bezier(.2,.8,.2,1) both}
+.launch-stage[data-state="live"] .launch-bubbles,.launch-stage[data-state="post"] .launch-bubbles{opacity:.4}
+@keyframes launch-reveal{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:none}}
+.launch-video-frame{position:relative;width:100%;max-width:640px;margin:8px auto 24px;aspect-ratio:16/9;border-radius:18px;overflow:hidden;background:#000;box-shadow:0 24px 70px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1)}
+.launch-video-frame mux-player{width:100%;height:100%;display:block}
+.launch-stage[data-state="live"] .launch-video-frame{box-shadow:0 0 0 1px rgba(255,77,77,.45),0 24px 70px rgba(0,0,0,.55)}
+@media(max-width:520px){.lc-unit{min-width:60px;padding:12px 8px}.launch-countdown{gap:8px}}
+@media(prefers-reduced-motion:reduce){.launch-bubble{animation:none}.launch-dot{animation:none}}
 </style>
 </head>
 <body>
 
 <bp-global-header></bp-global-header>
+
+<!-- LAUNCH STAGE (prelaunch · launch · post-launch) -->
+<section class="launch-stage" id="launchStage" data-state="pre" aria-label="Series premiere">
+  <div class="launch-bubbles" id="launchBubbles" aria-hidden="true"></div>
+
+  <div class="launch-content">
+    <!-- PRELAUNCH -->
+    <div class="launch-pre">
+      <span class="launch-pill"><span class="launch-dot"></span> <span id="launchPillText">Premiere incoming</span></span>
+      <h2 class="launch-headline">Something new is about to drop.</h2>
+      <p class="launch-subhead">A brand-new video premieres soon. The closer we get, the more the room comes alive.</p>
+      <div class="launch-countdown" role="timer" aria-live="polite">
+        <div class="lc-unit"><span class="lc-num" id="lcDays">00</span><span class="lc-label">days</span></div>
+        <div class="lc-unit"><span class="lc-num" id="lcHours">00</span><span class="lc-label">hrs</span></div>
+        <div class="lc-unit"><span class="lc-num" id="lcMins">00</span><span class="lc-label">min</span></div>
+        <div class="lc-unit"><span class="lc-num" id="lcSecs">00</span><span class="lc-label">sec</span></div>
+      </div>
+      <p class="launch-when" id="launchWhen"></p>
+    </div>
+
+    <!-- LAUNCH + POST-LAUNCH -->
+    <div class="launch-live">
+      <span class="launch-pill launch-pill-live"><span class="launch-dot"></span> <span id="livePillText">Premiering now</span></span>
+      <h2 class="launch-headline" id="liveHeadline">It's here — watch the premiere.</h2>
+      <div class="launch-video-frame" id="launchVideoFrame"></div>
+      <a class="btn-primary" href="../videos/1st-commandment-no-other-gods/" style="background:#fff;color:#1a1a1a">Watch the full episode</a>
+    </div>
+  </div>
+</section>
 
 <!-- HERO -->
 <section class="hero">
@@ -265,6 +326,186 @@ body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;font-w
 
 <div class="footer-spacer"></div>
 <bp-global-footer></bp-global-footer>
+
+<script>
+(function(){
+  // ── Premiere configuration ──────────────────────────────
+  var LAUNCH_TS   = Date.parse('2026-07-29T18:13:08Z'); // ~1 hour from build time
+  var RAMP_MS     = 60 * 60 * 1000;      // activity ramps up over the final hour
+  var LIVE_MS     = 2  * 60 * 60 * 1000; // "premiering now" window before it becomes on-demand
+  var PLAYBACK_ID = 'kmUoo4745gIarp4nhib958PnPPpD9YGkfvmtZrIvLyo';
+  var VIDEO_TITLE = '1st Commandment: No Other Gods';
+
+  var stage = document.getElementById('launchStage');
+  var field = document.getElementById('launchBubbles');
+  if(!stage || !field) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── "Premieres <when>" label ──
+  var whenEl = document.getElementById('launchWhen');
+  try{
+    whenEl.textContent = 'Premieres ' + new Date(LAUNCH_TS).toLocaleString([], {
+      weekday:'short', month:'short', day:'numeric', hour:'numeric', minute:'2-digit'
+    });
+  }catch(e){}
+
+  // ── Bubble field ──
+  var W = 1, H = 1;
+  function resize(){ var r = field.getBoundingClientRect(); W = r.width; H = r.height; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  var COUNT = reduce ? 10 : 18;
+  var bubbles = [];
+  for(var i = 0; i < COUNT; i++){
+    var el = document.createElement('div');
+    el.className = 'launch-bubble';
+    var size = 28 + Math.random() * 96;
+    var hue  = Math.floor(Math.random() * 360);
+    el.style.width = el.style.height = size + 'px';
+    el.style.background = 'radial-gradient(circle at 32% 28%, hsla('+hue+',90%,72%,.95), hsla('+hue+',85%,55%,.4) 58%, hsla('+hue+',80%,45%,0) 72%)';
+    el.style.animationDelay = (-Math.random() * 16) + 's';
+    field.appendChild(el);
+    bubbles.push({
+      el: el, size: size,
+      x: Math.random() * W, y: Math.random() * H,
+      vx: (Math.random()*2 - 1) * 26, vy: (Math.random()*2 - 1) * 26,
+      ox: 0, oy: 0
+    });
+  }
+
+  // ── Pointer (nudge toward cursor, ease back on leave) ──
+  var pointer = { x: 0, y: 0, active: false };
+  if(!reduce){
+    stage.addEventListener('pointermove', function(e){
+      var r = stage.getBoundingClientRect();
+      pointer.x = e.clientX - r.left;
+      pointer.y = e.clientY - r.top;
+      pointer.active = true;
+    });
+    stage.addEventListener('pointerleave', function(){ pointer.active = false; });
+  }
+
+  // ── Activity: 0 far out → 1 at launch ──
+  function activity(now){
+    var t = LAUNCH_TS - now;
+    if(t <= 0) return 1;
+    return Math.max(0, Math.min(1, 1 - t / RAMP_MS));
+  }
+
+  var last = performance.now();
+  function frame(now){
+    var dt = Math.min(0.05, (now - last) / 1000); last = now;
+    var a  = activity(Date.now());
+    var cx = W / 2, cy = H / 2;
+    var speed = 0.6 + a * 2.4;          // overall pace grows toward launch
+    var pull  = 0.2 + a * 0.95;         // pull toward center grows → they cluster
+    var wander = 34 * a;                // random jitter grows → "more activity"
+    var vmax  = 45 + a * 230;
+    var reach = Math.min(W, H) * 0.6;
+
+    for(var i = 0; i < bubbles.length; i++){
+      var b = bubbles[i];
+      // wander + center pull
+      b.vx += (Math.random()*2 - 1) * wander * dt + (cx - b.x) * pull * dt;
+      b.vy += (Math.random()*2 - 1) * wander * dt + (cy - b.y) * pull * dt;
+      // clamp speed
+      var sp = Math.hypot(b.vx, b.vy);
+      if(sp > vmax){ b.vx = b.vx / sp * vmax; b.vy = b.vy / sp * vmax; }
+      // integrate
+      b.x += b.vx * speed * dt;
+      b.y += b.vy * speed * dt;
+      // bounce off walls
+      var rad = b.size / 2;
+      if(b.x < rad){ b.x = rad; b.vx = Math.abs(b.vx); }
+      else if(b.x > W - rad){ b.x = W - rad; b.vx = -Math.abs(b.vx); }
+      if(b.y < rad){ b.y = rad; b.vy = Math.abs(b.vy); }
+      else if(b.y > H - rad){ b.y = H - rad; b.vy = -Math.abs(b.vy); }
+      // cursor nudge (gentle, proximity-weighted) — eases back to 0 on leave
+      var tox = 0, toy = 0;
+      if(pointer.active){
+        var dx = pointer.x - b.x, dy = pointer.y - b.y;
+        var dist = Math.hypot(dx, dy) || 1;
+        var near = Math.max(0, 1 - dist / reach);
+        var mag = Math.min(dist, 70) * 0.55 * near;
+        tox = dx / dist * mag; toy = dy / dist * mag;
+      }
+      var ease = Math.min(1, dt * 6);
+      b.ox += (tox - b.ox) * ease;
+      b.oy += (toy - b.oy) * ease;
+      // render
+      b.el.style.transform = 'translate3d(' + (b.x + b.ox - rad) + 'px,' + (b.y + b.oy - rad) + 'px,0)';
+    }
+    raf = requestAnimationFrame(frame);
+  }
+
+  var raf;
+  if(reduce){
+    // static placement, no motion
+    for(var j = 0; j < bubbles.length; j++){
+      var bb = bubbles[j];
+      bb.el.style.transform = 'translate3d(' + (bb.x - bb.size/2) + 'px,' + (bb.y - bb.size/2) + 'px,0)';
+    }
+  } else {
+    raf = requestAnimationFrame(frame);
+  }
+
+  // ── State machine: pre → live → post ──
+  var curState = null, videoInjected = false;
+
+  function injectVideo(autoplay){
+    if(videoInjected) return;
+    videoInjected = true;
+    var vf = document.getElementById('launchVideoFrame');
+    var mp = document.createElement('mux-player');
+    mp.setAttribute('playback-id', PLAYBACK_ID);
+    mp.setAttribute('metadata-video-title', VIDEO_TITLE);
+    mp.setAttribute('accent-color', '#2a9fd6');
+    mp.setAttribute('style', '--media-object-fit:contain');
+    if(autoplay){ mp.setAttribute('autoplay', 'muted'); mp.muted = true; }
+    vf.appendChild(mp);
+  }
+
+  function applyState(st){
+    stage.dataset.state = st;
+    if(st === 'live'){
+      // celebratory burst — kick bubbles outward
+      for(var i = 0; i < bubbles.length; i++){
+        var b = bubbles[i], dx = b.x - W/2, dy = b.y - H/2, d = Math.hypot(dx, dy) || 1;
+        b.vx += dx / d * 200; b.vy += dy / d * 200;
+      }
+      var lp = document.getElementById('livePillText'); if(lp) lp.textContent = 'Premiering now';
+      var lh = document.getElementById('liveHeadline'); if(lh) lh.textContent = "It's here — watch the premiere.";
+      injectVideo(true);
+    } else if(st === 'post'){
+      var lp2 = document.getElementById('livePillText'); if(lp2) lp2.textContent = 'Now streaming';
+      var lh2 = document.getElementById('liveHeadline'); if(lh2) lh2.textContent = 'Now available to watch.';
+      var pill = stage.querySelector('.launch-pill-live'); if(pill) pill.classList.remove('launch-pill-live');
+      injectVideo(false);
+    }
+  }
+
+  function pad(n){ return n < 10 ? '0' + n : '' + n; }
+  function updateCountdown(now){
+    var t = Math.max(0, LAUNCH_TS - now);
+    document.getElementById('lcDays').textContent  = pad(Math.floor(t / 86400000));
+    document.getElementById('lcHours').textContent = pad(Math.floor(t / 3600000) % 24);
+    document.getElementById('lcMins').textContent  = pad(Math.floor(t / 60000) % 60);
+    document.getElementById('lcSecs').textContent  = pad(Math.floor(t / 1000) % 60);
+    var pt = document.getElementById('launchPillText');
+    if(pt) pt.textContent = t < 5 * 60000 ? 'Starting any moment' : 'Premiere incoming';
+  }
+
+  function tick(){
+    var now = Date.now();
+    var st = now < LAUNCH_TS ? 'pre' : (now < LAUNCH_TS + LIVE_MS ? 'live' : 'post');
+    if(st !== curState){ curState = st; applyState(st); }
+    if(st === 'pre') updateCountdown(now);
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
+</script>
 
 </body>
 </html>
