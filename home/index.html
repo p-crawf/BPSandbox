@@ -34,12 +34,21 @@ body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;font-w
 .btn-blue:hover{background:var(--bp-blue-dark)}
 .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 
-/* ── HERO ── */
-.hero{padding:56px 24px 40px;background:#fff}
-.hero-inner{max-width:820px;margin:0 auto}
+/* ── HERO (collapsible featured panel) ── */
+.hero{padding:32px 24px 12px}
+.hero-inner{max-width:880px;margin:0 auto;background:linear-gradient(165deg,#e8f0f6 0%,#eef1f4 100%);border:1px solid #dbe5ee;border-radius:24px;padding:18px 22px 30px;box-shadow:0 12px 34px rgba(26,60,90,.07)}
+.hero-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 4px 14px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:.7rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#487a9c}
+.hero-eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--bp-blue);box-shadow:0 0 0 4px rgba(42,159,214,.18)}
+.hero-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid #cadae6;background:#fff;color:#3a6b8c;font-size:.72rem;font-weight:600;padding:6px 13px;border-radius:100px;cursor:pointer;transition:background .15s,border-color .15s}
+.hero-toggle:hover{background:#f2f8fc;border-color:#b4cbdd}
+.hero-toggle svg{width:13px;height:13px;transition:transform .35s cubic-bezier(.4,0,.2,1)}
+.hero.collapsed .hero-toggle svg{transform:rotate(180deg)}
+.hero-body{overflow:hidden;transition:max-height .5s cubic-bezier(.4,0,.2,1),opacity .35s ease;max-height:1600px;opacity:1}
+.hero.collapsed .hero-body{max-height:0;opacity:0}
 .hero-video{position:relative;width:100%;aspect-ratio:16/9;border-radius:20px;overflow:hidden;background:#0d1a26;box-shadow:0 20px 60px rgba(0,0,0,.16)}
 .hero-video mux-player{width:100%;height:100%;display:block}
-.hero-copy{text-align:center;margin-top:36px}
+.hero-copy{text-align:center;margin-top:32px}
 .hero-title{font-size:clamp(1.9rem,4.5vw,3rem);font-weight:800;letter-spacing:-.02em;line-height:1.14;margin-bottom:14px}
 .hero-caption{font-size:1rem;color:var(--bp-gray);max-width:460px;margin:0 auto 26px;line-height:1.6}
 
@@ -119,25 +128,61 @@ body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;font-w
   </div>
 </nav>
 
-<!-- HERO -->
-<section class="hero">
+<!-- HERO (collapsible featured panel) -->
+<section class="hero" id="home-hero">
   <div class="hero-inner">
-    <div class="hero-video">
-      <mux-player
-        playback-id="kmUoo4745gIarp4nhib958PnPPpD9YGkfvmtZrIvLyo"
-        metadata-video-title="BibleProject"
-        accent-color="#2a9fd6"
-        style="--media-object-fit:cover"
-      ></mux-player>
+    <div class="hero-head">
+      <span class="hero-eyebrow"><span class="dot"></span>Welcome</span>
+      <button class="hero-toggle" type="button" id="hero-toggle" aria-expanded="true" aria-controls="hero-body">
+        <span class="hero-toggle-label">Hide</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+      </button>
     </div>
 
-    <div class="hero-copy">
-      <h1 class="hero-title">Experience the Bible with us.</h1>
-      <p class="hero-caption">Free videos, study guides, podcasts, and classes to help everyone explore the story that leads to Jesus.</p>
-      <a class="btn-dark" href="../videos/">Start Exploring</a>
+    <div class="hero-body" id="hero-body">
+      <div class="hero-video">
+        <mux-player
+          playback-id="kmUoo4745gIarp4nhib958PnPPpD9YGkfvmtZrIvLyo"
+          metadata-video-title="BibleProject"
+          accent-color="#2a9fd6"
+          style="--media-object-fit:cover"
+        ></mux-player>
+      </div>
+
+      <div class="hero-copy">
+        <h1 class="hero-title">Experience the Bible with us.</h1>
+        <p class="hero-caption">Free videos, study guides, podcasts, and classes to help everyone explore the story that leads to Jesus.</p>
+        <a class="btn-dark" href="../videos/">Start Exploring</a>
+      </div>
     </div>
   </div>
 </section>
+
+<script>
+(function(){
+  var hero = document.getElementById('home-hero');
+  var btn = document.getElementById('hero-toggle');
+  if(!hero || !btn) return;
+  var label = btn.querySelector('.hero-toggle-label');
+  var KEY = 'bp_hero_collapsed';
+  var collapsed = false;
+  try { collapsed = localStorage.getItem(KEY) === '1'; } catch(e){}
+  // apply saved state without animating on first paint
+  if(collapsed){
+    hero.querySelector('.hero-body').style.transition = 'none';
+    hero.classList.add('collapsed');
+    btn.setAttribute('aria-expanded','false');
+    label.textContent = 'Show';
+    requestAnimationFrame(function(){ hero.querySelector('.hero-body').style.transition = ''; });
+  }
+  btn.addEventListener('click', function(){
+    var isCollapsed = hero.classList.toggle('collapsed');
+    btn.setAttribute('aria-expanded', isCollapsed ? 'false' : 'true');
+    label.textContent = isCollapsed ? 'Show' : 'Hide';
+    try { localStorage.setItem(KEY, isCollapsed ? '1' : '0'); } catch(e){}
+  });
+})();
+</script>
 
 <!-- WATCH READ LISTEN LEARN -->
 <section class="resources">
