@@ -183,6 +183,13 @@
     + '.bpux-mno{margin-top:12px;width:100%;background:none;border:0;color:#9a9a9a;font-size:.8rem;font-weight:600;cursor:pointer;font-family:inherit}'
     + '.bpux-mno:hover{color:#6b6b6b}'
     + '.bpux-mnote{font-size:.72rem;color:#a7a7a7;text-align:center;margin-top:12px}'
+    // rewatch / relisten nudge (shown at >=80% complete)
+    + '.bpux-rewatch-wrap{display:flex;align-items:center;gap:12px;margin-top:14px;flex-wrap:wrap;animation:bpux-fade .3s ease}'
+    + '.bpux-rewatch-txt{font-size:.85rem;color:#6b6b6b}'
+    + '.bpux-rewatch{display:inline-flex;align-items:center;gap:8px;background:#1a1a1a;color:#fff;font-size:.82rem;font-weight:600;padding:9px 16px;border-radius:100px;border:0;cursor:pointer;font-family:Inter,system-ui,sans-serif;transition:background .15s}'
+    + '.bpux-rewatch:hover{background:#000}'
+    + '.bpux-rewatch svg{width:15px;height:15px;fill:currentColor}'
+    + '@keyframes bpux-fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}'
     + '@media(max-width:520px){.bpux-status{display:none}}';
 
   function injectStyle() {
@@ -449,6 +456,47 @@
     if (wrap && wrap.parentNode) wrap.parentNode.insertBefore(note, wrap.nextSibling);
   }
 
+  // ---- rewatch / relisten nudge (>=80% complete) ----
+  var REWATCH_AT = 0.8;
+  function rewindIcon() {
+    return '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5V1L7 6l5 5V7a5 5 0 1 1-5 5H5a7 7 0 1 0 7-7z"/></svg>';
+  }
+
+  function showVideoRewatch(player) {
+    if (document.getElementById('bpux-rewatch')) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'bpux-rewatch-wrap';
+    wrap.id = 'bpux-rewatch';
+    wrap.innerHTML = '<span class="bpux-rewatch-txt">Finished — worth a second watch?</span>'
+      + '<button class="bpux-rewatch" type="button">' + rewindIcon() + 'Watch again</button>';
+    var anchor = player.closest('.video-player-wrap') || player.parentNode;
+    if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(wrap, anchor.nextSibling);
+    else document.body.appendChild(wrap);
+    wrap.querySelector('.bpux-rewatch').addEventListener('click', function () {
+      try { player.currentTime = 0; player.play(); } catch (e) {}
+      wrap.remove();
+    });
+  }
+
+  function showPodcastRewatch(row) {
+    var host = row.querySelector('.ep-info') || row.querySelector('.player-meta');
+    if (!host || host.querySelector('.bpux-rewatch-wrap')) return;
+    var wrap = document.createElement('div');
+    wrap.className = 'bpux-rewatch-wrap';
+    wrap.innerHTML = '<button class="bpux-rewatch" type="button">' + rewindIcon() + 'Listen again</button>';
+    host.appendChild(wrap);
+    wrap.querySelector('.bpux-rewatch').addEventListener('click', function (e) {
+      e.stopPropagation();
+      var audio = document.getElementById('podAudio');
+      var btn = row.querySelector('.ep-play, .play-btn');
+      if (btn && btn.classList.contains('playing')) {
+        try { if (audio) audio.currentTime = 0; if (audio && audio.paused) audio.play(); } catch (err) {}
+      } else if (btn) {
+        btn.click(); // page script switches to this episode and plays from the top
+      }
+    });
+  }
+
   // ---- media tracking ----
   function saveThrottled(fn) {
     var last = 0;
@@ -473,14 +521,26 @@
         try { player.currentTime = it.position; } catch (e) {}
       }
     }
-    player.addEventListener('loadedmetadata', function () { tryResume(); applyResume(); });
+    function checkRewatch() {
+      var d = player.duration || 0, t = player.currentTime || 0;
+      if (d > 0 && t / d >= REWATCH_AT) showVideoRewatch(player);
+    }
+    player.addEventListener('loadedmetadata', function () {
+      tryResume(); applyResume();
+      // a video revisited after it was (nearly) finished shows the nudge on load
+      var it = history()[item.id];
+      if (it && it.progress >= REWATCH_AT) showVideoRewatch(player);
+    });
 
     var save = saveThrottled(function () {
       recordProgress(item, player.currentTime || 0, player.duration || 0);
     });
-    player.addEventListener('timeupdate', save);
+    player.addEventListener('timeupdate', function () { save(); checkRewatch(); });
     ['pause', 'ended', 'seeked'].forEach(function (ev) {
-      player.addEventListener(ev, function () { recordProgress(item, player.currentTime || 0, player.duration || 0); });
+      player.addEventListener(ev, function () {
+        recordProgress(item, player.currentTime || 0, player.duration || 0);
+        checkRewatch();
+      });
     });
   }
 
@@ -508,19 +568,25 @@
       if (!b) return null;
       return b.closest('.ep[data-ep]') || b.closest('.player-card');
     }
+    function checkRewatch() {
+      var d = audio.duration || 0, t = audio.currentTime || 0;
+      if (d <= 0 || t / d < REWATCH_AT) return;
+      var row = currentRow(); if (row) showPodcastRewatch(row);
+    }
     var save = saveThrottled(function () {
       var row = currentRow(); if (!row) return;
       var meta = episodeMeta(row);
       recordProgress({ id: episodeId(row), title: meta.title, type: 'Podcast', url: pageId(), thumb: meta.thumb },
         audio.currentTime || 0, audio.duration || 0);
     });
-    audio.addEventListener('timeupdate', save);
+    audio.addEventListener('timeupdate', function () { save(); checkRewatch(); });
     ['pause', 'ended'].forEach(function (ev) {
       audio.addEventListener(ev, function () {
         var row = currentRow(); if (!row) return;
         var meta = episodeMeta(row);
         recordProgress({ id: episodeId(row), title: meta.title, type: 'Podcast', url: pageId(), thumb: meta.thumb },
           audio.currentTime || 0, audio.duration || 0);
+        checkRewatch();
       });
     });
   }
