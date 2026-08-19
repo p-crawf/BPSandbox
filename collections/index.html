@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Exodus Way — BibleProject</title>
+<link rel="icon" href="https://static.bibleproject.com/favicons/favicon.ico" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script type="module" src="https://static.bibleproject.com/bp-web-components/v0.27.2/bp-web-components.esm.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bp-blue:#2a9fd6;
+  --bp-cream:#faf6ef;
+  --bp-black:#1a1a1a;
+  --bp-gray:#6b6b6b;
+  --bp-border:#e8e5e0;
+  --bp-card:#f5f3ee;
+}
+html{scroll-behavior:smooth}
+body{background:#fff;color:var(--bp-black);font-family:'Inter',sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+
+/* ── HERO CAROUSEL ── */
+.hero{position:relative;width:100%;height:min(72vw,600px);overflow:hidden;background:#0d1a26}
+.hero-slide{position:absolute;inset:0;opacity:0;transition:opacity .8s ease}
+.hero-slide.active{opacity:1}
+.hero-slide img{width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.55))}
+.hero-dots{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);display:flex;gap:8px;z-index:10}
+.hero-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.45);border:0;cursor:pointer;transition:background .2s}
+.hero-dot.active{background:#fff}
+
+/* ── BREADCRUMB / TITLE BAR ── */
+.titlebar{padding:28px 24px 0;max-width:1040px;margin:0 auto}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:.78rem;color:var(--bp-gray);margin-bottom:14px}
+.breadcrumb a{color:inherit;text-decoration:none}
+.breadcrumb a:hover{color:var(--bp-black)}
+.breadcrumb svg{flex-shrink:0}
+.collection-title{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:10px}
+.collection-tagline{font-size:1.05rem;color:var(--bp-gray);max-width:560px;margin-bottom:32px}
+
+/* ── SHARED SECTION ── */
+.section{padding:48px 24px}
+.section-inner{max-width:1040px;margin:0 auto}
+.section-heading{font-size:1.25rem;font-weight:700;margin-bottom:20px;padding-bottom:14px;border-bottom:1.5px solid var(--bp-border)}
+
+/* ── COLLAPSIBLE TOGGLE ── */
+details summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;font-size:1.25rem;font-weight:700;padding-bottom:14px;border-bottom:1.5px solid var(--bp-border);margin-bottom:20px;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary .chevron{transition:transform .25s;flex-shrink:0}
+details[open] summary .chevron{transform:rotate(180deg)}
+
+/* ── CONTENT CARD (horizontal list item) ── */
+.card-list{display:flex;flex-direction:column;gap:2px}
+.content-card{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:16px;padding:14px 12px;border-radius:12px;text-decoration:none;color:inherit;transition:background .15s}
+.content-card:hover{background:var(--bp-card)}
+.content-card .thumb{width:80px;aspect-ratio:4/3;border-radius:8px;object-fit:cover;background:#e0ddd8;flex-shrink:0}
+.content-card.wide-thumb .thumb{aspect-ratio:16/9;width:120px}
+.content-card .card-body{min-width:0}
+.card-type{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bp-blue);margin-bottom:3px}
+.card-title{font-size:.95rem;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-meta{font-size:.78rem;color:var(--bp-gray);margin-top:3px}
+.card-action{flex-shrink:0;color:var(--bp-gray)}
+.play-btn{width:36px;height:36px;border-radius:50%;background:var(--bp-black);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:0;cursor:pointer;transition:background .15s}
+.play-btn:hover{background:var(--bp-blue)}
+
+/* ── INSIGHT VIDEOS GRID ── */
+.insight-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:20px}
+.insight-card{text-decoration:none;color:inherit}
+.insight-card:hover .insight-thumb-wrap{transform:translateY(-3px)}
+.insight-thumb-wrap{border-radius:12px;overflow:hidden;aspect-ratio:1/1;background:#e0ddd8;margin-bottom:10px;transition:transform .2s}
+.insight-thumb-wrap img{width:100%;height:100%;object-fit:cover}
+.insight-label{font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bp-blue);margin-bottom:4px}
+.insight-title{font-size:.9rem;font-weight:600;line-height:1.3}
+
+/* ── BONUS ── */
+.bonus-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+</style>
+</head>
+<body>
+
+<bp-global-header></bp-global-header>
+
+<!-- HERO CAROUSEL -->
+<div class="hero" id="hero">
+  <div class="hero-slide active">
+    <img src="https://ik.imagekit.io/bpweb1/web/media/collections/the-exodus-way/tr:q-75,w-1200/collection-exodus-way-hero-01.jpg" alt="" loading="eager">
+  </div>
+  <div class="hero-slide">
+    <img src="https://ik.imagekit.io/bpweb1/web/media/collections/the-exodus-way/tr:q-75,w-1200/collection-exodus-way-hero-02.jpg" alt="" loading="lazy">
+  </div>
+  <div class="hero-slide">
+    <img src="https://ik.imagekit.io/bpweb1/web/media/collections/the-exodus-way/tr:q-75,w-1200/collection-exodus-way-hero-03.jpg" alt="" loading="lazy">
+  </div>
+  <div class="hero-slide">
+    <img src="https://ik.imagekit.io/bpweb1/web/media/collections/the-exodus-way/tr:q-75,w-1200/collection-exodus-way-hero-04.jpg" alt="" loading="lazy">
+  </div>
+  <div class="hero-slide">
+    <img src="https://ik.imagekit.io/bpweb1/web/media/collections/the-exodus-way/tr:q-75,w-1200/collection-exodus-way-hero-05.jpg" alt="" loading="lazy">
+  </div>
+  <div class="hero-slide">
+    <img src="https://ik.imagekit.io/bpweb1/web/media/collections/the-exodus-way/tr:q-75,w-1200/collection-exodus-way-hero-06.jpg" alt="" loading="lazy">
+  </div>
+  <div class="hero-slide">
+    <img src="https://ik.imagekit.io/bpweb1/web/media/collections/the-exodus-way/tr:q-75,w-1200/collection-exodus-way-hero-07.jpg" alt="" loading="lazy">
+  </div>
+  <div class="hero-slide">
+    <img src="https://ik.imagekit.io/bpweb1/web/media/collections/the-exodus-way/tr:q-75,w-1200/collection-exodus-way-hero-08.jpg" alt="" loading="lazy">
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-dots" id="heroDots"></div>
+</div>
+
+<!-- TITLE -->
+<div class="titlebar">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="../">Sandbox</a>
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M4.5 2.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>Collections</span>
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M4.5 2.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span>The Exodus Way</span>
+  </nav>
+  <h1 class="collection-title">The Exodus Way</h1>
+  <p class="collection-tagline">Discover the Bible's three-part rescue story — and how it shapes everything from Genesis to Revelation.</p>
+</div>
+
+<!-- THE MAIN IDEA -->
+<section class="section">
+  <div class="section-inner">
+    <details open>
+      <summary>
+        The Main Idea
+        <svg class="chevron" width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </summary>
+
+      <div class="card-list">
+        <!-- Series video -->
+        <a class="content-card wide-thumb" href="https://bibleproject.com/explore/video/the-exodus-way/">
+          <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/The%20Exodus%20Way/tr:q-75,w-200/exodus-way_1.1.jpg" alt="The Exodus Way" loading="lazy">
+          <div class="card-body">
+            <p class="card-type">Video</p>
+            <p class="card-title">The Exodus Way</p>
+            <p class="card-meta">Overview • 8 min</p>
+          </div>
+          <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+
+        <!-- Podcast Ep 1 -->
+        <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e1/">
+          <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="The Exodus Way Podcast" loading="lazy">
+          <div class="card-body">
+            <p class="card-type">Podcast</p>
+            <p class="card-title">The Exodus Way Podcast — Episode 1</p>
+            <p class="card-meta">45 min</p>
+          </div>
+          <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- EXPLORE THE EXODUS WAY (Podcast episodes) -->
+<section class="section" style="background:var(--bp-cream)">
+  <div class="section-inner">
+    <h2 class="section-heading">Explore the Exodus Way</h2>
+
+    <div class="card-list">
+      <!-- Episodes 1-14 -->
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e1/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 1 — The Exodus Way</p>
+          <p class="card-meta">45 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e2/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 2 — The Exodus Way</p>
+          <p class="card-meta">45 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e3/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 3 — The Exodus Way</p>
+          <p class="card-meta">58 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e4/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 4 — The Exodus Way</p>
+          <p class="card-meta">46 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e5/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 5 — The Exodus Way</p>
+          <p class="card-meta">49 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e6/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 6 — The Exodus Way</p>
+          <p class="card-meta">59 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e7/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 7 — The Exodus Way</p>
+          <p class="card-meta">34 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e8/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 8 — The Exodus Way</p>
+          <p class="card-meta">51 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e9/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 9 — The Exodus Way</p>
+          <p class="card-meta">58 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e10/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 10 — The Exodus Way</p>
+          <p class="card-meta">45 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e11/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 11 — The Exodus Way</p>
+          <p class="card-meta">44 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e12/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 12 — The Exodus Way</p>
+          <p class="card-meta">47 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e13/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 13 — The Exodus Way</p>
+          <p class="card-meta">54 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/podcasts/the-exodus-way/the-exodus-way-e14/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/tr:q-75,w-200/Exodus-Way-Podcast_1.1.jpg" alt="" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Podcast</p>
+          <p class="card-title">Episode 14 — The Exodus Way</p>
+          <p class="card-meta">1 hr 7 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- KEEP EXPLORING (Insight Videos) -->
+<section class="section">
+  <div class="section-inner">
+    <h2 class="section-heading">Keep Exploring the Exodus Way…</h2>
+    <div class="insight-grid">
+      <a class="insight-card" href="https://bibleproject.com/explore/video/outcry/">
+        <div class="insight-thumb-wrap">
+          <img src="https://ik.imagekit.io/bpweb1/web/media/Insight%20Videos/Outcry/tr:q-75,w-400/VI-outcry_1.1.jpg" alt="Outcry" loading="lazy">
+        </div>
+        <p class="insight-label">Insight Video</p>
+        <p class="insight-title">Outcry</p>
+      </a>
+      <a class="insight-card" href="https://bibleproject.com/explore/video/zakar-remember/">
+        <div class="insight-thumb-wrap">
+          <img src="https://ik.imagekit.io/bpweb1/web/media/Insight%20Videos/Zakar%20-%20Remember/tr:q-75,w-400/zakar_1.1.jpg" alt="Zakar / Remember" loading="lazy">
+        </div>
+        <p class="insight-label">Insight Video</p>
+        <p class="insight-title">Zakar / Remember</p>
+      </a>
+      <a class="insight-card" href="https://bibleproject.com/explore/video/ot-sign/">
+        <div class="insight-thumb-wrap">
+          <img src="https://ik.imagekit.io/bpweb1/web/media/Insight%20Videos/Ot%20-%20Sign/tr:q-75,w-400/VI-ot_1.1.jpg" alt="Ot / Sign" loading="lazy">
+        </div>
+        <p class="insight-label">Insight Video</p>
+        <p class="insight-title">Ot / Sign</p>
+      </a>
+      <a class="insight-card" href="https://bibleproject.com/explore/video/avad-serve-work/">
+        <div class="insight-thumb-wrap">
+          <img src="https://ik.imagekit.io/bpweb1/web/media/Insight%20Videos/Avad%20-%20Serve/tr:q-75,w-400/avad_1.1.jpg" alt="Avad / Serve, Work" loading="lazy">
+        </div>
+        <p class="insight-label">Insight Video</p>
+        <p class="insight-title">Avad / Serve, Work</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- BONUS MATERIAL -->
+<section class="section" style="background:var(--bp-cream)">
+  <div class="section-inner">
+    <h2 class="section-heading">Bonus Material</h2>
+    <div class="card-list">
+      <a class="content-card wide-thumb" href="https://bibleproject.com/the-exodus-way-flip-book/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/collections/the-exodus-way/tr:q-75,w-200/collection-exodus-way-flipbook.jpg" alt="The Exodus Way Flip Book" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Guide</p>
+          <p class="card-title">The Exodus Way Flip Book</p>
+          <p class="card-meta">Scholar-written guide</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a class="content-card wide-thumb" href="https://bibleproject.com/explore/video/the-exodus-way-behind-the-scenes/">
+        <img class="thumb" src="https://ik.imagekit.io/bpweb1/web/media/collections/the-exodus-way/tr:q-75,w-200/collection-exodus-way-bts.jpg" alt="Behind the Scenes" loading="lazy">
+        <div class="card-body">
+          <p class="card-type">Video</p>
+          <p class="card-title">Behind the Scenes</p>
+          <p class="card-meta">9 min</p>
+        </div>
+        <svg class="card-action" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<bp-global-footer></bp-global-footer>
+
+<script>
+(function(){
+  const slides = document.querySelectorAll('.hero-slide');
+  const dotsEl = document.getElementById('heroDots');
+  let current = 0;
+  let timer;
+
+  // Build dots
+  slides.forEach((_,i)=>{
+    const d = document.createElement('button');
+    d.className = 'hero-dot' + (i===0?' active':'');
+    d.setAttribute('aria-label','Slide '+(i+1));
+    d.addEventListener('click',()=>goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  function goTo(n){
+    slides[current].classList.remove('active');
+    dotsEl.children[current].classList.remove('active');
+    current = (n + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dotsEl.children[current].classList.add('active');
+  }
+
+  function advance(){ goTo(current+1); }
+
+  function startTimer(){ timer = setInterval(advance, 4500); }
+  function stopTimer(){ clearInterval(timer); }
+
+  startTimer();
+  document.getElementById('hero').addEventListener('mouseenter', stopTimer);
+  document.getElementById('hero').addEventListener('mouseleave', startTimer);
+})();
+</script>
+</body>
+</html>
