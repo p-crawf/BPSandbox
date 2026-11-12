@@ -21,7 +21,10 @@
     try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {}
   }
   function isAuthed() { return read(LS_AUTH, false) === true; }
-  function setAuthed(v) { write(LS_AUTH, !!v); }
+  function setAuthed(v) {
+    write(LS_AUTH, !!v);
+    try { document.dispatchEvent(new CustomEvent('bpux:auth', { detail: { authed: !!v } })); } catch (e) {}
+  }
   function history() { return read(LS_HIST, {}); }
   function stars() { return read(LS_STAR, {}); }
   function savedInfo() { return read('bp_saved', null); }
