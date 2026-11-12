@@ -44,8 +44,29 @@
     if (Object.prototype.hasOwnProperty.call(routes, path)) {
       return root + routes[path] + tail;
     }
+    // Individual videos (/videos/<slug>) open the sandbox video detail page.
+    var video = path.match(/^\/videos\/([^\/]+)$/);
+    if (video && video[1] !== "all" && video[1] !== "collections") {
+      return root + "videos/watch/?v=" + encodeURIComponent(video[1]) + url.hash;
+    }
     return "https://bibleproject.com" + url.pathname + tail;
   }
+
+  function isExternal(href) { return href.indexOf("https://bibleproject.com") === 0; }
+
+  // Point sandbox-routed links at their local page so hover, copy and
+  // middle-click match what a normal click does.
+  function rewriteLinks() {
+    var links = document.querySelectorAll("a[href]");
+    for (var i = 0; i < links.length; i++) {
+      var next = destination(links[i].getAttribute("href"));
+      if (!next || isExternal(next)) continue;
+      links[i].setAttribute("href", next);
+      if (links[i].target === "_blank") links[i].removeAttribute("target");
+    }
+  }
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", rewriteLinks);
+  else rewriteLinks();
 
   document.addEventListener("click", function (event) {
     if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -54,9 +75,9 @@
     for (var i = 0; i < nodes.length; i++) {
       if (nodes[i] && nodes[i].tagName === "A") { anchor = nodes[i]; break; }
     }
-    if (!anchor || anchor.target === "_blank") return;
+    if (!anchor) return;
     var next = destination(anchor.getAttribute("href") || "");
-    if (!next) return;
+    if (!next || (anchor.target === "_blank" && isExternal(next))) return;
     event.preventDefault();
     window.location.href = next;
   }, true);

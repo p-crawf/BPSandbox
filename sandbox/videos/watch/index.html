@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-sandbox-root="../../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video | BibleProject</title>
+<link rel="icon" href="https://static.bibleproject.com/favicons/favicon.ico">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/root-BL8_Tx5m.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/text-FanO_oAg.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/page-Z_r5uRud.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/button-DA5_Emdj.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/stack-B8N0WQsC.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/truncate-BRhWlXoB.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/image-DIOpfJ2g.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/heading-Dz4lPXWF.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/bp-web-components/v0.29.3/bp.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/bp-web-components/v0.29.3/bp-compat.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/global-BenC1smb.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/route-Bvhqv_8g.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/link-BlY7zp63.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/badge-DxIpDHNW.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/title-bar-BtgLL4iT.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/hero-DpOzr00P.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/content-progress-DihGuRt4.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/video-block-bUh3FsaJ.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/carousel-DDq6TGg7.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/unstyled-button-D1AaJn8d.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/grid-DjrEu_ue.css">
+<link rel="stylesheet" href="../../assets/chrome.css">
+<style>
+.watch{max-width:1200px;margin:0 auto;padding:0 var(--page-gutter,24px) 64px}
+.watch-crumbs{display:flex;flex-wrap:wrap;align-items:center;gap:8px;list-style:none;margin:0;padding:20px 0 16px;border-bottom:1px solid var(--color-border-primary,#e0ddd8);font-size:var(--font-size-s,.875rem)}
+.watch-crumbs a{color:inherit;text-decoration:none;font-weight:var(--font-weight-semibold,600)}
+.watch-crumbs a:hover{text-decoration:underline}
+.watch-crumbs li+li::before{content:"›";margin-right:8px;color:var(--color-text-secondary,#6b6b6b)}
+.watch-grid{display:grid;gap:32px;padding-top:24px}
+@media (min-width:960px){.watch-grid{grid-template-columns:minmax(0,1fr) 340px}}
+.watch-player{position:relative;aspect-ratio:16/9;border-radius:var(--radius-l,12px);overflow:hidden;background:#0d1a26}
+.watch-player mux-player{width:100%;height:100%;display:block;--media-object-fit:contain}
+.watch-player img{width:100%;height:100%;object-fit:cover;display:block}
+.watch-unavailable{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(13,26,38,.62);color:#fff;text-align:center;padding:24px}
+.watch-unavailable .play{width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center}
+.watch-unavailable .play svg{width:26px;height:26px;fill:#fff;margin-left:4px}
+.watch-unavailable p{margin:0;font-size:var(--font-size-s,.875rem);max-width:34ch;opacity:.9}
+.watch-label{margin:20px 0 4px;font-size:var(--font-size-xs,.75rem);font-weight:var(--font-weight-semibold,600);letter-spacing:.06em;text-transform:uppercase;color:var(--color-text-secondary,#6b6b6b)}
+.watch-title{margin:0;font-size:clamp(1.6rem,3vw,2.25rem);line-height:1.15;font-weight:var(--font-weight-bold,700)}
+.watch-meta{margin:8px 0 0;color:var(--color-text-secondary,#6b6b6b);font-size:var(--font-size-s,.875rem)}
+.watch-desc{margin:16px 0 0;max-width:68ch;line-height:1.6}
+.watch-actions{display:flex;gap:8px;margin-top:20px}
+.watch-btn{border:1px solid var(--color-border-primary,#d9d4ca);background:transparent;color:inherit;border-radius:100px;padding:8px 16px;font:inherit;font-size:var(--font-size-s,.875rem);font-weight:var(--font-weight-semibold,600);cursor:pointer}
+.watch-btn:hover{background:var(--color-background-secondary,#f5f2ec)}
+.watch-side h2{margin:0 0 12px;font-size:var(--font-size-m,1rem);font-weight:var(--font-weight-semibold,600)}
+.watch-side h2 a{color:inherit}
+.watch-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.watch-item{display:flex;gap:12px;padding:8px;margin:0 -8px;border-radius:var(--radius-m,8px);color:inherit;text-decoration:none}
+.watch-item:hover{background:var(--color-background-secondary,#f5f2ec)}
+.watch-item[aria-current="page"]{background:var(--color-background-secondary,#f5f2ec)}
+.watch-thumb{position:relative;flex:0 0 136px;aspect-ratio:16/9;border-radius:var(--radius-s,6px);overflow:hidden;background:#0d1a26}
+.watch-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.watch-thumb .dur{position:absolute;right:4px;bottom:4px;background:rgba(0,0,0,.72);color:#fff;font-size:.7rem;font-weight:600;padding:1px 6px;border-radius:100px}
+.watch-item-title{margin:0;font-size:var(--font-size-s,.875rem);font-weight:var(--font-weight-semibold,600);line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.watch-item-sub{margin:4px 0 0;font-size:var(--font-size-xs,.75rem);color:var(--color-text-secondary,#6b6b6b)}
+.watch-missing{padding:64px 0;text-align:center}
+.watch-missing a{font-weight:600}
+</style>
+</head>
+<body>
+<div class="page"><div class="page-header"><div class="raw-html"><header class="sb-header" data-theme="light">
+  <a class="sb-logo" href="../../" aria-label="BibleProject Home">
+    <img src="../../assets/logo-mark.svg" alt="" width="28" height="28">
+    <img class="sb-word" src="../../assets/word-mark.svg" alt="BibleProject" width="132" height="24">
+  </a>
+  <nav class="sb-nav" aria-label="Primary">
+    <a href="../" aria-current="page">Videos</a>
+    <a href="../../guides/">Guides</a>
+    <a href="../../classroom/">Classes</a>
+    <a href="../../podcasts/">Podcast</a>
+    <details class="sb-more">
+      <summary>More</summary>
+      <div class="sb-menu">
+        <a href="../../collections/">Collections</a>
+        <a href="../../articles/">Articles</a>
+        <a href="https://bibleproject.com/bible/nasb/genesis/1/">Bible Reader</a>
+        <a href="../../reading-plans/">Reading Plans</a>
+        <a href="../../downloads/">Downloads</a>
+        <a href="https://store.bibleproject.com/" target="_blank" rel="noreferrer">Store</a>
+      </div>
+    </details>
+  </nav>
+  <a class="sb-give" href="../../give/">Give</a>
+  <details class="sb-burger">
+    <summary aria-label="Open menu">Menu</summary>
+    <div class="sb-menu">
+      <a href="../" aria-current="page">Videos</a>
+      <a href="../../guides/">Guides</a>
+      <a href="../../classroom/">Classes</a>
+      <a href="../../podcasts/">Podcast</a>
+      <a href="../../collections/">Collections</a>
+      <a href="../../articles/">Articles</a>
+      <a href="https://bibleproject.com/bible/nasb/genesis/1/">Bible Reader</a>
+      <a href="../../reading-plans/">Reading Plans</a>
+      <a href="../../downloads/">Downloads</a>
+      <a href="../../about/">About</a>
+      <a href="../../app/">App</a>
+      <a href="../../give/">Give</a>
+    </div>
+  </details>
+</header></div></div><main class="page-body" id="content"><div class="watch" id="watch"></div></main><div class="page-footer"><div class="raw-html"><footer class="sb-footer">
+  <div class="sb-footer-inner">
+    <div class="sb-callout">
+      <p>Everything we make is available for free because of a generous community of patrons.</p>
+      <a href="../../give/">Support BibleProject</a>
+    </div>
+    <div class="sb-footer-grid">
+      <nav class="sb-footer-links" aria-label="Footer">
+        <a href="../../app/">BibleProject App</a>
+        <a href="../../about/">About Us</a>
+        <a href="https://store.bibleproject.com/" target="_blank" rel="noreferrer">Store</a>
+        <a href="https://bibleproject.com/languages/">Languages</a>
+        <a href="https://bibleproject.com/pray/">Prayer Community</a>
+        <a href="https://help.bibleproject.com/">Help Center</a>
+        <a href="https://bibleproject.com/careers/">Careers</a>
+        <a href="https://bibleproject.com/privacy/">Privacy Policy</a>
+        <a href="https://bibleproject.com/terms/">Terms of Use</a>
+        <a href="https://bibleproject.com/brand/">Brand Guidelines</a>
+      </nav>
+      <form class="sb-email" action="https://bibleproject.com/" method="post" onsubmit="return false">
+        <label for="sb-email">Receive BibleProject videos and updates in your inbox.</label>
+        <div>
+          <input id="sb-email" type="email" placeholder="Email address" autocomplete="email">
+          <button type="submit">Subscribe</button>
+        </div>
+      </form>
+    </div>
+    <div class="sb-footer-meta">
+      <div class="sb-stores">
+        <a href="https://apps.apple.com/us/app/bibleproject/id1523687027">App Store</a>
+        <a href="https://play.google.com/store/apps/details?id=com.bibleproject">Play Store</a>
+      </div>
+      <p>© Copyright 2026 BibleProject</p>
+    </div>
+  </div>
+</footer></div></div></div>
+<script src="../../assets/videos-data.js"></script>
+<script>
+/* Video detail page: renders ?v=<slug> from window.BP_VIDEOS. Must run before bp-ux.js boots. */
+(function () {
+  var data = window.BP_VIDEOS || { videos: {}, series: {} };
+  var slug = new URLSearchParams(location.search).get('v') || '';
+  var v = data.videos[slug];
+  var root = document.getElementById('watch');
+  function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
+  // imagekit transforms sit just before the filename
+  function sized(base, w) { if (!base) return ''; var i = base.lastIndexOf('/'); return base.slice(0, i) + '/tr:q-70,w-' + w + base.slice(i); }
+  function href(s) { return '?v=' + encodeURIComponent(s); }
+
+  if (!v) {
+    document.title = 'Video not found | BibleProject';
+    root.innerHTML = '<div class="watch-missing"><h1 class="watch-title">Video not found</h1><p class="watch-meta">We couldn\u2019t find that video in the sandbox.</p><p><a href="../">Back to Videos</a></p></div>';
+    return;
+  }
+  document.title = v.title + ' | BibleProject';
+  var s = v.series.length ? data.series[v.series[0]] : null;
+  var label = s ? s.title : (v.label || '');
+
+  var player = v.playbackId
+    ? '<mux-player playback-id="' + esc(v.playbackId) + '" metadata-video-title="' + esc(v.title) + '" accent-color="#2a9fd6"></mux-player>'
+    : '<img alt="" src="' + esc(sized(v.image, 1280)) + '"><div class="watch-unavailable"><span class="play"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg></span><p>Playback for this video isn\u2019t wired up in the sandbox yet.</p></div>';
+
+  // Up next: the rest of the series starting after this video, wrapping around.
+  var list, listTitle;
+  if (s) {
+    var i = s.videos.indexOf(slug);
+    list = s.videos.slice(i + 1).concat(s.videos.slice(0, i));
+    listTitle = 'Up next in <a href="' + esc(s.href) + '">' + esc(s.title) + '</a>';
+  } else {
+    list = Object.keys(data.videos).filter(function (k) { return k !== slug; });
+    listTitle = 'More videos';
+  }
+  list = list.slice(0, 8);
+
+  root.innerHTML =
+    '<ol class="watch-crumbs"><li><a href="../">Videos</a></li>'
+    + (s ? '<li><a href="' + esc(s.href) + '">' + esc(s.title) + '</a></li>' : '')
+    + '<li aria-current="page">' + esc(v.title) + '</li></ol>'
+    + '<div class="watch-grid"><div>'
+    + '<div class="watch-player video-player-wrap">' + player + '</div>'
+    + (label ? '<p class="watch-label">' + esc(label) + '</p>' : '<div style="height:20px"></div>')
+    + '<h1 class="watch-title">' + esc(v.title) + '</h1>'
+    + (v.duration ? '<p class="watch-meta">' + esc(v.duration) + '</p>' : '')
+    + (v.description ? '<p class="watch-desc">' + esc(v.description) + '</p>' : '')
+    + '<div class="watch-actions"><button class="watch-btn" type="button" id="watch-share">Share</button></div>'
+    + '</div><aside class="watch-side"><h2>' + listTitle + '</h2><ul class="watch-list">'
+    + list.map(function (k) {
+        var it = data.videos[k];
+        return '<li><a class="watch-item" href="' + href(k) + '"><span class="watch-thumb"><img alt="" loading="lazy" src="' + esc(sized(it.image, 320)) + '">'
+          + (it.duration ? '<span class="dur">' + esc(it.duration) + '</span>' : '') + '</span>'
+          + '<span><p class="watch-item-title">' + esc(it.title) + '</p></span></a></li>';
+      }).join('')
+    + '</ul></aside></div>';
+
+  var share = document.getElementById('watch-share');
+  share.addEventListener('click', function () {
+    var done = function () { share.textContent = 'Link copied'; setTimeout(function () { share.textContent = 'Share'; }, 1600); };
+    try { navigator.clipboard.writeText(location.href).then(done, done); } catch (e) { done(); }
+  });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player@3.1.0" defer></script>
+<script src="../../../assets/bp-ux.js" defer></script>
+<script src="../../assets/nav.js" defer></script>
+</body>
+</html>
