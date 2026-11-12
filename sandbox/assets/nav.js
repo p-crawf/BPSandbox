@@ -17,6 +17,7 @@
   "/guides": "guides/",
   "/about": "about/",
   "/give": "give/",
+  "/login": "login/",
   "/app": "app/",
   "/": "./"
 };

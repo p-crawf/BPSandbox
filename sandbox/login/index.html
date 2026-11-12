@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-sandbox-root="../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign In | BibleProject</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="https://static.bibleproject.com/favicons/favicon.ico">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/root-BL8_Tx5m.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/text-FanO_oAg.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/page-Z_r5uRud.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/button-DA5_Emdj.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/stack-B8N0WQsC.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/truncate-BRhWlXoB.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/image-DIOpfJ2g.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/heading-Dz4lPXWF.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/bp-web-components/v0.29.3/bp.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/bp-web-components/v0.29.3/bp-compat.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/global-BenC1smb.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/route-C4AY5-Za.css">
+<link rel="stylesheet" href="../assets/chrome.css">
+<style>
+.login{min-height:60vh;display:flex;align-items:center;justify-content:center;padding:64px var(--page-gutter,24px)}
+.login-card{width:100%;max-width:420px;padding:40px 32px;border:1px solid var(--color-border-primary,#e0ddd8);border-radius:var(--border-radius-l,16px);background:var(--color-background-primary,#fff);text-align:center}
+.login-card h1{margin:0 0 8px;font-size:clamp(1.6rem,4vw,2rem);line-height:1.15;font-weight:var(--font-weight-bold,700)}
+.login-card p{margin:0;color:var(--color-text-secondary,#6b6b6b);font-size:var(--font-size-s,.95rem);line-height:1.5}
+.login-tabs{display:flex;gap:4px;padding:4px;margin:0 0 28px;border-radius:100px;background:var(--color-surface-10,#f2efe9)}
+.login-tabs button{flex:1;border:0;border-radius:100px;padding:8px 12px;background:transparent;color:inherit;font:inherit;font-size:var(--font-size-s,.875rem);font-weight:var(--font-weight-semibold,600);cursor:pointer}
+.login-tabs button[aria-selected="true"]{background:var(--color-background-primary,#fff);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.login-cta{display:block;width:100%;margin-top:28px;padding:14px 20px;border:0;border-radius:100px;background:var(--color-interactive-primary,#1a1a1a);color:var(--color-interactive-primary-contrast,#fff);font:inherit;font-weight:var(--font-weight-semibold,600);cursor:pointer}
+.login-cta:hover{opacity:.9}
+.login-note{margin-top:16px!important;font-size:var(--font-size-xs,.78rem)!important}
+.login-back{display:inline-block;margin-top:20px;color:inherit;font-size:var(--font-size-s,.875rem);font-weight:600}
+</style>
+</head>
+<body>
+<div class="page"><div class="page-header"><div class="raw-html"><header class="sb-header" data-theme="light">
+  <a class="sb-logo" href="../" aria-label="BibleProject Home">
+    <img src="../assets/logo-mark.svg" alt="" width="28" height="28">
+    <img class="sb-word" src="../assets/word-mark.svg" alt="BibleProject" width="132" height="24">
+  </a>
+  <nav class="sb-nav" aria-label="Primary">
+    <a href="../videos/">Videos</a>
+    <a href="../guides/">Guides</a>
+    <a href="../classroom/">Classes</a>
+    <a href="../podcasts/">Podcast</a>
+    <details class="sb-more">
+      <summary>More</summary>
+      <div class="sb-menu">
+        <a href="../collections/">Collections</a>
+        <a href="../articles/">Articles</a>
+        <a href="https://bibleproject.com/bible/nasb/genesis/1/">Bible Reader</a>
+        <a href="../reading-plans/">Reading Plans</a>
+        <a href="../downloads/">Downloads</a>
+        <a href="https://store.bibleproject.com/" target="_blank" rel="noreferrer">Store</a>
+      </div>
+    </details>
+  </nav>
+  <a class="sb-give" href="../give/">Give</a>
+  <details class="sb-burger">
+    <summary aria-label="Open menu">Menu</summary>
+    <div class="sb-menu">
+      <a href="../videos/">Videos</a>
+      <a href="../guides/">Guides</a>
+      <a href="../classroom/">Classes</a>
+      <a href="../podcasts/">Podcast</a>
+      <a href="../collections/">Collections</a>
+      <a href="../articles/">Articles</a>
+      <a href="https://bibleproject.com/bible/nasb/genesis/1/">Bible Reader</a>
+      <a href="../reading-plans/">Reading Plans</a>
+      <a href="../downloads/">Downloads</a>
+      <a href="../about/">About</a>
+      <a href="../app/">App</a>
+      <a href="../give/">Give</a>
+    </div>
+  </details>
+</header></div></div><main class="page-body" id="content"><div class="login"><div class="login-card">
+<div class="login-tabs" role="tablist" aria-label="Account">
+<button type="button" role="tab" id="tab-signin" data-mode="signin">Sign in</button>
+<button type="button" role="tab" id="tab-signup" data-mode="signup">Create account</button>
+</div>
+<h1 id="login-title">Welcome back</h1>
+<p id="login-sub">Sign in to save your progress and pick up where you left off.</p>
+<button type="button" class="login-cta" id="login-cta">Sign in</button>
+<p class="login-note">Demo only: no email or password needed.</p>
+<a class="login-back" id="login-back" href="../">Cancel</a>
+</div></div></main><div class="page-footer"><div class="raw-html"><footer class="sb-footer">
+  <div class="sb-footer-inner">
+    <div class="sb-callout">
+      <p>Everything we make is available for free because of a generous community of patrons.</p>
+      <a href="../give/">Support BibleProject</a>
+    </div>
+    <div class="sb-footer-grid">
+      <nav class="sb-footer-links" aria-label="Footer">
+        <a href="../app/">BibleProject App</a>
+        <a href="../about/">About Us</a>
+        <a href="https://store.bibleproject.com/" target="_blank" rel="noreferrer">Store</a>
+        <a href="https://bibleproject.com/languages/">Languages</a>
+        <a href="https://bibleproject.com/pray/">Prayer Community</a>
+        <a href="https://help.bibleproject.com/">Help Center</a>
+        <a href="https://bibleproject.com/careers/">Careers</a>
+        <a href="https://bibleproject.com/privacy/">Privacy Policy</a>
+        <a href="https://bibleproject.com/terms/">Terms of Use</a>
+        <a href="https://bibleproject.com/brand/">Brand Guidelines</a>
+      </nav>
+      <form class="sb-email" action="https://bibleproject.com/" method="post" onsubmit="return false">
+        <label for="sb-email">Receive BibleProject videos and updates in your inbox.</label>
+        <div>
+          <input id="sb-email" type="email" placeholder="Email address" autocomplete="email">
+          <button type="submit">Subscribe</button>
+        </div>
+      </form>
+    </div>
+    <div class="sb-footer-meta">
+      <div class="sb-stores">
+        <a href="https://apps.apple.com/us/app/bibleproject/id1523687027">App Store</a>
+        <a href="https://play.google.com/store/apps/details?id=com.bibleproject">Play Store</a>
+      </div>
+      <p>© Copyright 2026 BibleProject</p>
+    </div>
+  </div>
+</footer></div></div></div>
+<script>
+/* Demo login: one click signs in (bp_auth) and returns to ?return=<same-origin path>. */
+(function () {
+  var COPY = {
+    signin: { title: 'Welcome back', sub: 'Sign in to save your progress and pick up where you left off.', cta: 'Sign in' },
+    signup: { title: 'Create your account', sub: 'Create a free account to save your progress and pick up where you left off.', cta: 'Create account' }
+  };
+  var params = new URLSearchParams(location.search);
+  var mode = params.get('mode') === 'signup' ? 'signup' : 'signin';
+
+  // Only allow returning to a page on this site (no open redirect).
+  function safeReturn(raw) {
+    if (!raw) return null;
+    try {
+      var u = new URL(raw, location.href);
+      return u.origin === location.origin ? u.pathname + u.search + u.hash : null;
+    } catch (e) { return null; }
+  }
+  var back = safeReturn(params.get('return')) || '../';
+
+  function setMode(m) {
+    mode = m;
+    ['signin', 'signup'].forEach(function (k) {
+      document.getElementById('tab-' + k).setAttribute('aria-selected', String(k === m));
+    });
+    document.getElementById('login-title').textContent = COPY[m].title;
+    document.getElementById('login-sub').textContent = COPY[m].sub;
+    document.getElementById('login-cta').textContent = COPY[m].cta;
+    document.title = COPY[m].cta + ' | BibleProject';
+    try { history.replaceState(null, '', '?' + new URLSearchParams({ mode: m, return: params.get('return') || '' }).toString()); } catch (e) {}
+  }
+  document.querySelectorAll('.login-tabs [data-mode]').forEach(function (b) {
+    b.addEventListener('click', function () { setMode(b.getAttribute('data-mode')); });
+  });
+  document.getElementById('login-back').setAttribute('href', back);
+  document.getElementById('login-cta').addEventListener('click', function () {
+    try {
+      localStorage.setItem('bp_auth', 'true');
+      sessionStorage.setItem('bp_auth_flash', mode);
+    } catch (e) {}
+    location.replace(back);
+  });
+  setMode(mode);
+})();
+</script>
+<script src="../assets/nav.js" defer></script>
+</body>
+</html>
