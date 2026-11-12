@@ -67,6 +67,7 @@
       progress: progress,
       position: position,
       duration: duration,
+      completedAt: prev.completedAt || null,
       updated: Date.now()
     };
     write(LS_HIST, h);
@@ -109,6 +110,7 @@
       progress: prev.progress || 0,
       position: prev.position || 0,
       duration: prev.duration || 0,
+      completedAt: prev.completedAt || null,
       updated: Date.now()
     };
     write(LS_HIST, h);
@@ -454,7 +456,7 @@
     var player = document.querySelector('mux-player');
     if (!player) return;
     var it = history()[pageId()];
-    if (!it || it.position < 5 || it.progress >= 0.95) return;
+    if (!it || it.position < 5 || it.progress >= 0.95 || it.completedAt) return;
     var mins = Math.floor(it.position / 60), secs = Math.round(it.position % 60);
     if (document.getElementById('bpux-resume')) return;
     var note = document.createElement('div');
@@ -526,7 +528,7 @@
       if (resumed) return; resumed = true;
       if (!isAuthed()) return;
       var it = history()[item.id];
-      if (it && it.position > 5 && it.progress < 0.95) {
+      if (it && it.position > 5 && it.progress < 0.95 && !it.completedAt) {
         try { player.currentTime = it.position; } catch (e) {}
       }
     }

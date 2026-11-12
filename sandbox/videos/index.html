@@ -143,7 +143,7 @@
     }
     var h = read('bp_history', {});
     var items = Object.keys(h).map(function (k) { return h[k]; }).filter(function (it) {
-      return it && it.type === 'Video' && it.duration > 0 && it.progress > 0 && it.progress < 0.95;
+      return it && it.type === 'Video' && !it.completedAt && it.duration > 0 && it.progress > 0 && it.progress < 0.95;
     }).sort(function (a, b) { return (b.updated || 0) - (a.updated || 0); });
     if (!items.length) {
       host.innerHTML = '<p class="videos-continue-empty">Start watching a video</p>';
