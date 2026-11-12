@@ -36,7 +36,12 @@
     if (p.charAt(p.length - 1) !== '/') p += '/';
     return p;
   }
-  function pageId() { return normId(location.pathname); }
+  // A ?v=<slug> query identifies one video on the shared sandbox watch page.
+  function pageId() {
+    var v = null;
+    try { v = new URLSearchParams(location.search).get('v'); } catch (e) {}
+    return normId(location.pathname) + (v ? '?v=' + encodeURIComponent(v) : '');
+  }
   function resolveHref(href) {
     try { return normId(new URL(href, location.href).pathname); } catch (e) { return null; }
   }
@@ -62,6 +67,7 @@
       progress: progress,
       position: position,
       duration: duration,
+      completedAt: prev.completedAt || null,
       updated: Date.now()
     };
     write(LS_HIST, h);
@@ -104,6 +110,7 @@
       progress: prev.progress || 0,
       position: prev.position || 0,
       duration: prev.duration || 0,
+      completedAt: prev.completedAt || null,
       updated: Date.now()
     };
     write(LS_HIST, h);
@@ -131,6 +138,7 @@
     + '.bpux-switch[aria-checked="true"] .bpux-knob{left:20px}'
     + '.bpux-profile{border:0;background:#1a1a1a;color:#fff;width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0}'
     + '.bpux-profile:hover{background:#000}'
+    + '.bpux-profile[hidden]{display:none}'
     + '.bpux-scrim{position:fixed;inset:0;background:rgba(10,16,24,.45);z-index:99998;opacity:0;transition:opacity .25s}'
     + '.bpux-scrim.show{opacity:1}'
     + '.bpux-drawer{position:fixed;top:0;right:0;height:100%;width:380px;max-width:92vw;background:#fff;z-index:99999;box-shadow:-14px 0 40px rgba(0,0,0,.2);transform:translateX(100%);transition:transform .28s cubic-bezier(.2,.8,.2,1);display:flex;flex-direction:column;font-family:Inter,system-ui,sans-serif}'
@@ -448,7 +456,7 @@
     var player = document.querySelector('mux-player');
     if (!player) return;
     var it = history()[pageId()];
-    if (!it || it.position < 5 || it.progress >= 0.95) return;
+    if (!it || it.position < 5 || it.progress >= 0.95 || it.completedAt) return;
     var mins = Math.floor(it.position / 60), secs = Math.round(it.position % 60);
     if (document.getElementById('bpux-resume')) return;
     var note = document.createElement('div');
@@ -520,7 +528,7 @@
       if (resumed) return; resumed = true;
       if (!isAuthed()) return;
       var it = history()[item.id];
-      if (it && it.position > 5 && it.progress < 0.95) {
+      if (it && it.position > 5 && it.progress < 0.95 && !it.completedAt) {
         try { player.currentTime = it.position; } catch (e) {}
       }
     }

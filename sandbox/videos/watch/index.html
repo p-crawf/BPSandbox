@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-sandbox-root="../../">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Video | BibleProject</title>
+<link rel="icon" href="https://static.bibleproject.com/favicons/favicon.ico">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/root-BL8_Tx5m.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/text-FanO_oAg.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/page-Z_r5uRud.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/button-DA5_Emdj.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/stack-B8N0WQsC.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/truncate-BRhWlXoB.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/image-DIOpfJ2g.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/heading-Dz4lPXWF.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/bp-web-components/v0.29.3/bp.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/bp-web-components/v0.29.3/bp-compat.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/global-BenC1smb.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/route-Bvhqv_8g.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/link-BlY7zp63.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/badge-DxIpDHNW.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/title-bar-BtgLL4iT.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/hero-DpOzr00P.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/content-progress-DihGuRt4.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/video-block-bUh3FsaJ.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/carousel-DDq6TGg7.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/unstyled-button-D1AaJn8d.css">
+<link rel="stylesheet" href="https://static.bibleproject.com/web/5da7d32/assets/grid-DjrEu_ue.css">
+<link rel="stylesheet" href="../../assets/chrome.css">
+<style>
+/* Mirrors app/routes/videos/detail/video-detail.css, with token fallbacks. */
+.vd{max-width:var(--page-max-width,1144px);margin:0 auto;padding:0 var(--page-gutter,24px) var(--space-20,80px)}
+.video-title-bar{margin-block-start:var(--size-4,32px);margin-block-end:var(--size-2,16px)}
+.vd-titlebar ol{display:flex;flex-wrap:wrap;align-items:center;gap:8px;list-style:none;margin:0;padding:0}
+.vd-titlebar a{color:inherit;text-decoration:none}
+.vd-titlebar a:hover{text-decoration:underline}
+.vd-titlebar .name{font-size:var(--font-size-l,1.25rem);font-weight:var(--font-weight-semibold,600)}
+.vd-titlebar .crumb{display:flex;align-items:center;gap:8px;font-size:var(--font-size-l,1.25rem);color:var(--color-text-secondary,#6b6b6b)}
+.vd-titlebar svg{width:14px;height:14px}
+.video-player-detail{position:relative;aspect-ratio:16/9;border-radius:var(--border-radius-l,12px);overflow:hidden;background:#0d1a26;margin-block:0 var(--size-4,32px)}
+@media (min-width:1144px){.video-player-detail{margin-block:0 var(--size-6,48px)}}
+.video-player-detail mux-player{width:100%;height:100%;display:block;--media-object-fit:contain}
+.vd-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.vd-poster-cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;background:rgba(13,26,38,.55);color:#fff;text-align:center;padding:24px}
+.vd-poster-cover .play{width:72px;height:72px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center}
+.vd-poster-cover .play svg{width:28px;height:28px;fill:#fff;margin-left:4px}
+.vd-poster-cover p{margin:0;font-size:var(--font-size-s,.875rem);max-width:34ch;opacity:.9}
+.vd-duration{position:absolute;left:16px;bottom:16px;background:rgba(0,0,0,.7);color:#fff;font-size:var(--font-size-xs,.75rem);font-weight:600;padding:2px 8px;border-radius:100px}
+.video-content{display:grid;height:fit-content;grid-template-areas:"details" "aside" "downloads";row-gap:var(--space-6,48px)}
+@media (min-width:1024px){.video-content{grid-template-areas:"details aside" "downloads aside";column-gap:var(--size-8,64px);grid-template-rows:min-content 1fr;grid-template-columns:minmax(440px,720px) minmax(320px,auto)}}
+.video-content:has(> .video-learning){grid-template-areas:"details" "learning" "aside" "downloads"}
+@media (min-width:1024px){.video-content:has(> .video-learning){grid-template-areas:"details aside" "learning aside" "downloads aside";grid-template-rows:min-content min-content 1fr}}
+.video-details{grid-area:details}.video-learning{grid-area:learning}.video-downloads{grid-area:downloads}.video-aside{grid-area:aside}
+.vd-stack{display:flex;flex-direction:column}
+.vd-episode{margin:0;font-size:var(--font-size-s,.875rem);color:var(--color-text-primary,#1a1a1a)}
+.vd-title{margin:0;font-size:clamp(1.75rem,3.2vw,2.5rem);line-height:1.1;font-weight:var(--font-weight-bold,700)}
+.vd-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.video-details-description{font-size:var(--font-size-base,1rem);line-height:1.6;max-width:68ch}
+.video-details-description p{margin:0}
+.vd-btn{display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 16px;border-radius:100px;border:1px solid var(--color-border-primary,#d9d4ca);background:var(--color-background-primary,#fff);color:inherit;font:inherit;font-size:var(--font-size-s,.875rem);font-weight:var(--font-weight-semibold,600);cursor:pointer;text-decoration:none}
+.vd-btn:hover{background:var(--color-surface-10,#f5f2ec)}
+.vd-btn svg{width:16px;height:16px}
+.mark-complete-button{width:36px;padding:0;justify-content:center}
+.mark-complete-button[data-complete="true"]{background:var(--color-interactive-info,#2a9fd6);border-color:var(--color-interactive-info,#2a9fd6);color:#fff}
+.mark-complete-button[disabled]{opacity:.5;cursor:default}
+.mark-complete-button[aria-disabled="true"]{color:var(--color-text-secondary,#6b6b6b)}
+.vd-mc-wrap{position:relative;display:inline-flex}
+.vd-tip{position:absolute;bottom:calc(100% + 10px);left:-8px;z-index:20;width:280px;padding:14px 16px;border-radius:var(--border-radius-m,10px);background:#1a1a1a;color:#fff;box-shadow:0 10px 30px rgba(0,0,0,.2);font-size:var(--font-size-s,.875rem);line-height:1.45;opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .15s,transform .15s}
+.vd-tip::after{content:"";position:absolute;top:100%;left:20px;border:7px solid transparent;border-top-color:#1a1a1a}
+.vd-tip[data-open="true"]{opacity:1;transform:none;pointer-events:auto}
+.vd-tip strong{display:block;margin-bottom:2px}
+.vd-tip p{margin:0;color:rgba(255,255,255,.82)}
+.vd-tip-actions{display:flex;gap:8px;margin-top:12px}
+.vd-tip-actions button{border:0;border-radius:100px;padding:6px 12px;font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}
+.vd-tip-actions .primary{background:#fff;color:#1a1a1a}
+.vd-tip-actions .secondary{background:rgba(255,255,255,.14);color:#fff}
+.video-discussion-questions{padding:var(--size-2,16px) var(--size-3,24px);border-radius:var(--border-radius-l,12px);background:var(--color-surface-10,#f5f2ec)}
+.video-expanded-by-link{display:block;padding:var(--size-3,24px);border-radius:var(--border-radius-l,12px);background:var(--color-surface-10,#f5f2ec);color:inherit;text-decoration:none}
+.vd-h2{margin:0;font-size:var(--font-size-xl,1.5rem);font-weight:var(--font-weight-bold,700);line-height:1.2}
+.vd-h2-sm{margin:0;font-size:var(--font-size-l,1.25rem);font-weight:var(--font-weight-semibold,600);line-height:1.25}
+.vd-block{display:flex;gap:16px;color:inherit;text-decoration:none;border-radius:var(--border-radius-m,8px)}
+.vd-block:hover .vd-block-title{text-decoration:underline}
+.vd-block-art{position:relative;flex:0 0 120px;aspect-ratio:1/1;border-radius:var(--border-radius-m,8px);overflow:hidden;background:#0d1a26}
+@container (min-width:420px){.vd-block-art{flex-basis:144px}}
+.vd-block-art img{width:100%;height:100%;object-fit:cover;display:block}
+.vd-block-art .dur{position:absolute;right:6px;bottom:6px;background:rgba(0,0,0,.72);color:#fff;font-size:.7rem;font-weight:600;padding:1px 6px;border-radius:100px}
+.vd-block-body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.vd-block-ep{margin:0;font-size:var(--font-size-xs,.75rem);color:var(--color-text-secondary,#6b6b6b)}
+.vd-block-title{margin:0;font-size:var(--font-size-base,1rem);font-weight:var(--font-weight-semibold,600);line-height:1.25}
+.vd-block-desc{margin:0;font-size:var(--font-size-s,.875rem);color:var(--color-text-secondary,#6b6b6b);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.vd-block[aria-current="page"]{outline:2px solid var(--color-interactive-info,#2a9fd6);outline-offset:4px}
+.vd-progress{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:var(--font-size-xs,.75rem);color:var(--color-text-secondary,#6b6b6b)}
+.vd-progress-bar{flex:0 0 64px;height:4px;border-radius:100px;background:var(--color-border-primary,#e0ddd8);overflow:hidden}
+.vd-progress-bar span{display:block;height:100%;background:var(--color-interactive-info,#2a9fd6)}
+.vd-progress svg{width:14px;height:14px;color:var(--color-interactive-info,#2a9fd6)}
+.vd-toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,16px);background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:100px;font-size:var(--font-size-s,.875rem);font-weight:600;opacity:0;transition:opacity .2s,transform .2s;z-index:100000;pointer-events:none}
+.vd-toast.show{opacity:1;transform:translate(-50%,0)}
+.vd-missing{padding:64px 0;text-align:center}
+.vd-missing a{font-weight:600}
+</style>
+</head>
+<body>
+<div class="page"><div class="page-header"><div class="raw-html"><header class="sb-header" data-theme="light">
+  <a class="sb-logo" href="../../" aria-label="BibleProject Home">
+    <img src="../../assets/logo-mark.svg" alt="" width="28" height="28">
+    <img class="sb-word" src="../../assets/word-mark.svg" alt="BibleProject" width="132" height="24">
+  </a>
+  <nav class="sb-nav" aria-label="Primary">
+    <a href="../" aria-current="page">Videos</a>
+    <a href="../../guides/">Guides</a>
+    <a href="../../classroom/">Classes</a>
+    <a href="../../podcasts/">Podcast</a>
+    <details class="sb-more">
+      <summary>More</summary>
+      <div class="sb-menu">
+        <a href="../../collections/">Collections</a>
+        <a href="../../articles/">Articles</a>
+        <a href="https://bibleproject.com/bible/nasb/genesis/1/">Bible Reader</a>
+        <a href="../../reading-plans/">Reading Plans</a>
+        <a href="../../downloads/">Downloads</a>
+        <a href="https://store.bibleproject.com/" target="_blank" rel="noreferrer">Store</a>
+      </div>
+    </details>
+  </nav>
+  <a class="sb-give" href="../../give/">Give</a>
+  <details class="sb-burger">
+    <summary aria-label="Open menu">Menu</summary>
+    <div class="sb-menu">
+      <a href="../" aria-current="page">Videos</a>
+      <a href="../../guides/">Guides</a>
+      <a href="../../classroom/">Classes</a>
+      <a href="../../podcasts/">Podcast</a>
+      <a href="../../collections/">Collections</a>
+      <a href="../../articles/">Articles</a>
+      <a href="https://bibleproject.com/bible/nasb/genesis/1/">Bible Reader</a>
+      <a href="../../reading-plans/">Reading Plans</a>
+      <a href="../../downloads/">Downloads</a>
+      <a href="../../about/">About</a>
+      <a href="../../app/">App</a>
+      <a href="../../give/">Give</a>
+    </div>
+  </details>
+</header></div></div><main class="page-body" id="content"><div class="vd" id="watch"></div></main><div class="page-footer"><div class="raw-html"><footer class="sb-footer">
+  <div class="sb-footer-inner">
+    <div class="sb-callout">
+      <p>Everything we make is available for free because of a generous community of patrons.</p>
+      <a href="../../give/">Support BibleProject</a>
+    </div>
+    <div class="sb-footer-grid">
+      <nav class="sb-footer-links" aria-label="Footer">
+        <a href="../../app/">BibleProject App</a>
+        <a href="../../about/">About Us</a>
+        <a href="https://store.bibleproject.com/" target="_blank" rel="noreferrer">Store</a>
+        <a href="https://bibleproject.com/languages/">Languages</a>
+        <a href="https://bibleproject.com/pray/">Prayer Community</a>
+        <a href="https://help.bibleproject.com/">Help Center</a>
+        <a href="https://bibleproject.com/careers/">Careers</a>
+        <a href="https://bibleproject.com/privacy/">Privacy Policy</a>
+        <a href="https://bibleproject.com/terms/">Terms of Use</a>
+        <a href="https://bibleproject.com/brand/">Brand Guidelines</a>
+      </nav>
+      <form class="sb-email" action="https://bibleproject.com/" method="post" onsubmit="return false">
+        <label for="sb-email">Receive BibleProject videos and updates in your inbox.</label>
+        <div>
+          <input id="sb-email" type="email" placeholder="Email address" autocomplete="email">
+          <button type="submit">Subscribe</button>
+        </div>
+      </form>
+    </div>
+    <div class="sb-footer-meta">
+      <div class="sb-stores">
+        <a href="https://apps.apple.com/us/app/bibleproject/id1523687027">App Store</a>
+        <a href="https://play.google.com/store/apps/details?id=com.bibleproject">Play Store</a>
+      </div>
+      <p>© Copyright 2026 BibleProject</p>
+    </div>
+  </div>
+</footer></div></div></div>
+<script src="../../assets/videos-data.js"></script>
+<script>
+/* Video detail page (?v=<slug>), structured like app/routes/videos/detail:
+   title bar, player, then details / learning / downloads / aside grid.
+   Must run before bp-ux.js boots so it finds <mux-player>. */
+(function () {
+  var data = window.BP_VIDEOS || { videos: {}, series: {} };
+  var slug = new URLSearchParams(location.search).get('v') || '';
+  var v = data.videos[slug];
+  var root = document.getElementById('watch');
+  var LABELS = {
+    videosTitle: 'Videos', nextEpisodeTitle: 'Next Episode', moreVideosTitle: 'More Videos Like This',
+    episodeNumber: 'Episode {n}', share: 'Share', copied: 'Link Copied',
+    markComplete: 'Mark as watched', markIncomplete: 'Mark as unwatched',
+    markedComplete: 'Marked as watched', markedIncomplete: 'Marked as unwatched',
+    remaining: '{remaining} left', complete: 'Completed',
+    tipTitle: 'Keep track of what you’ve watched',
+    tipBody: 'Sign in or create an account to mark videos as watched and pick up where you left off.',
+    signIn: 'Sign in', createAccount: 'Create account'
+  };
+  var ICON = {
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>',
+    share: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg>',
+    angle: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>',
+    play: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
+  };
+
+  // ---- helpers ----
+  function esc(t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return '&#' + c.charCodeAt(0) + ';'; }); }
+  function sized(base, w) { if (!base) return ''; var i = base.lastIndexOf('/'); return base.slice(0, i) + '/tr:q-90,w-' + w + base.slice(i); }
+  function href(s) { return '?v=' + encodeURIComponent(s); }
+  function read(k, f) { try { var x = localStorage.getItem(k); return x ? JSON.parse(x) : f; } catch (e) { return f; } }
+  function write(k, val) { try { localStorage.setItem(k, JSON.stringify(val)); } catch (e) {} }
+  function isAuthed() { return read('bp_auth', false) === true; }
+  function idFor(s) { return location.pathname.replace(/index\.html$/i, '') + '?v=' + encodeURIComponent(s); }
+  function progressFor(s) { return read('bp_history', {})[idFor(s)] || null; }
+  function fmtSecs(sec) { sec = Math.max(0, Math.round(sec)); var m = Math.floor(sec / 60), r = sec % 60; return m + ':' + (r < 10 ? '0' : '') + r; }
+  function episodeLabel(s, series) { if (!series) return null; var i = series.videos.indexOf(s); return i < 0 ? null : LABELS.episodeNumber.replace('{n}', i + 1); }
+  var toastTimer;
+  function toast(msg) {
+    var t = document.getElementById('vd-toast');
+    if (!t) { t = document.createElement('div'); t.id = 'vd-toast'; t.className = 'vd-toast'; t.setAttribute('role', 'status'); document.body.appendChild(t); }
+    t.textContent = msg; t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.classList.remove('show'); }, 2200);
+  }
+
+  if (!v) {
+    document.title = 'Video not found | BibleProject';
+    root.innerHTML = '<div class="vd-missing"><h1 class="vd-title">Video not found</h1><p>We couldn’t find that video in the sandbox.</p><p><a href="../">Back to Videos</a></p></div>';
+    return;
+  }
+  document.title = v.title + ' | BibleProject';
+  var collection = v.series.length ? data.series[v.series[0]] : null;
+  var epLabel = episodeLabel(slug, collection);
+
+  // Next video: the following episode in the collection (none after the last).
+  var nextSlug = null;
+  if (collection) { var idx = collection.videos.indexOf(slug); nextSlug = collection.videos[idx + 1] || null; }
+  // Related: the whole collection, or a fallback set of other videos.
+  var related = collection
+    ? { title: collection.title, videos: collection.videos.slice() }
+    : { title: LABELS.moreVideosTitle, videos: Object.keys(data.videos).filter(function (k) { return k !== slug; }).slice(0, 6) };
+
+  // ---- static shell: title bar, player, grid ----
+  var player = v.playbackId
+    ? '<mux-player playback-id="' + esc(v.playbackId) + '" metadata-video-title="' + esc(v.title) + '" accent-color="#2a9fd6"></mux-player>'
+    : '<img class="vd-poster" alt="" src="' + esc(sized(v.image, 1120)) + '" srcset="' + esc(sized(v.image, 600)) + ' 600w, ' + esc(sized(v.image, 1120)) + ' 1120w">'
+      + '<div class="vd-poster-cover"><span class="play">' + ICON.play + '</span><p>Playback for this video isn’t wired up in the sandbox yet.</p></div>'
+      + (v.duration ? '<span class="vd-duration">' + esc(v.duration) + '</span>' : '');
+
+  root.innerHTML =
+    '<div class="video-title-bar"><nav class="vd-titlebar" aria-label="Breadcrumb"><ol>'
+    + '<li class="name"><a href="../">' + LABELS.videosTitle + '</a></li>'
+    + (collection ? '<li class="crumb">' + ICON.angle + '<a href="' + esc(collection.href) + '">' + esc(collection.title) + '</a></li>' : '')
+    + '</ol></nav></div>'
+    + '<section data-testid="video-player"><div class="video-player-detail video-player-wrap">' + player + '</div></section>'
+    + '<div class="video-content">'
+    +   '<section class="video-details"><div class="vd-stack" style="gap:var(--size-4,32px)">'
+    +     '<div class="vd-stack" style="gap:var(--size-1,8px)"><div class="vd-stack" style="gap:var(--size-0-5,4px)">'
+    +       (epLabel ? '<p class="vd-episode">' + esc(epLabel) + '</p>' : '')
+    +       '<h1 class="vd-title">' + esc(v.title) + '</h1></div>'
+    +       '<div class="vd-actions" id="vd-actions"></div></div>'
+    +     (v.description ? '<div class="video-details-description" data-testid="video-details-description"><p>' + esc(v.description) + '</p></div>' : '')
+    +   '</div></section>'
+    +   '<section class="video-aside"><div class="vd-stack" style="gap:var(--size-3,24px)" id="vd-aside"></div></section>'
+    + '</div>';
+
+  // ---- dynamic parts: re-render on auth / history changes ----
+  function block(s, testid) {
+    var it = data.videos[s]; if (!it) return '';
+    var showProgress = isAuthed();
+    var p = showProgress ? progressFor(s) : null;
+    var ep = episodeLabel(s, collection);
+    var prog = '';
+    if (showProgress) {
+      if (p && p.completedAt) prog = '<div class="vd-progress">' + ICON.check + LABELS.complete + '</div>';
+      else if (p && p.duration > 0 && p.progress > 0) prog = '<div class="vd-progress"><span class="vd-progress-bar" role="progressbar" aria-valuenow="' + Math.round(p.progress * 100) + '" aria-valuemin="0" aria-valuemax="100"><span style="width:' + Math.round(p.progress * 100) + '%"></span></span>' + LABELS.remaining.replace('{remaining}', fmtSecs(p.duration - p.position)) + '</div>';
+      else if (it.duration) prog = '<div class="vd-progress">' + esc(it.duration) + '</div>';
+    }
+    return '<a class="vd-block" data-testid="' + testid + '" href="' + href(s) + '"' + (s === slug ? ' aria-current="page"' : '') + '>'
+      + '<span class="vd-block-art"><img alt="" loading="lazy" src="' + esc(sized(it.image, 300)) + '">'
+      + (!showProgress && it.duration ? '<span class="dur">' + esc(it.duration) + '</span>' : '') + '</span>'
+      + '<span class="vd-block-body">' + (ep ? '<p class="vd-block-ep">' + esc(ep) + '</p>' : '')
+      + '<h3 class="vd-block-title">' + esc(it.title) + '</h3>'
+      + (it.description ? '<p class="vd-block-desc">' + esc(it.description) + '</p>' : '')
+      + prog + '</span></a>';
+  }
+
+  function renderAside() {
+    var html = '';
+    if (nextSlug) html += '<div class="vd-stack" style="gap:var(--size-2,16px);container-type:inline-size"><h2 class="vd-h2-sm">' + LABELS.nextEpisodeTitle + '</h2>' + block(nextSlug, 'video-detail-next-video') + '</div>';
+    if (related.videos.length) html += '<div class="vd-stack" style="gap:var(--size-2,16px)"><h2 class="vd-h2-sm">' + esc(related.title) + '</h2><div class="vd-stack" style="gap:var(--size-2,16px);container-type:inline-size">'
+      + related.videos.map(function (s) { return block(s, 'video-related-video'); }).join('') + '</div></div>';
+    document.getElementById('vd-aside').innerHTML = html;
+  }
+
+  var tipOpen = false;
+  function renderActions() {
+    var authed = isAuthed();
+    var p = progressFor(slug);
+    var complete = authed && !!(p && p.completedAt);
+    var mc;
+    if (authed) {
+      mc = '<button type="button" class="vd-btn mark-complete-button" data-testid="video-detail-mark-complete" data-complete="' + complete + '" aria-pressed="' + complete + '" aria-label="' + (complete ? LABELS.markIncomplete : LABELS.markComplete) + '" title="' + (complete ? LABELS.markIncomplete : LABELS.markComplete) + '">' + ICON.check + '</button>';
+    } else {
+      // Signed out: the button stays visible but opens a sign-in tooltip instead of saving.
+      mc = '<span class="vd-mc-wrap" id="vd-mc-wrap">'
+        + '<button type="button" class="vd-btn mark-complete-button" data-testid="video-detail-mark-complete" aria-disabled="true" aria-label="' + LABELS.markComplete + '" aria-describedby="vd-tip" aria-expanded="' + tipOpen + '">' + ICON.check + '</button>'
+        + '<span class="vd-tip" id="vd-tip" role="tooltip" data-open="' + tipOpen + '"><strong>' + LABELS.tipTitle + '</strong><p>' + LABELS.tipBody + '</p>'
+        + '<span class="vd-tip-actions"><button type="button" class="primary" data-signin>' + LABELS.signIn + '</button><button type="button" class="secondary" data-signin>' + LABELS.createAccount + '</button></span></span></span>';
+    }
+    var box = document.getElementById('vd-actions');
+    box.innerHTML = mc + '<button type="button" class="vd-btn" id="vd-share" aria-label="Copy URL to clipboard">' + ICON.share + LABELS.share + '</button>';
+
+    box.querySelector('#vd-share').addEventListener('click', function () {
+      var btn = this;
+      var done = function () { btn.innerHTML = ICON.share + LABELS.copied; setTimeout(function () { btn.innerHTML = ICON.share + LABELS.share; }, 1600); };
+      try { navigator.clipboard.writeText(location.href).then(done, done); } catch (e) { done(); }
+    });
+
+    var mcBtn = box.querySelector('.mark-complete-button');
+    if (authed) {
+      mcBtn.addEventListener('click', toggleComplete);
+      return;
+    }
+    var wrap = box.querySelector('#vd-mc-wrap'), tip = box.querySelector('#vd-tip');
+    var hideTimer;
+    function setOpen(o) { tipOpen = o; tip.setAttribute('data-open', o); mcBtn.setAttribute('aria-expanded', o); }
+    wrap.addEventListener('mouseenter', function () { clearTimeout(hideTimer); setOpen(true); });
+    wrap.addEventListener('mouseleave', function () { hideTimer = setTimeout(function () { setOpen(false); }, 200); });
+    mcBtn.addEventListener('focus', function () { setOpen(true); });
+    mcBtn.addEventListener('click', function (e) { e.stopPropagation(); setOpen(true); });
+    tip.querySelectorAll('[data-signin]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        tipOpen = false;
+        var sw = document.querySelector('.bpux-switch');
+        if (!sw) { write('bp_auth', true); rerender(); return; }
+        sw.click(); // demo sign-in; skip the profile drawer it opens so the button change is visible
+        var close = document.querySelector('.bpux-close'); if (close) close.click();
+      });
+    });
+  }
+
+  function toggleComplete() {
+    var h = read('bp_history', {}), id = idFor(slug);
+    var prev = h[id] || { id: id, title: v.title, type: 'Video', url: id, thumb: v.playbackId ? 'https://image.mux.com/' + v.playbackId + '/thumbnail.jpg?width=320&height=180&fit_mode=smartcrop' : sized(v.image, 320), progress: 0, position: 0, duration: 0 };
+    var completed = !prev.completedAt;
+    prev.completedAt = completed ? new Date().toISOString() : null;
+    prev.updated = Date.now();
+    h[id] = prev; write('bp_history', h);
+    rerender();
+    toast(completed ? LABELS.markedComplete : LABELS.markedIncomplete);
+  }
+
+  function rerender() { renderActions(); renderAside(); }
+  document.addEventListener('click', function (e) {
+    if (!tipOpen) return;
+    var wrap = document.getElementById('vd-mc-wrap');
+    if (wrap && !wrap.contains(e.target)) { tipOpen = false; renderActions(); }
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && tipOpen) { tipOpen = false; renderActions(); } });
+  document.addEventListener('bpux:auth', rerender);
+  window.addEventListener('storage', function (e) { if (!e.key || e.key === 'bp_auth' || e.key === 'bp_history') rerender(); });
+  rerender();
+  // Playback progress is saved by bp-ux.js; refresh the cards when it pauses or ends.
+  var mp = root.querySelector('mux-player');
+  if (mp) ['pause', 'ended'].forEach(function (ev) { mp.addEventListener(ev, function () { setTimeout(renderAside, 50); }); });
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@mux/mux-player@3.1.0" defer></script>
+<script src="../../../assets/bp-ux.js" defer></script>
+<script src="../../assets/nav.js" defer></script>
+</body>
+</html>
