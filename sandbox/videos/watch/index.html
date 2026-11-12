@@ -71,7 +71,7 @@
 .vd-tip strong{display:block;margin-bottom:2px}
 .vd-tip p{margin:0;color:rgba(255,255,255,.82)}
 .vd-tip-actions{display:flex;gap:8px;margin-top:12px}
-.vd-tip-actions button{border:0;border-radius:100px;padding:6px 12px;font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}
+.vd-tip-actions a{text-decoration:none;border:0;border-radius:100px;padding:6px 12px;font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}
 .vd-tip-actions .primary{background:#fff;color:#1a1a1a}
 .vd-tip-actions .secondary{background:rgba(255,255,255,.14);color:#fff}
 .video-discussion-questions{padding:var(--size-2,16px) var(--size-3,24px);border-radius:var(--border-radius-l,12px);background:var(--color-surface-10,#f5f2ec)}
@@ -305,7 +305,7 @@
       mc = '<span class="vd-mc-wrap" id="vd-mc-wrap">'
         + '<button type="button" class="vd-btn mark-complete-button" data-testid="video-detail-mark-complete" aria-disabled="true" aria-label="' + LABELS.markComplete + '" aria-describedby="vd-tip" aria-expanded="' + tipOpen + '">' + ICON.check + '</button>'
         + '<span class="vd-tip" id="vd-tip" role="tooltip" data-open="' + tipOpen + '"><strong>' + LABELS.tipTitle + '</strong><p>' + LABELS.tipBody + '</p>'
-        + '<span class="vd-tip-actions"><button type="button" class="primary" data-signin>' + LABELS.signIn + '</button><button type="button" class="secondary" data-signin>' + LABELS.createAccount + '</button></span></span></span>';
+        + '<span class="vd-tip-actions"><a class="primary" href="' + loginHref('signin') + '">' + LABELS.signIn + '</a><a class="secondary" href="' + loginHref('signup') + '">' + LABELS.createAccount + '</a></span></span></span>';
     }
     var box = document.getElementById('vd-actions');
     box.innerHTML = mc + '<button type="button" class="vd-btn" id="vd-share" aria-label="Copy URL to clipboard">' + ICON.share + LABELS.share + '</button>';
@@ -322,21 +322,19 @@
       return;
     }
     var wrap = box.querySelector('#vd-mc-wrap'), tip = box.querySelector('#vd-tip');
-    var hideTimer;
     function setOpen(o) { tipOpen = o; tip.setAttribute('data-open', o); mcBtn.setAttribute('aria-expanded', o); }
-    wrap.addEventListener('mouseenter', function () { clearTimeout(hideTimer); setOpen(true); });
-    wrap.addEventListener('mouseleave', function () { hideTimer = setTimeout(function () { setOpen(false); }, 200); });
-    mcBtn.addEventListener('focus', function () { setOpen(true); });
-    mcBtn.addEventListener('click', function (e) { e.stopPropagation(); setOpen(true); });
-    tip.querySelectorAll('[data-signin]').forEach(function (b) {
-      b.addEventListener('click', function () {
-        tipOpen = false;
-        var sw = document.querySelector('.bpux-switch');
-        if (!sw) { write('bp_auth', true); rerender(); return; }
-        sw.click(); // demo sign-in; skip the profile drawer it opens so the button change is visible
-        var close = document.querySelector('.bpux-close'); if (close) close.click();
-      });
+    // Clicking Mark as watched while signed out opens the sign-in prompt.
+    mcBtn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      setOpen(!tipOpen);
+      if (tipOpen) { var first = tip.querySelector('a'); if (first) first.focus(); }
     });
+  }
+
+  // Login returns here (same video, same scroll spot) after the demo sign-in.
+  function loginHref(mode) {
+    var here = location.pathname + location.search + '#vd-actions';
+    return '../../login/?mode=' + mode + '&return=' + encodeURIComponent(here);
   }
 
   function toggleComplete() {
@@ -360,6 +358,14 @@
   document.addEventListener('bpux:auth', rerender);
   window.addEventListener('storage', function (e) { if (!e.key || e.key === 'bp_auth' || e.key === 'bp_history') rerender(); });
   rerender();
+  // Coming back from /login: confirm the sign-in and bring the button back into view.
+  var flash = null;
+  try { flash = sessionStorage.getItem('bp_auth_flash'); sessionStorage.removeItem('bp_auth_flash'); } catch (e) {}
+  if (flash && isAuthed()) {
+    toast(flash === 'signup' ? 'Account created. You\u2019re signed in.' : 'You\u2019re signed in.');
+    var actions = document.getElementById('vd-actions');
+    if (actions) actions.scrollIntoView({ block: 'center' });
+  }
   // Playback progress is saved by bp-ux.js; refresh the cards when it pauses or ends.
   var mp = root.querySelector('mux-player');
   if (mp) ['pause', 'ended'].forEach(function (ev) { mp.addEventListener(ev, function () { setTimeout(renderAside, 50); }); });
